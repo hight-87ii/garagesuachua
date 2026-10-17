@@ -1,5 +1,7 @@
 # Bí mật cục bộ
 .streamlit/secrets.toml
+# .env: GitHub Push Protection chặn (GEMINI_API_KEY) — cần đổi/thu hồi key hoặc
+# dùng link "unblock secret" của repo mới đẩy được
 .env
 
 # Dữ liệu vận hành có thể chứa thông tin cá nhân
@@ -19,8 +21,6 @@ venv/
 env/
 
 # Tệp tạm và cache
-__pycache__/
-*.py[cod]
 *.tmp
 .pytest_cache/
 .impeccable/
@@ -30,7 +30,6 @@ __pycache__/
 *.before_refresh_*.pptx
 *.backup.docx
 artifacts/ppt_render_*/
-.tools/
 
 # Upload vận hành (ảnh/video xe, hóa đơn) — không commit lên git
 app/static/uploads/
@@ -38,15 +37,8 @@ app/static/uploads/
 *.mov
 *.webm
 
-# Database vận hành
-garage.db
-garage.db-shm
-garage.db-wal
-*.db-shm
-*.db-wal
+# Database vận hành (đẩy lên theo yêu cầu)
 
-# Backup truoc rebuild RAG (ingest_knowledge.py)
-backup/
+# Backup truoc rebuild RAG (ingest_knowledge.py) — đẩy lên theo yêu cầu
 
-# Log vận hành local (AI metrics/PII-safe JSONL)
-logs/
+# Log vận hành local (AI metrics/PII-safe JSONL) — đẩy lên theo yêu cầu
