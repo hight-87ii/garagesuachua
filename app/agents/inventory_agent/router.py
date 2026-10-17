@@ -104,6 +104,8 @@ async def inventory_chat(data: InventoryIn, db: Session = Depends(get_db),
         ctx.append("TỒN KHO: " + ("; ".join(
             f"{p['name']} [{p['part_number']}] tồn {p['stock']} (min {p['min']})"
             for p in stock_rows) if stock_rows else "(không khớp tên phụ tùng cụ thể)"))
+    ctx.append("PHỤ TÙNG CẢNH BÁO: {} / {} (cần chú ý / tổng số).".format(
+        alerts["alert_count"], alerts["total_parts"]))
     ctx.append("CẢNH BÁO SẮP HẾT: " + (
         "; ".join(f"{p['name']} (tồn {p['stock']}/min {p['min']})" for p in alerts["low"])
         or "(không có)") + " | ĐÃ HẾT: " + (

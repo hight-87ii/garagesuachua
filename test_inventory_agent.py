@@ -141,7 +141,8 @@ async def case3_stock_alert_demand(db):
     # Canh bao
     assert [p["name"] for p in out["alerts"]["low"]] == ["Lọc gió động cơ"], out["alerts"]
     assert [p["name"] for p in out["alerts"]["out"]] == ["Lọc dầu"], out["alerts"]
-    assert out["alerts"]["total"] == 3
+    assert out["alerts"]["total_parts"] == 3, out["alerts"]   # tong so phu tung
+    assert out["alerts"]["alert_count"] == 2, out["alerts"]   # sap het + da het
     # Du doan nhap hang
     demand = out["restock_demand"]
     assert demand[0]["name"] == "Lọc dầu" and demand[0]["urgency"] == "out", demand
@@ -285,7 +286,8 @@ def test_inventory_tools_direct():
         assert T.search_stock(db, "abcxyz") == []
 
         al = T.get_stock_alerts(db)
-        assert al["total"] == 3
+        assert al["total_parts"] == 3, al       # TONG so phu tung (khong phai so canh bao)
+        assert al["alert_count"] == 2, al       # sap het + da het
         assert [p["name"] for p in al["low"]] == ["Dây curoa"]
         assert [p["name"] for p in al["out"]] == ["Lọc xăng"]
 

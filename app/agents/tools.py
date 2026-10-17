@@ -677,17 +677,21 @@ def search_stock(db: Session, text: str, limit: int = 8) -> list:
 
 
 def get_stock_alerts(db: Session, limit: int = 5) -> dict:
-    """Canh bao phu tung sap het / da het. Loi -> rong. CHI DOC."""
-    out = {"total": 0, "low": [], "out": []}
+    """Canh bao phu tung sap het / da het. Loi -> rong. CHI DOC.
+
+    total_parts = TONG so phu tung (moi ton kho); alert_count = so phu tung
+    CO canh bao (sap het + da het)."""
+    out = {"total_parts": 0, "alert_count": 0, "low": [], "out": []}
     try:
         parts = db.query(SparePart).all()
     except Exception:
         return out
-    out["total"] = len(parts)
+    out["total_parts"] = len(parts)
     low = [p for p in parts if 0 < (p.stock_quantity or 0) <= (p.min_stock or 5)]
     oos = [p for p in parts if (p.stock_quantity or 0) <= 0]
     low.sort(key=lambda p: (p.stock_quantity or 0))
     oos.sort(key=lambda p: (p.stock_quantity or 0))
+    out["alert_count"] = len(low) + len(oos)
     out["low"] = [_part_dict(p) for p in low[:limit]]
     out["out"] = [_part_dict(p) for p in oos[:limit]]
     return out
