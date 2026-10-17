@@ -1,0 +1,691 @@
+{% extends "base.html" %}
+
+{% block title %}Lịch hẹn & Theo dõi sửa chữa - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    /* --- Chung --- */
+    .page-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding-top: 1.25rem; }
+    .flash-banner { border-radius: 12px; padding: 0.9rem 1.2rem; display: flex; align-items: center; gap: 0.7rem; font-weight: 600; margin-bottom: 1.25rem; }
+    .flash-success { background: rgba(25,135,84,0.08); color: #198754; border: 1px solid rgba(25,135,84,0.25); }
+    .flash-info { background: rgba(13,117,165,0.08); color: #0d75a5; border: 1px solid rgba(13,117,165,0.25); }
+    .flash-error { background: rgba(220,53,69,0.08); color: #dc3545; border: 1px solid rgba(220,53,69,0.25); }
+
+    .sect-card { background: #fff; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 1.25rem; overflow: hidden; }
+    .sect-head { padding: 1rem 1.4rem; border-bottom: 1px solid var(--concrete-gray); font-weight: 600; display: flex; align-items: center; gap: 0.6rem; }
+    .sect-body { padding: 1.4rem; }
+
+    /* --- Badge trạng thái lịch hẹn --- */
+    .st { font-weight: 600; border-radius: 999px; font-size: 0.78rem; padding: 0.3rem 0.75rem; }
+    .st-pending { background: rgba(255,193,7,0.15); color: #b07d00; border: 1px solid rgba(255,193,7,0.4); }
+    .st-confirmed { background: rgba(13,117,165,0.1); color: #0d75a5; border: 1px solid rgba(13,117,165,0.3); }
+    .st-completed { background: rgba(25,135,84,0.1); color: #198754; border: 1px solid rgba(25,135,84,0.3); }
+    .st-cancelled { background: rgba(108,117,125,0.12); color: #6c757d; border: 1px solid rgba(108,117,125,0.3); }
+
+    /* --- Card lịch hẹn --- */
+    .appt-card { background: #fff; border: 1px solid var(--concrete-gray); border-radius: 14px; margin-bottom: 1rem; overflow: hidden; transition: box-shadow 0.2s; }
+    .appt-card:hover { box-shadow: 0 8px 26px rgba(0,0,0,0.07); }
+    .appt-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; padding: 0.9rem 1.3rem; background: var(--warm-white); border-bottom: 1px solid var(--concrete-gray); }
+    .appt-plate { font-weight: 700; font-size: 0.95rem; background: #fff; border: 1px solid var(--concrete-gray); padding: 3px 12px; border-radius: 8px; }
+    .appt-datetime { font-weight: 600; font-size: 0.9rem; color: var(--copper-orange); }
+    .appt-body { padding: 1.2rem 1.3rem; }
+    .mini-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; margin-bottom: 0.2rem; }
+
+    /* --- Tiến trình nhỏ --- */
+    .steps-mini { display: flex; gap: 0; margin-top: 0.8rem; }
+    .step-mini { flex: 1; text-align: center; font-size: 0.72rem; position: relative; padding-top: 1.6rem; color: var(--text-muted); }
+    .step-mini::before { content: ''; position: absolute; top: 6px; left: 0; right: 0; height: 3px; background: var(--concrete-gray); }
+    .step-mini::after { content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; border-radius: 50%; background: var(--concrete-gray); }
+    .step-mini.done::before, .step-mini.done::after { background: var(--copper-orange); }
+    .step-mini.done { color: var(--copper-orange); font-weight: 600; }
+    .step-mini:last-child::before { right: 50%; }
+    .step-mini:first-child::before { left: 50%; }
+
+    /* --- Wizard --- */
+    .wizard-bar { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .wiz-step { display: flex; align-items: center; gap: 0.55rem; padding: 0.45rem 1rem; border-radius: 999px; background: var(--warm-white); border: 1px solid var(--concrete-gray); font-size: 0.88rem; font-weight: 500; color: var(--text-muted); cursor: default; }
+    .wiz-step .num { width: 24px; height: 24px; border-radius: 50%; background: var(--concrete-gray); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; }
+    .wiz-step.active { background: var(--charcoal-black); border-color: var(--charcoal-black); color: #fff; }
+    .wiz-step.active .num { background: var(--copper-orange); }
+    .wiz-step.done .num { background: var(--copper-orange); }
+    .wiz-step.done { color: var(--charcoal-black); }
+    .wiz-sep { flex: 0 0 24px; height: 2px; background: var(--concrete-gray); }
+    .wiz-panel { display: none; }
+    .wiz-panel.active { display: block; animation: fadein 0.25s ease; }
+    @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .type-card { border: 2px solid var(--concrete-gray); border-radius: 14px; padding: 1.4rem 1.2rem; cursor: pointer; text-align: center; transition: all 0.2s; height: 100%; background: #fff; }
+    .type-card:hover { border-color: var(--copper-orange); }
+    .type-card.selected { border-color: var(--copper-orange); background: rgba(200,121,65,0.06); box-shadow: 0 4px 16px rgba(200,121,65,0.15); }
+    .type-card .t-icon { font-size: 2rem; }
+    .type-card .t-title { font-weight: 700; margin-top: 0.5rem; }
+    .type-card .t-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+    .slot-btn { border: 1px solid var(--concrete-gray); background: #fff; border-radius: 10px; padding: 0.5rem 0.9rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .slot-btn:hover { border-color: var(--copper-orange); color: var(--copper-orange); }
+    .slot-btn.selected { background: var(--charcoal-black); border-color: var(--charcoal-black); color: #fff; }
+
+    .svc-card { border: 1px solid var(--concrete-gray); border-radius: 12px; padding: 0.9rem 1rem; cursor: pointer; background: #fff; height: 100%; transition: all 0.15s; }
+    .svc-card:hover { border-color: var(--copper-orange); }
+    .svc-card.selected { border-color: var(--copper-orange); background: rgba(200,121,65,0.06); }
+    .svc-price { color: var(--copper-orange); font-weight: 700; }
+
+    .summary-box { background: var(--warm-white); border: 1px solid var(--concrete-gray); border-radius: 14px; padding: 1.2rem 1.3rem; position: sticky; top: 1rem; }
+    .sum-line { display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; font-size: 0.9rem; border-bottom: 1px dashed var(--concrete-gray); }
+    .sum-line:last-of-type { border-bottom: none; }
+    .sum-line .k { color: var(--text-muted); white-space: nowrap; }
+    .sum-line .v { font-weight: 600; text-align: right; }
+    .sum-total { font-size: 1.15rem; font-weight: 700; color: var(--copper-orange); text-align: right; margin-top: 0.4rem; }
+
+    .btn-copper { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; border-radius: 999px; padding: 0.55rem 1.6rem; }
+    .btn-copper:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+
+    @media (max-width: 767.98px) {
+        .summary-box { position: static; margin-top: 1rem; }
+        .steps-mini { flex-wrap: wrap; gap: 0.5rem; }
+        .step-mini { flex: 1 0 40%; }
+    }
+
+    /* --- Hero đặt lịch: than chì & đồng, tĩnh, không glow --- */
+    .booking-hero {
+        background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 55%, #A65E2F 130%);
+        border: 1px solid rgba(200,121,65,.25);
+        border-radius: 22px;
+        color: #fff;
+        padding: 28px 26px;
+        position: relative;
+        overflow: hidden;
+        margin-top: 16px;
+    }
+    .booking-hero h2 { color: #fff; font-size: 1.45rem; letter-spacing: -.02em; }
+    .booking-hero p { color: rgba(255,255,255,0.82); }
+    .hero-cal {
+        width: 56px; height: 56px; border-radius: 16px; flex: 0 0 56px;
+        background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22);
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; color: #E0A375;
+    }
+    .hero-stat {
+        background: rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 14px;
+        padding: 8px 16px;
+        min-width: 120px;
+    }
+    .hero-stat small { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.82); }
+    .hero-stat strong { display: block; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+    .appt-card { position: relative; transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s; }
+    .appt-card:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -20px rgba(30,30,30,.4); }
+    .type-card.selected, .svc-card.selected {
+        box-shadow: 0 8px 22px rgba(200,121,65,0.18);
+        transform: translateY(-1px);
+    }
+    .wiz-step.active {
+        background: var(--lux-graphite, #1E1E1E);
+        border-color: var(--lux-graphite, #1E1E1E);
+        color: #fff;
+    }
+    .flash-banner { animation: slideDown 0.35s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) {
+        .wiz-panel.active, .flash-banner { animation: none; }
+        .appt-card:hover, .type-card.selected, .svc-card.selected { transform: none; }
+    }
+</style>
+
+<!-- Hero -->
+<div class="booking-hero">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 position-relative" style="z-index:1;">
+        <div class="d-flex gap-3 align-items-center">
+            <div class="hero-cal"><i class="bi bi-calendar-check"></i></div>
+            <div>
+                <h2 class="fw-bold mb-1">Đặt lịch & theo dõi sửa chữa</h2>
+                <p class="mb-0">Chọn dịch vụ, giờ hẹn và xem tiến trình xe theo thời gian thực.</p>
+            </div>
+        </div>
+        <div style="font-size:.82rem;color:rgba(255,255,255,.75);">Giờ làm việc: 08:00–11:30 & 13:30–17:00</div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap mt-3 position-relative" style="z-index:1;">
+        <div class="hero-stat"><small>Tổng lịch hẹn</small><strong>{{ appointments|length }}</strong></div>
+        <div class="hero-stat"><small>Chờ xác nhận</small><strong>{{ appointments|selectattr('status', 'equalto', 'Pending')|list|length }}</strong></div>
+        <div class="hero-stat"><small>Hoàn thành</small><strong>{{ appointments|selectattr('status', 'equalto', 'Completed')|list|length }}</strong></div>
+    </div>
+</div>
+
+<!-- Tiêu đề -->
+<div class="page-head mb-3">
+    <h1 class="h3 mb-0"><i class="bi bi-calendar-check me-2" style="color: var(--copper-orange);"></i>Lịch hẹn của tôi</h1>
+    <a href="#bookNow" class="btn btn-copper btn-sm" id="scrollToBook"><i class="bi bi-plus-lg me-1"></i>Đặt lịch mới</a>
+</div>
+
+<!-- Flash messages -->
+{% if booked %}
+<div class="flash-banner flash-success"><i class="bi bi-check-circle-fill"></i> Đặt lịch hẹn thành công! Garage sẽ liên hệ xác nhận với bạn trong thời gian sớm nhất.</div>
+{% endif %}
+{% if cancelled %}
+<div class="flash-banner flash-info"><i class="bi bi-x-circle-fill"></i> Lịch hẹn đã được hủy.</div>
+{% endif %}
+{% if auto_cancelled %}
+<div class="flash-banner flash-info"><i class="bi bi-alarm me-1"></i> {{ auto_cancelled }} lịch quá hẹn 24h không tới garage đã tự động hủy. Bạn có thể đặt lại lịch mới.</div>
+{% endif %}
+{% if error %}
+<div class="flash-banner flash-error"><i class="bi bi-exclamation-triangle-fill"></i> {{ error }}</div>
+{% endif %}
+
+<!-- ============ DANH SÁCH LỊCH HẸN ============ -->
+<div class="sect-card">
+    <div class="sect-head"><i class="bi bi-journal-text" style="color: var(--copper-orange);"></i> Danh sách lịch hẹn
+        <span class="badge rounded-pill" style="background: var(--warm-white); color: var(--charcoal-black); border: 1px solid var(--concrete-gray);">{{ appointments|length }}</span>
+    </div>
+    <div class="sect-body pt-3">
+
+        {% for appt in appointments %}
+        <div class="appt-card">
+            <div class="appt-top">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="appt-plate"><i class="bi bi-car-front me-1"></i>{{ appt.vehicle.license_plate if appt.vehicle else '---' }}</span>
+                    {% if appt.appointment_type == 'CarWash' %}
+                    <span class="st" style="background: rgba(13,117,165,0.1); color: #0d75a5; border: 1px solid rgba(13,117,165,0.3);"><i class="bi bi-stars me-1"></i>Rửa xe / Chăm sóc</span>
+                    {% else %}
+                    <span class="st" style="background: rgba(200,121,65,0.1); color: var(--copper-orange); border: 1px solid rgba(200,121,65,0.3);"><i class="bi bi-wrench-adjustable me-1"></i>Sửa chữa / Bảo dưỡng</span>
+                    {% endif %}
+                </div>
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <span class="appt-datetime"><i class="bi bi-clock me-1"></i>{{ appt.appointment_date }}{% if appt.appointment_time %} · {{ appt.appointment_time }}{% endif %}</span>
+                    {% if appt.status == 'Pending' %}
+                    <span class="st st-pending">Chờ xác nhận</span>
+                    {% elif appt.status == 'Confirmed' %}
+                    <span class="st st-confirmed">Đã xác nhận</span>
+                    {% elif appt.status == 'Completed' %}
+                    <span class="st st-completed">Đã hoàn thành</span>
+                    {% elif appt.status == 'Cancelled' %}
+                    <span class="st st-cancelled">Đã hủy</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="appt-body">
+                <div class="row g-3">
+                    <!-- Yêu cầu của khách -->
+                    <div class="col-md-4">
+                        <div class="mini-label">Yêu cầu của bạn</div>
+                        <p class="mb-2" style="font-size: 0.92rem;">{{ appt.symptoms }}</p>
+
+                        {% if appt.preferred_technician %}
+                        <div class="mini-label">Kỹ thuật viên yêu cầu</div>
+                        <p class="mb-2 fw-bold" style="color: var(--copper-orange); font-size: 0.9rem;"><i class="bi bi-person-gear me-1"></i>{{ appt.preferred_technician.full_name }}</p>
+                        {% endif %}
+
+                        {% if appt.appointment_type != 'CarWash' and appt.ai_diagnosis %}
+                        <div class="mini-label">AI dự đoán ban đầu</div>
+                        <div class="p-2 mb-0" style="background: var(--warm-white); border-radius: 8px; font-size: 0.85rem; border: 1px dashed var(--concrete-gray);">
+                            {{ appt.ai_diagnosis }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Tiến độ tại garage -->
+                    <div class="col-md-8">
+                        {% set ns = namespace(ro=None) %}
+                        {% for order in appt.vehicle.repair_orders if appt.vehicle %}
+                            {% if order.symptoms == appt.symptoms and order.status != 'Cancelled' %}
+                                {% set ns.ro = order %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set ro = ns.ro %}
+
+                        {% if appt.status == 'Cancelled' %}
+                        <div class="p-3 text-center text-muted" style="background: var(--warm-white); border-radius: 10px;">
+                            <i class="bi bi-slash-circle fs-4 d-block mb-1"></i> Lịch hẹn này đã hủy.
+                            <small class="d-block mt-1"><i class="bi bi-clock me-1"></i>Tự động xóa sau 1 ngày kể từ lúc hủy.</small>
+                        </div>
+
+                        {% elif ro %}
+                        <!-- Tiến trình 4 bước -->
+                        <div class="steps-mini">
+                            <div class="step-mini done">Tiếp nhận</div>
+                            <div class="step-mini {{ 'done' if ro.estimated_cost }}">Kiểm tra & báo giá</div>
+                            <div class="step-mini {{ 'done' if ro.status in ['In Progress', 'Completed'] }}">Sửa chữa</div>
+                            <div class="step-mini {{ 'done' if ro.status == 'Completed' }}">Hoàn thành</div>
+                        </div>
+
+                        <div class="mt-2 text-end">
+                            <a href="/my-repairs/{{ ro.id }}" class="fw-bold" style="font-size: 0.85rem; color: var(--copper-orange); text-decoration: none;">
+                                <i class="bi bi-arrow-right-circle me-1"></i>Xem chi tiết công việc & thông tin kỹ thuật →
+                            </a>
+                        </div>
+
+                        {% if ro.estimated_cost %}
+                        <!-- Khung báo giá -->
+                        <div class="mt-3 p-3" style="background: var(--warm-white); border: 1px solid rgba(255,193,7,0.4); border-radius: 10px;">
+                            <p class="mb-1" style="font-size: 0.9rem;"><strong>Kết quả kiểm tra:</strong> {{ ro.inspection_result or 'Đang chờ cập nhật' }}</p>
+                            <p class="mb-2 text-danger fw-bold" style="font-size: 0.95rem;">Tổng chi phí dự kiến: {{ "{:,}".format(ro.estimated_cost) }} VNĐ</p>
+
+                            {% if ro.customer_approval == 'Pending' %}
+                            <div class="d-flex gap-2 flex-wrap">
+                                <form action="/my-appointments/approve" method="POST" class="m-0">
+                                    <input type="hidden" name="order_id" value="{{ ro.id }}">
+                                    <input type="hidden" name="action" value="approve">
+                                    <button type="submit" class="btn btn-sm rounded-pill px-3" style="background: #198754; color: #fff; border: none;"><i class="bi bi-check-lg me-1"></i>Đồng ý sửa</button>
+                                </form>
+                                <form action="/my-appointments/approve" method="POST" class="m-0">
+                                    <input type="hidden" name="order_id" value="{{ ro.id }}">
+                                    <input type="hidden" name="action" value="reject">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Bạn chắc chắn từ chối báo giá này?');"><i class="bi bi-x-lg me-1"></i>Từ chối</button>
+                                </form>
+                            </div>
+                            {% elif ro.customer_approval == 'Approved' %}
+                            <div class="fw-bold" style="color: #198754; font-size: 0.9rem;"><i class="bi bi-check-circle me-1"></i>Bạn đã đồng ý báo giá. Garage đang tiến hành sửa chữa.</div>
+                            {% elif ro.customer_approval == 'Rejected' %}
+                            <div class="fw-bold text-danger" style="font-size: 0.9rem;"><i class="bi bi-x-circle me-1"></i>Bạn đã từ chối báo giá.</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        {% if ro.status == 'Completed' %}
+                        <!-- Đánh giá dịch vụ -->
+                        <div class="mt-3 p-3 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: rgba(25,135,84,0.06); border: 1px solid rgba(25,135,84,0.25); border-radius: 10px;">
+                            <div style="font-size: 0.9rem; color: #198754;" class="fw-semibold">
+                                <i class="bi bi-check2-circle me-1"></i>Đã giao xe ({{ ro.handover_datetime or (ro.completed_at.strftime('%d/%m/%Y') if ro.completed_at else '') }})
+                            </div>
+                            {% if not ro.service_rating %}
+                            <form action="/my-appointments/rate" method="POST" class="d-inline-flex align-items-center gap-2 m-0">
+                                <input type="hidden" name="order_id" value="{{ ro.id }}">
+                                <select name="rating" class="form-select form-select-sm w-auto rounded-pill" required style="font-size: 0.85rem;">
+                                    <option value="">- Đánh giá sao -</option>
+                                    <option value="5">5 sao - Rất tốt</option>
+                                    <option value="4">4 sao - Tốt</option>
+                                    <option value="3">3 sao - Bình thường</option>
+                                    <option value="2">2 sao - Kém</option>
+                                    <option value="1">1 sao - Rất kém</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm rounded-pill px-3" style="background: var(--copper-orange); color: #fff; border: none;">Gửi</button>
+                            </form>
+                            {% else %}
+                            <div style="font-size: 0.9rem;"><i class="bi bi-star-fill me-1" style="color: var(--copper-orange);"></i>{{ ro.service_rating }} / 5 — Cảm ơn bạn đã đánh giá!</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        {% else %}
+                        <div class="p-3 text-center" style="background: var(--warm-white); border-radius: 10px; color: var(--text-muted);">
+                            <div class="spinner-border spinner-border-sm me-2" style="width: 1rem; height: 1rem;"></div>
+                            Đang chờ Garage tiếp nhận & xác nhận...
+                        </div>
+                        {% endif %}
+
+                        <!-- Nút hủy lịch -->
+                        {% if appt.status in ['Pending', 'Confirmed'] %}
+                        <div class="text-end mt-3">
+                            <form action="/my-appointments/{{ appt.id }}/cancel" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="return confirm('Bạn chắc chắn muốn hủy lịch hẹn này?');">
+                                    <i class="bi bi-x-lg me-1"></i>Hủy lịch hẹn
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-calendar-x fs-1 d-block mb-2" style="color: var(--copper-orange); opacity: 0.5;"></i>
+            <p class="mb-1 fw-semibold" style="color: var(--charcoal-black);">Bạn chưa có lịch hẹn nào</p>
+            <p style="font-size: 0.9rem;">Đặt lịch ngay để được garage tiếp nhận xe đúng hẹn.</p>
+            <a href="#bookNow" class="btn btn-copper btn-sm mt-2"><i class="bi bi-plus-lg me-1"></i>Đặt lịch đầu tiên</a>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<!-- ============ WIZARD ĐẶT LỊCH ============ -->
+<div class="sect-card" id="bookNow">
+    <div class="sect-head"><i class="bi bi-calendar-plus" style="color: var(--copper-orange);"></i> Đặt lịch hẹn mới</div>
+    <div class="sect-body">
+
+        <!-- Thanh tiến trình -->
+        <div class="wizard-bar">
+            <div class="wiz-step active" data-wiz="1"><span class="num">1</span> Dịch vụ & Xe</div>
+            <div class="wiz-sep"></div>
+            <div class="wiz-step" data-wiz="2"><span class="num">2</span> Chi tiết hẹn</div>
+            <div class="wiz-sep"></div>
+            <div class="wiz-step" data-wiz="3"><span class="num">3</span> Xác nhận</div>
+        </div>
+
+        <form action="/my-appointments/book" method="POST" id="bookForm">
+            <div class="row g-4">
+                <!-- Cột trái: nội dung các bước -->
+                <div class="col-lg-8">
+
+                    <!-- BƯỚC 1 -->
+                    <div class="wiz-panel active" data-panel="1">
+                        <label class="form-label fw-bold">Loại lịch hẹn <span class="text-danger">*</span></label>
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <div class="type-card selected" data-type="Repair" onclick="selectType(this)">
+                                    <div class="t-icon"><i class="bi bi-wrench-adjustable"></i></div>
+                                    <div class="t-title">Sửa chữa / Bảo dưỡng</div>
+                                    <div class="t-desc">Xe có lỗi, cần kiểm tra kỹ thuật</div>
+                                    <input type="radio" name="appointment_type" value="Repair" checked class="d-none" id="typeRepair">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="type-card" data-type="CarWash" onclick="selectType(this)">
+                                    <div class="t-icon"><i class="bi bi-stars"></i></div>
+                                    <div class="t-title">Rửa xe / Chăm sóc</div>
+                                    <div class="t-desc">Chọn dịch vụ yêu thích</div>
+                                    <input type="radio" name="appointment_type" value="CarWash" class="d-none" id="typeCarWash">
+                                </div>
+                            </div>
+                        </div>
+
+                        <label class="form-label fw-bold">Chọn xe của bạn <span class="text-danger">*</span></label>
+                        {% if vehicles %}
+                        <select name="vehicle_id" class="form-select rounded-pill" required id="vehicleSelect" onchange="updateSummary()">
+                            <option value="">-- Chọn xe --</option>
+                            {% for v in vehicles %}
+                            <option value="{{ v.id }}" data-plate="{{ v.license_plate }}" data-name="{{ v.make }} {{ v.model }}">{{ v.license_plate }} — {{ v.make }} {{ v.model }}{% if v.current_odo %} ({{ "{:,}".format(v.current_odo) }} km){% endif %}</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <div class="p-3 rounded-3" style="background: var(--warm-white); border: 1px dashed var(--concrete-gray);">
+                            Bạn chưa có xe nào trong hệ thống. <a href="/my-vehicles" class="fw-bold">Thêm xe ngay →</a>
+                        </div>
+                        <select name="vehicle_id" class="d-none" disabled><option value=""></option></select>
+                        {% endif %}
+                    </div>
+
+                    <!-- BƯỚC 2 -->
+                    <div class="wiz-panel" data-panel="2">
+                        <!-- Nội dung theo loại: Repair -->
+                        <div id="repairArea">
+                            <label class="form-label fw-bold">Mô tả tình trạng lỗi <span class="text-danger">*</span></label>
+                            <textarea name="symptoms" id="symptomsInput" class="form-control" rows="4" placeholder="Ví dụ: Xe kêu cót két khi phanh, máy nổ lụp bụp lúc sáng lạnh..."></textarea>
+                            <div class="form-text">Mô tả chi tiết giúp KTV chuẩn bị trước — AI sẽ chẩn đoán sơ bộ cho bạn.</div>
+                        </div>
+
+                        <!-- Nội dung theo loại: CarWash -->
+                        <div id="serviceArea" style="display: none;">
+                            <label class="form-label fw-bold">Chọn dịch vụ mong muốn</label>
+                            <div class="input-group mb-3" id="svcSearchBox">
+                                <span class="input-group-text bg-white border-end-0 rounded-start-pill"><i class="bi bi-search"></i></span>
+                                <input type="text" id="svcKeyword" class="form-control border-start-0 rounded-end-pill" placeholder="Gõ để tìm dịch vụ (VD: rửa xe, nội thất...)" autocomplete="off" oninput="filterServices()">
+                            </div>
+                            <div class="row g-3" id="serviceGrid">
+                                {% for srv in services %}
+                                <div class="col-sm-6 col-lg-4 svc-item" data-search="{{ (srv.name ~ ' ' ~ (srv.category or ''))|lower }}">
+                                    <div class="svc-card" data-svc="{{ srv.id }}" data-price="{{ srv.promo_price if srv.promo_price else srv.base_price }}" data-name="{{ srv.name }}" onclick="toggleService(this)">
+                                        <div class="d-flex justify-content-between align-items-start gap-2">
+                                            <strong style="font-size: 0.9rem;">{{ srv.name }}</strong>
+                                            <span class="badge rounded-pill" style="background: var(--warm-white); border: 1px solid var(--concrete-gray); color: var(--text-muted);">{{ srv.duration_minutes }}p</span>
+                                        </div>
+                                        <div class="svc-price mt-2">{{ "{:,}".format(srv.promo_price if srv.promo_price else srv.base_price) }} đ</div>
+                                        <input type="checkbox" name="service_ids" value="{{ srv.id }}" class="d-none">
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="col-12 text-muted">Hiện chưa có dịch vụ nào. Garage sẽ liên hệ tư vấn.</div>
+                                {% endfor %}
+                                <div class="col-12 text-muted text-center py-3" id="svcNoMatch" style="display: none;">
+                                    <i class="bi bi-search d-block fs-3 mb-1"></i>Không tìm thấy dịch vụ nào khớp từ khóa.
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="opacity: 0.15; margin: 1.5rem 0;">
+
+                        <!-- Ngày & giờ -->
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold">Ngày hẹn <span class="text-danger">*</span></label>
+                                <input type="date" name="appointment_date" class="form-control rounded-pill" required min="{{ today }}" id="dateInput" onchange="updateSummary()">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-bold">Khung giờ <span class="text-danger">*</span></label>
+                                <select name="appointment_time" class="form-select rounded-pill" required onchange="updateSummary()" id="timeSelect">
+                                    <option value="">-- Chọn giờ --</option>
+                                    {% for slot in ["08:00", "09:00", "10:00", "10:30", "13:30", "14:30", "15:30", "16:30"] %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">Giờ làm việc: 08:00–11:30 & 13:30–17:00</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="form-label fw-bold">Kỹ thuật viên yêu cầu (tùy chọn)</label>
+                            <select name="preferred_technician_id" class="form-select rounded-pill" onchange="updateSummary()" id="techSelect">
+                                <option value="">-- Garage tự sắp xếp --</option>
+                                {% for tech in technicians %}
+                                {% set ep = tech.employee_profile %}
+                                <option value="{{ tech.id }}" data-name="{{ tech.full_name }}">{{ tech.full_name }} — {{ (ep.job_title if ep and ep.job_title else "Kỹ thuật viên") }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- BƯỚC 3 -->
+                    <div class="wiz-panel" data-panel="3">
+                        <div class="p-4 rounded-4" style="background: var(--warm-white); border: 1px solid var(--concrete-gray);">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-clipboard-check me-2" style="color: var(--copper-orange);"></i>Xem lại thông tin đặt lịch</h6>
+                            <div id="reviewContent" style="font-size: 0.93rem;"></div>
+                        </div>
+                        <div class="form-text mt-2">
+                            Sau khi gửi, Garage sẽ liên hệ xác nhận. Bạn có thể hủy lịch tại trang này.
+                        </div>
+                    </div>
+
+                    <!-- Nút điều hướng -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-dark rounded-pill px-4" id="btnPrev" style="visibility: hidden;" onclick="changeStep(-1)">
+                            <i class="bi bi-arrow-left me-1"></i>Quay lại
+                        </button>
+                        <button type="button" class="btn btn-copper" id="btnNext" onclick="changeStep(1)">
+                            Tiếp tục<i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                        <button type="submit" class="btn btn-copper d-none" id="btnSubmit">
+                            <i class="bi bi-check2-circle me-1"></i>Xác nhận đặt lịch
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cột phải: tóm tắt -->
+                <div class="col-lg-4">
+                    <div class="summary-box">
+                        <div class="fw-bold mb-2" style="font-size: 0.95rem;"><i class="bi bi-receipt-cutoff me-2" style="color: var(--copper-orange);"></i>Tóm tắt yêu cầu</div>
+                        <div class="sum-line"><span class="k">Loại dịch vụ</span><span class="v" id="sumType">Sửa chữa / Bảo dưỡng</span></div>
+                        <div class="sum-line"><span class="k">Xe</span><span class="v" id="sumVehicle">Chưa chọn</span></div>
+                        <div class="sum-line"><span class="k">Ngày & giờ</span><span class="v" id="sumDateTime">Chưa chọn</span></div>
+                        <div class="sum-line" id="sumSvcRow" style="display: none;"><span class="k">Dịch vụ</span><span class="v" id="sumServices">—</span></div>
+                        <div class="sum-line"><span class="k">KTV yêu cầu</span><span class="v" id="sumTech">Garage sắp xếp</span></div>
+                        <div class="sum-total d-none" id="sumTotalRow">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Tạm tính:</span>
+                            <span id="sumTotal">0 đ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+/* ============ Wizard ============ */
+let currentStep = 1;
+const TOTAL_STEPS = 3;
+
+function showStep(step) {
+    currentStep = step;
+    document.querySelectorAll('.wiz-panel').forEach(p => p.classList.toggle('active', +p.dataset.panel === step));
+    document.querySelectorAll('.wiz-step').forEach(s => {
+        const n = +s.dataset.wiz;
+        s.classList.toggle('active', n === step);
+        s.classList.toggle('done', n < step);
+        s.querySelector('.num').innerHTML = n < step ? '<i class="bi bi-check-lg"></i>' : n;
+    });
+    document.getElementById('btnPrev').style.visibility = step === 1 ? 'hidden' : 'visible';
+    document.getElementById('btnNext').classList.toggle('d-none', step === TOTAL_STEPS);
+    document.getElementById('btnSubmit').classList.toggle('d-none', step !== TOTAL_STEPS);
+    if (step === TOTAL_STEPS) buildReview();
+    document.getElementById('bookNow').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function changeStep(delta) {
+    if (delta > 0 && !validateStep(currentStep)) return;
+    showStep(Math.min(TOTAL_STEPS, Math.max(1, currentStep + delta)));
+}
+
+function validateStep(step) {
+    if (step === 1) {
+        const v = document.getElementById('vehicleSelect');
+        if (!v || !v.value) { alert('Vui lòng chọn xe trước khi tiếp tục.'); return false; }
+    }
+    if (step === 2) {
+        const isRepair = document.getElementById('typeRepair').checked;
+        if (isRepair) {
+            const t = document.getElementById('symptomsInput');
+            if (!t.value.trim()) { alert('Vui lòng mô tả tình trạng lỗi.'); t.focus(); return false; }
+        }
+        const d = document.getElementById('dateInput'), h = document.getElementById('timeSelect');
+        if (!d.value) { alert('Vui lòng chọn ngày hẹn.'); d.focus(); return false; }
+        if (!h.value) { alert('Vui lòng chọn khung giờ.'); h.focus(); return false; }
+    }
+    return true;
+}
+
+/* ============ Chọn loại ============ */
+function selectType(el) {
+    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input[type=radio]').checked = true;
+
+    const isRepair = el.dataset.type === 'Repair';
+    document.getElementById('repairArea').style.display = isRepair ? 'block' : 'none';
+    document.getElementById('serviceArea').style.display = isRepair ? 'none' : 'block';
+    document.getElementById('symptomsInput').required = isRepair;
+    updateSummary();
+}
+
+/* ============ Chọn dịch vụ (CarWash) ============ */
+function toggleService(el) {
+    el.classList.toggle('selected');
+    el.querySelector('input[type=checkbox]').checked = el.classList.contains('selected');
+    updateSummary();
+}
+
+/* ============ Tìm kiếm dịch vụ (gõ để lọc) ============ */
+function filterServices() {
+    const kw = (document.getElementById('svcKeyword').value || '').trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+    let visible = 0;
+    document.querySelectorAll('#serviceGrid .svc-item').forEach(item => {
+        const hay = (item.dataset.search || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+        const ok = !kw || hay.includes(kw);
+        item.style.display = ok ? '' : 'none';
+        if (ok) visible++;
+    });
+    const noMatch = document.getElementById('svcNoMatch');
+    if (noMatch) noMatch.style.display = (kw && visible === 0) ? '' : 'none';
+}
+
+/* ============ Tóm tắt live ============ */
+function fmtMoney(n) { return n.toLocaleString('vi-VN') + ' đ'; }
+
+function updateSummary() {
+    const isRepair = document.getElementById('typeRepair').checked;
+    document.getElementById('sumType').textContent = isRepair ? 'Sửa chữa / Bảo dưỡng' : 'Rửa xe / Chăm sóc';
+
+    const vs = document.getElementById('vehicleSelect');
+    document.getElementById('sumVehicle').textContent = (vs && vs.value) ? vs.options[vs.selectedIndex].dataset.plate : 'Chưa chọn';
+
+    const d = document.getElementById('dateInput').value;
+    const h = document.getElementById('timeSelect').value;
+    document.getElementById('sumDateTime').textContent = (d && h) ? `${d.split('-').reverse().join('/')} · ${h}` : (d ? d.split('-').reverse().join('/') : 'Chưa chọn');
+
+    const ts = document.getElementById('techSelect');
+    document.getElementById('sumTech').textContent = (ts && ts.value) ? ts.options[ts.selectedIndex].dataset.name : 'Garage sắp xếp';
+
+    // Dịch vụ đã chọn (CarWash)
+    const chosen = document.querySelectorAll('.svc-card.selected');
+    const svcRow = document.getElementById('sumSvcRow');
+    if (!isRepair && chosen.length) {
+        svcRow.style.display = 'flex';
+        document.getElementById('sumServices').textContent = chosen.length + ' dịch vụ đã chọn';
+        let total = 0;
+        chosen.forEach(c => total += parseInt(c.dataset.price || 0));
+        document.getElementById('sumTotalRow').classList.remove('d-none');
+        document.getElementById('sumTotal').textContent = fmtMoney(total);
+    } else {
+        svcRow.style.display = 'none';
+        document.getElementById('sumTotalRow').classList.add('d-none');
+    }
+}
+
+/* ============ Bước 3: xem lại ============ */
+function buildReview() {
+    const isRepair = document.getElementById('typeRepair').checked;
+    const vs = document.getElementById('vehicleSelect');
+    const vehicle = (vs && vs.value) ? vs.options[vs.selectedIndex].dataset.plate + ' — ' + vs.options[vs.selectedIndex].dataset.name : 'Chưa chọn';
+    const d = document.getElementById('dateInput').value;
+    const h = document.getElementById('timeSelect').value;
+    const ts = document.getElementById('techSelect');
+    const tech = (ts && ts.value) ? ts.options[ts.selectedIndex].dataset.name : 'Garage tự sắp xếp';
+
+    let rows = `
+        <div class="sum-line"><span class="k">Loại dịch vụ</span><span class="v">${isRepair ? 'Sửa chữa / Bảo dưỡng' : 'Rửa xe / Chăm sóc'}</span></div>
+        <div class="sum-line"><span class="k">Xe</span><span class="v">${vehicle}</span></div>
+        <div class="sum-line"><span class="k">Ngày hẹn</span><span class="v">${d ? d.split('-').reverse().join('/') : '—'}</span></div>
+        <div class="sum-line"><span class="k">Khung giờ</span><span class="v">${h || '—'}</span></div>
+        <div class="sum-line"><span class="k">KTV yêu cầu</span><span class="v">${tech}</span></div>`;
+
+    if (isRepair) {
+        const sym = document.getElementById('symptomsInput').value.trim();
+        rows += `<div class="sum-line"><span class="k">Mô tả lỗi</span><span class="v" style="max-width: 65%;">${sym.replace(/</g, '&lt;')}</span></div>`;
+    } else {
+        const chosen = document.querySelectorAll('.svc-card.selected');
+        let names = Array.from(chosen).map(c => c.dataset.name);
+        if (names.length) rows += `<div class="sum-line"><span class="k">Dịch vụ</span><span class="v" style="max-width: 65%;">${names.join(', ')}</span></div>`;
+    }
+
+    document.getElementById('reviewContent').innerHTML = rows;
+}
+
+/* ============ Cập nhật tóm tắt khi thay đổi ============ */
+['vehicleSelect', 'dateInput', 'timeSelect', 'techSelect'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', updateSummary);
+});
+
+/* Cuộn đến form khi bấm nút Đặt lịch mới */
+document.getElementById('scrollToBook').addEventListener('click', () => showStep(1));
+
+/* Preselect KTV khi đi từ trang đội ngũ / hồ sơ thợ: /my-appointments?tech_id=ID#bookNow */
+(function preselectTech() {
+    const q = new URLSearchParams(window.location.search);
+    const techId = q.get('tech_id');
+    if (!techId) return;
+    const sel = document.getElementById('techSelect');
+    if (!sel) return;
+    if ([...sel.options].some(o => o.value === techId)) {
+        sel.value = techId;
+        updateSummary();
+        const name = sel.options[sel.selectedIndex]?.dataset?.name || 'KTV đã chọn';
+        const book = document.getElementById('bookNow');
+        if (book) {
+            const note = document.createElement('div');
+            note.className = 'alert mt-3';
+            note.setAttribute('role', 'status');
+            note.style.cssText = 'background:rgba(200,121,65,.08);border:1px solid rgba(200,121,65,.35);color:#8A5A32;border-radius:12px;font-size:.86rem;';
+            note.innerHTML = '<i class="bi bi-person-check me-1"></i>Đã chọn <strong>' + name.replace(/</g, '&lt;') + '</strong> theo yêu cầu của bạn. Bạn có thể đổi lại thành “Garage tự sắp xếp” nếu muốn.';
+            book.prepend(note);
+            setTimeout(() => book.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+        }
+    }
+})();
+
+updateSummary();
+</script>
+{% endblock %}

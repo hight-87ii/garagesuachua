@@ -1,0 +1,23 @@
+[GUIDELINE] Điều hòa và hệ thống điện thân xe - tổng quan
+Áp dụng cho: Xe con có điều hòa 1-3 dàn lạnh, hệ điện 12V phổ thông
+Ngày hiệu lực: 01/01/2026
+
+1. NGUYÊN LÝ NHANH
+Điều hòa ô tô gồm lốc nén, dàn nóng (trước két nước), van tiết lưu, dàn lạnh (trong táp-lô) và quạt. Gas lạnh tuần hoàn kín — hệ thống chuẩn KHÔNG hao gas; thiếu gas nghĩa là đang RÒ RỈ ở đâu đó, phải tìm chỗ rò chứ không chỉ nạp bổ sung.
+
+2. DẤU HIỆU ĐIỀU HÒA YẾU
+- Gió thổi không mát sâu, mát lúc đầu rồi nóng dần (đóng băng dàn lạnh hoặc thiếu gas).
+- Lốc đóng-ngắt liên tục, có tiếng lạch cạch khi đóng lốc.
+- Mùi hôi, mốc khi mới bật (dàn lạnh và lọc gió bẩn, cần vệ sinh nội soi).
+- Kính mờ, hơi ẩm nhiều (chế độ lấy gió trong kẹt hoặc dàn lạnh quá bẩn).
+
+3. HỆ ĐIỆN THÂN XE LIÊN QUAN
+Quạt dàn nóng/dàn lạnh chạy yếu làm điều hòa kém mát khi dừng đèn đỏ nhưng mát khi chạy nhanh (có gió tự nhiên). Cầu chì, rơ-le lốc cháy do quá tải cũng gây mất lạnh đột ngột — kiểm tra điện trước khi kết luận hỏng lốc.
+
+4. THÓI QUEN TỐT CHO CHỦ XE
+- Bật quạt gió 1-2 phút trước khi bật A/C sau khi xe phơi nắng; tắt A/C, để quạt 2-3 phút trước khi tắt máy để hong khô dàn lạnh, giảm mốc.
+- Thay lọc gió điều hòa mỗi 15.000 - 20.000 km.
+- Mỗi tháng cho lốc chạy 10 phút kể cả mùa đông để phớt lốc không bị khô kẹt.
+
+5. QUY TRÌNH TẠI THREEH
+Đo áp suất gas 2 đường cao/áp thấp bằng đồng hồ chuyên dụng, soi rò bằng đèn UV + dung dịch, vệ sinh dàn lạnh nội soi không tháo táp-lô (trừ ca nặng), thay lọc gió, kiểm tra quạt và hệ điện liên quan. Nạp gas đúng chủng loại R134a/R1234yf theo tem xe — nạp nhầm loại gây hỏng lốc.

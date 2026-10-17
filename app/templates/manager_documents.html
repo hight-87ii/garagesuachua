@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Tài liệu AI - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 pt-3">
+    <h1 class="h3">📚 Tài liệu AI của gara</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadDocModal">+ Thêm tài liệu</button>
+</div>
+
+{% if request.query_params.get('success') %}
+<div class="alert alert-success">Tải tài liệu thành công!</div>
+{% endif %}
+{% if request.query_params.get('reingested') %}
+<div class="alert alert-success">Đã nạp lại tài liệu vào VectorDB!</div>
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle bg-white shadow-sm rounded">
+        <thead class="table-dark">
+            <tr>
+                <th style="width:60px;">ID</th>
+                <th>Tiêu đề</th>
+                <th>Loại</th>
+                <th>VectorDB</th>
+                <th>Ngày tạo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in documents %}
+            <tr>
+                <td>#{{ d.id }}</td>
+                <td class="fw-bold">{{ d.title }}</td>
+                <td><span class="badge bg-secondary">{{ d.document_type }}</span></td>
+                <td>
+                    {% if d.is_ingested %}
+                    <span class="badge bg-success">Đã ingest</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Chờ ingest</span>
+                    <form action="/manager/documents/{{ d.id }}/reingest" method="POST" class="d-inline ms-1">
+                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Nạp lại vào VectorDB">Nạp lại</button>
+                    </form>
+                    {% endif %}
+                </td>
+                <td>{{ d.created_at.strftime('%d/%m/%Y %H:%M') if d.created_at else '---' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-center text-muted py-4">Chưa có tài liệu nào.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="uploadDocModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form action="/manager/documents/upload" method="POST" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm tài liệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Tiêu đề *</label>
+                        <input type="text" name="title" class="form-control" required maxlength="255">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Loại</label>
+                        <select name="document_type" class="form-select">
+                            <option value="report">Báo cáo</option>
+                            <option value="manual">Hướng dẫn</option>
+                            <option value="guideline">Quy trình</option>
+                            <option value="policy">Chính sách</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nội dung *</label>
+                    <textarea name="content" class="form-control" rows="8" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary">Lưu tài liệu</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

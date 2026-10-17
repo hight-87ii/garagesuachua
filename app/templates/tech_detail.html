@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tech.full_name }} - Kỹ thuật viên ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    .tech-hero {
+        background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 55%, #A65E2F 130%);
+        border: 1px solid rgba(200,121,65,.25);
+        border-radius: 22px;
+        color: #fff;
+        padding: 30px 28px;
+        position: relative;
+        overflow: hidden;
+        margin-top: 16px;
+    }
+    .tech-hero h1 { color: #fff; font-size: 1.5rem; letter-spacing: -.02em; }
+    .tech-hero .sub { color: rgba(255,255,255,.82); font-size: .88rem; }
+    .tech-avatar {
+        width: 104px; height: 104px; border-radius: 50%; object-fit: cover;
+        border: 3px solid rgba(255,255,255,.35);
+        box-shadow: 0 10px 24px rgba(0,0,0,.35);
+        background: rgba(255,255,255,0.12); flex: 0 0 104px;
+    }
+    .tech-avatar-fallback {
+        width: 104px; height: 104px; border-radius: 50%;
+        background: #2D2D2D; border: 3px solid rgba(255,255,255,.35);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.4rem; font-weight: 800; color: #E0A375; flex: 0 0 104px;
+    }
+    .tech-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+        padding: 5px 13px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; color: #fff;
+    }
+    .tech-badge i { color: #fff; }
+    .tech-badge.ok { background: rgba(123,199,154,.14); border-color: rgba(123,199,154,.4); }
+    .tech-badge.ok i { color: #7BC79A; }
+    .tech-stats { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 14px; }
+    .tech-stats .stat { min-width: 0; }
+    .tech-stats .n { font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.3; }
+    .tech-stats .n i { color: #fff; font-size: 1rem; }
+    .tech-stats .l { font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.65); margin-top: 2px; }
+    .tech-quote {
+        margin-top: 18px; padding: 14px 18px 14px 16px; border-left: 2px solid #E0A375;
+        background: rgba(255,255,255,.06); border-radius: 0 12px 12px 0;
+        font-size: .92rem; line-height: 1.6; color: rgba(255,255,255,.9); font-style: italic;
+    }
+    .tech-quote small { display: block; margin-top: 6px; font-style: normal; font-size: .78rem; color: rgba(255,255,255,.7); }
+    .tech-card {
+        background: #fff; border: 1px solid var(--lux-hairline); border-radius: 18px;
+        box-shadow: 0 1px 3px rgba(30,30,30,.04); margin-bottom: 18px; overflow: hidden;
+    }
+    .tech-card-head {
+        padding: 14px 20px; border-bottom: 1px solid var(--lux-hairline); font-weight: 700;
+        display: flex; align-items: center; gap: 10px; background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory));
+        color: var(--lux-graphite); font-size: .92rem;
+    }
+    .tech-card-head i {
+        width: 34px; height: 34px; border-radius: 10px; flex: 0 0 34px;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: rgba(200,121,65,0.12); color: var(--copper-orange);
+    }
+    .tech-card-body { padding: 20px; }
+    .skill-pill {
+        display: inline-block; background: var(--lux-ivory); border: 1px solid var(--lux-hairline);
+        border-radius: 999px; padding: 5px 14px; margin: 0 6px 8px 0; font-size: 0.84rem; font-weight: 600; color: var(--lux-graphite);
+    }
+    .veh-pill {
+        display: inline-block; background: var(--lux-graphite); color: #fff;
+        border-radius: 999px; padding: 5px 14px; margin: 0 6px 8px 0; font-size: 0.84rem; font-weight: 600;
+    }
+    .cert { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px dashed var(--lux-hairline); }
+    .cert:last-child { border-bottom: none; padding-bottom: 0; }
+    .cert:first-child { padding-top: 0; }
+    .cert .ci {
+        flex: 0 0 36px; width: 36px; height: 36px; border-radius: 10px;
+        background: rgba(46,125,79,.09); color: #2E7D4F;
+        display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .cert .ct { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); }
+    .cert .cv { font-size: .9rem; font-weight: 600; color: var(--lux-graphite); line-height: 1.55; margin-top: 2px; }
+    .info-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--lux-hairline); font-size: 0.9rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .k { color: var(--lux-slate); font-size: .76rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding-top: 3px; flex-shrink: 0; }
+    .info-row .v { font-weight: 600; text-align: right; color: var(--lux-graphite); }
+    .score-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+    .score-big { font-size: 2.6rem; font-weight: 800; letter-spacing: -.03em; color: var(--lux-graphite); line-height: 1.3; font-variant-numeric: tabular-nums; }
+    .score-big small { font-size: 1rem; color: var(--lux-slate); font-weight: 600; }
+    .stars { color: var(--copper-orange); }
+    .stars i + i { margin-left: 2px; }
+    .review { border: 1px solid var(--lux-hairline); border-radius: 12px; padding: 13px 15px; margin-top: 10px; background: var(--lux-ivory); }
+    .review .rh { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: .78rem; color: var(--lux-slate); margin-bottom: 6px; }
+    .review .rt { font-size: .88rem; color: var(--lux-graphite); line-height: 1.6; }
+    .back-btn { background: #fff; border: 1px solid #D8D1C8; color: var(--lux-graphite); font-size: .8rem; font-weight: 600; border-radius: 999px; padding: .45rem 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .back-btn:hover { border-color: var(--lux-graphite); color: var(--lux-graphite); }
+</style>
+
+<div class="mb-3 pt-3">
+    <a href="/our-team" class="back-btn"><i class="bi bi-arrow-left"></i>Đội ngũ kỹ thuật viên</a>
+</div>
+
+<div class="tech-hero">
+    <div class="d-flex gap-3 align-items-center position-relative flex-wrap" style="z-index:1;">
+        {% if ep and ep.avatar_url %}
+        <img src="{{ ep.avatar_url }}" alt="Ảnh {{ tech.full_name }}" class="tech-avatar">
+        {% else %}
+        <div class="tech-avatar-fallback" aria-hidden="true">{{ tech.full_name[0]|upper }}</div>
+        {% endif %}
+        <div class="flex-grow-1" style="min-width: 240px;">
+            <h1 class="mb-1 fw-bold">{{ tech.full_name }}</h1>
+            <div class="sub mb-2">{{ ep.job_title if ep and ep.job_title else 'Kỹ thuật viên' }}{% if ep and ep.garage_name %} · {{ ep.garage_name }}{% endif %}{% if ep and ep.work_area %} · {{ ep.work_area }}{% endif %}</div>
+            <div class="d-flex gap-2 flex-wrap">
+                {% if stats.avg %}
+                <span class="tech-badge"><i class="bi bi-star-fill"></i>{{ stats.avg }} · {{ stats.nrate }} đánh giá</span>
+                {% endif %}
+                <span class="tech-badge"><i class="bi bi-briefcase"></i>{{ ep.years_of_experience or '—' }} năm kinh nghiệm</span>
+                {% if stats.open == 0 %}
+                <span class="tech-badge ok"><i class="bi bi-check-circle"></i>Đang nhận việc mới</span>
+                {% else %}
+                <span class="tech-badge"><i class="bi bi-hourglass-split"></i>Đang phụ trách {{ stats.open }} xe</span>
+                {% endif %}
+            </div>
+            <div class="tech-stats" aria-label="Số liệu thợ">
+                <div class="stat"><div class="n">{% if stats.avg %}<i class="bi bi-star-fill"></i> {{ stats.avg }}{% else %}—{% endif %}</div><div class="l">Điểm đánh giá</div></div>
+                <div class="stat"><div class="n">{{ stats.done }}</div><div class="l">Xe đã hoàn thành</div></div>
+                <div class="stat"><div class="n">{{ ep.years_of_experience or '—' }}</div><div class="l">Năm kinh nghiệm</div></div>
+            </div>
+        </div>
+        {% if user and user.get('role') == 'customer' %}
+        <a href="/my-appointments?tech_id={{ tech.id }}#bookNow" class="btn btn-light rounded-pill px-4 fw-bold"><i class="bi bi-calendar-check me-1"></i>Đặt lịch với tôi</a>
+        {% elif not user %}
+        <a href="/login?next=/our-team/{{ tech.id }}" class="btn btn-light rounded-pill px-4 fw-bold"><i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập để đặt lịch</a>
+        {% endif %}
+    </div>
+    {% if ep and ep.feedback_summary %}
+    <div class="tech-quote">“{{ ep.feedback_summary }}”<small>— Tổng hợp phản hồi khách hàng</small></div>
+    {% endif %}
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-lg-7">
+        <div class="tech-card">
+            <div class="tech-card-head"><i class="bi bi-tools"></i>Chuyên môn kỹ thuật</div>
+            <div class="tech-card-body">
+                {% if ep and ep.technical_skills %}
+                    {% for s in ep.technical_skills.split(',') %}<span class="skill-pill">{{ s.strip() }}</span>{% endfor %}
+                {% else %}
+                <p class="text-muted mb-0">Đang cập nhật.</p>
+                {% endif %}
+                {% if ep and ep.vehicle_types %}
+                <h6 class="fw-bold mt-3 mb-2" style="font-size:.82rem;color:var(--lux-graphite);">Dòng xe chuyên sửa</h6>
+                {% for v in ep.vehicle_types.split(',') %}<span class="veh-pill">{{ v.strip() }}</span>{% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tech-card">
+            <div class="tech-card-head"><i class="bi bi-patch-check"></i>Chứng chỉ & đào tạo</div>
+            <div class="tech-card-body" style="padding-top:12px;padding-bottom:12px;">
+                {% if ep and (ep.trade_certificates or ep.brand_certificates or ep.safety_certificates or ep.education_school) %}
+                    {% if ep.trade_certificates %}
+                    <div class="cert"><span class="ci"><i class="bi bi-award"></i></span><div><div class="ct">Chứng chỉ nghề</div><div class="cv">{{ ep.trade_certificates }}</div></div></div>
+                    {% endif %}
+                    {% if ep.brand_certificates %}
+                    <div class="cert"><span class="ci"><i class="bi bi-patch-check"></i></span><div><div class="ct">Đào tạo hãng xe</div><div class="cv">{{ ep.brand_certificates }}</div></div></div>
+                    {% endif %}
+                    {% if ep.safety_certificates %}
+                    <div class="cert"><span class="ci"><i class="bi bi-shield-check"></i></span><div><div class="ct">An toàn lao động</div><div class="cv">{{ ep.safety_certificates }}</div></div></div>
+                    {% endif %}
+                    {% if ep.education_school %}
+                    <div class="cert"><span class="ci"><i class="bi bi-mortarboard"></i></span><div><div class="ct">Đào tạo</div><div class="cv">{{ ep.education_school }}{% if ep.education_degree %} · {{ ep.education_degree }}{% endif %}</div></div></div>
+                    {% endif %}
+                {% else %}
+                <p class="text-muted mb-0">Đang cập nhật.</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-5">
+        <div class="tech-card">
+            <div class="tech-card-head"><i class="bi bi-person-vcard"></i>Thông tin nhanh</div>
+            <div class="tech-card-body" style="padding-top:10px;padding-bottom:10px;">
+                <div class="info-row"><span class="k">Kinh nghiệm</span><span class="v">{{ ep.years_of_experience ~ ' năm' if ep and ep.years_of_experience else '—' }}</span></div>
+                <div class="info-row"><span class="k">Xe đã hoàn thành</span><span class="v">{{ stats.done }} xe</span></div>
+                <div class="info-row"><span class="k">Điểm đánh giá</span><span class="v">{% if stats.avg %}{{ stats.avg }} / 5 ({{ stats.nrate }} lượt){% else %}Chưa có{% endif %}</span></div>
+                {% if ep and ep.hire_date %}<div class="info-row"><span class="k">Vào làm từ</span><span class="v">{{ ep.hire_date }}</span></div>{% endif %}
+                {% if ep and ep.work_area %}<div class="info-row"><span class="k">Khu vực</span><span class="v">{{ ep.work_area }}</span></div>{% endif %}
+                {% if ep and ep.garage_address %}<div class="info-row"><span class="k">Địa chỉ xưởng</span><span class="v">{{ ep.garage_address }}</span></div>{% endif %}
+            </div>
+        </div>
+
+        <div class="tech-card">
+            <div class="tech-card-head"><i class="bi bi-clock-history"></i>Kinh nghiệm làm việc</div>
+            <div class="tech-card-body">
+                {% if ep and (ep.past_garages or ep.key_projects or ep.past_roles) %}
+                    {% if ep.past_roles %}<p class="mb-2" style="font-size:.9rem;"><strong>Vị trí từng làm:</strong> {{ ep.past_roles }}</p>{% endif %}
+                    {% if ep.past_garages %}<p class="mb-2" style="font-size:.9rem;"><strong>Garage từng làm:</strong><br>{{ ep.past_garages.replace('\n', '<br>')|safe }}</p>{% endif %}
+                    {% if ep.key_projects %}<p class="mb-0" style="font-size:.9rem;"><strong>Dự án nổi bật:</strong> {{ ep.key_projects }}</p>{% endif %}
+                {% else %}
+                <p class="text-muted mb-0">Đang cập nhật.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tech-card">
+            <div class="tech-card-head"><i class="bi bi-telephone"></i>Liên hệ công việc</div>
+            <div class="tech-card-body">
+                {% if ep and (ep.zalo_link or ep.facebook_link or ep.linkedin_link) %}
+                    <div class="d-flex gap-2 flex-wrap">
+                        {% if ep.zalo_link %}<a href="{{ ep.zalo_link }}" target="_blank" rel="noopener" class="btn btn-sm rounded-pill" style="background:#fff;border:1px solid #D8D1C8;color:var(--lux-graphite);">Zalo</a>{% endif %}
+                        {% if ep.facebook_link %}<a href="{{ ep.facebook_link }}" target="_blank" rel="noopener" class="btn btn-sm rounded-pill" style="background:#fff;border:1px solid #D8D1C8;color:var(--lux-graphite);">Facebook</a>{% endif %}
+                        {% if ep.linkedin_link %}<a href="{{ ep.linkedin_link }}" target="_blank" rel="noopener" class="btn btn-sm rounded-pill" style="background:#fff;border:1px solid #D8D1C8;color:var(--lux-graphite);">LinkedIn</a>{% endif %}
+                    </div>
+                    <p class="mt-3 mb-0" style="font-size:.82rem;color:var(--lux-slate);">Liên hệ công việc qua garage để được xác nhận nhanh. Không chia sẻ số cá nhân trên trang công khai.</p>
+                {% else %}
+                <p class="text-muted mb-0">Liên hệ qua garage: 0981.888.888</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if ep and (ep.social_profiles or ep.tutorial_videos or ep.tech_posts or ep.community_participation) %}
+        <div class="tech-card">
+            <div class="tech-card-head"><i class="bi bi-globe"></i>Hoạt động chuyên môn</div>
+            <div class="tech-card-body">
+                {% if ep.tutorial_videos %}<div class="mb-2" style="font-size:.88rem;"><i class="bi bi-play-circle me-1" style="color:var(--copper-orange);"></i><a href="{{ ep.tutorial_videos }}" target="_blank" rel="noopener">Video hướng dẫn</a></div>{% endif %}
+                {% if ep.tech_posts %}<div class="mb-2" style="font-size:.88rem;"><i class="bi bi-file-text me-1" style="color:var(--copper-orange);"></i><a href="{{ ep.tech_posts }}" target="_blank" rel="noopener">Bài viết kỹ thuật</a></div>{% endif %}
+                {% if ep.social_profiles %}<div class="mb-2" style="font-size:.88rem;"><i class="bi bi-people me-1" style="color:var(--copper-orange);"></i>{{ ep.social_profiles }}</div>{% endif %}
+                {% if ep.community_participation %}<div class="mb-0" style="font-size:.88rem;"><i class="bi bi-chat-dots me-1" style="color:var(--copper-orange);"></i>{{ ep.community_participation }}</div>{% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="tech-card mt-1">
+    <div class="tech-card-head"><i class="bi bi-star-fill"></i>Đánh giá từ khách hàng</div>
+    <div class="tech-card-body">
+        {% if stats.avg %}
+        <div class="row g-3 align-items-stretch">
+            <div class="col-md-4">
+                <div class="score-wrap" style="margin-bottom:0;">
+                    <div class="score-big">{{ stats.avg }}<small>/5</small></div>
+                    <div>
+                        <div class="stars" aria-label="{{ stats.avg }} trên 5 sao">{% for _ in range(5) %}<i class="bi bi-star-fill"></i>{% endfor %}</div>
+                        <div style="font-size:.8rem;color:var(--lux-slate);margin-top:4px;">Dựa trên {{ stats.nrate }} lượt chấm sau sửa chữa</div>
+                    </div>
+                </div>
+            </div>
+            {% for r in reviews %}
+            <div class="col-md-4">
+                <div class="review" style="margin-top:0;height:100%;">
+                    <div class="rh"><span><i class="bi bi-star-fill me-1" style="color:var(--copper-orange);"></i>{{ r.service_rating }}/5 · {{ r.completed_at.strftime('%d/%m/%Y') if r.completed_at else (r.created_at.strftime('%d/%m/%Y') if r.created_at else '') }}</span></div>
+                    <div class="rt">“{{ (r.symptoms or '')|truncate(120) }}”</div>
+                    <div style="font-size:.78rem;color:var(--lux-slate);margin-top:6px;">Đã sửa chữa tại xưởng</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">Thợ mới — chưa có lượt chấm nào. Hãy là khách đầu tiên đặt lịch và đánh giá.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

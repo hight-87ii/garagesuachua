@@ -1,0 +1,19 @@
+[MANUAL] Nạp gas lạnh, vệ sinh dàn nóng - dàn lạnh
+Áp dụng cho: Xe dùng gas R134a hoặc R1234yf (xem tem trong khoang máy)
+Ngày hiệu lực: 01/01/2026
+
+1. PHÂN BIỆT LOẠI GAS
+R134a (xe đời cũ và đa số xe phổ thông) và R1234yf (xe đời mới, thân thiện môi trường) KHÔNG thay thế lẫn nhau: khác áp suất, khác dầu bôi trơn lốc. Nạp nhầm gây kẹt lốc, chi phí thay lốc gấp 10-20 lần tiền nạp gas. Đầu nạp 2 loại khác cỡ để chống nhầm — không được chế đầu chuyển.
+
+2. KHI NÀO CẦN NẠP GAS
+Chỉ nạp sau khi đã xử lý chỗ rò. Quy trình chuẩn: hút chân không toàn hệ thống 20-30 phút (loại ẩm và kiểm tra giữ áp), nếu tụt áp thì tìm rò bằng nitơ + bọt xà phòng hoặc đèn UV, khắc phục xong mới nạp đúng khối lượng gam in trên tem xe (nạp thừa/nạp thiếu đều kém lạnh và hại lốc).
+
+3. VỆ SINH DÀN NÓNG
+Dàn nóng trước két nước bám bụi, lá cây, xác côn trùng làm giảm tản nhiệt. Xịt rửa bằng nước áp lực vừa từ trong ra ngoài mỗi 6 tháng, nắn lại lá tản nhiệt bị gập. Dàn nóng móp nặng do đá văng cần thay để lốc không quá tải.
+
+4. VỆ SINH DÀN LẠNH
+- Nhẹ: xịt bọt vệ sinh qua đường thoát nước + thay lọc gió, khử mùi ozone 15 phút.
+- Nặng (bùn, mốc dày, chuột làm tổ): tháo táp-lô vệ sinh toàn bộ, thay van tiết lưu nếu tắc. Xưởng báo giá rõ 2 phương án để khách chọn, không tự ý tháo táp-lô khi chưa được duyệt (công tháo lắp lớn).
+
+5. BẢNG ÁP SUẤT THAM KHẢO (MÁY NỔ, NHIỆT ĐỘ NGOÀI ~30 ĐỘ)
+Đường thấp áp: 1,5 - 2,5 bar; đường cao áp: 12 - 17 bar (R134a). Vượt ngưỡng nhiều là dấu hiệu tắc nghẽn, quạt yếu hoặc nạp thừa gas — phải xử lý nguyên nhân, không xả gas bừa ra môi trường.

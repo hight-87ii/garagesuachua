@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Tài khoản - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    .mgr-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding: 22px 0 16px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 18px; }
+    .mgr-head h1 { font-size: 1.5rem; margin: 0; font-weight: 700; letter-spacing: -.02em; display: flex; align-items: center; gap: 10px; }
+    .mgr-head h1 i { color: var(--copper-orange); }
+    .mgr-sub { color: var(--lux-slate); font-size: .86rem; margin: 6px 0 0; }
+    .btn-bronze { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; }
+    .btn-bronze:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+    .tbl-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .tbl-card thead th { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--lux-slate); font-weight: 700; border-bottom: 1px solid var(--lux-hairline); background: var(--lux-ivory); padding: .7rem .75rem; white-space: nowrap; }
+    .tbl-card tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--lux-hairline); vertical-align: middle; font-size: .88rem; }
+    .tbl-card tbody tr:last-child td { border-bottom: none; }
+    .pill { display: inline-block; font-size: .72rem; font-weight: 700; border-radius: 999px; padding: .28em .8em; white-space: nowrap; border: 1px solid; letter-spacing: .02em; }
+    .pill-cust { background: #F1EFEA; color: #5F5A54; border-color: #E4DFD8; }
+    .pill-tech { background: rgba(200,121,65,.1); color: var(--lux-bronze-deep); border-color: rgba(200,121,65,.4); }
+    .pill-mgr { background: rgba(192,57,43,.08); color: #A93226; border-color: rgba(192,57,43,.3); }
+    .pill-admin { background: var(--lux-graphite); color: #fff; border-color: var(--lux-graphite); }
+    .pill-on { background: rgba(46,125,79,.1); color: #2E7D4F; border-color: rgba(46,125,79,.3); }
+    .pill-off { background: rgba(192,57,43,.08); color: #A93226; border-color: rgba(192,57,43,.3); }
+    .tb-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 14px 16px; border-bottom: 1px solid var(--lux-hairline); }
+    .tb-search { position: relative; flex: 1 1 240px; }
+    .tb-search i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--lux-slate); font-size: .85rem; }
+    .tb-search input { width: 100%; height: 40px; border: 1px solid #D8D1C8; background: #fff; border-radius: 999px; padding: 0 16px 0 38px; font-size: .88rem; color: var(--lux-graphite); }
+    .tb-search input:focus { outline: none; border-color: var(--copper-orange); box-shadow: 0 0 0 3px rgba(200,121,65,.13); }
+    .tb-search input::placeholder { color: var(--lux-slate); opacity: 1; }
+    .tb-tools .form-select { height: 40px; border-radius: 999px; border-color: #D8D1C8; font-size: .85rem; width: auto; }
+    .tb-count { color: var(--lux-slate); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+    .info-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--lux-hairline); font-size: .9rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .k { color: var(--lux-slate); font-size: .76rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding-top: 2px; }
+    .info-row .v { font-weight: 600; text-align: right; color: var(--lux-graphite); word-break: break-word; }
+    .modal-lux-head { background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); border-bottom: 1px solid var(--lux-hairline); }
+    .modal-lux-head .modal-title { color: var(--lux-graphite); font-size: 1.02rem; }
+    .modal-lux-head .modal-title i { color: var(--copper-orange); }
+</style>
+
+<div class="mgr-head">
+    <div>
+        <h1><i class="bi bi-people"></i>Tài khoản</h1>
+        <p class="mgr-sub">Toàn bộ tài khoản trong xưởng (trừ bạn) — bấm Sửa để đổi thông tin, vai trò, mật khẩu.</p>
+    </div>
+    <button class="btn btn-bronze" data-bs-toggle="modal" data-bs-target="#createUserModal">
+        <i class="bi bi-person-plus me-1"></i> Thêm tài khoản
+    </button>
+</div>
+
+{% if request.query_params.get('success') %}
+<div class="alert alert-success">Cập nhật thông tin tài khoản thành công!</div>
+{% endif %}
+{% if request.query_params.get('error') == 'username_exists' %}
+<div class="alert alert-danger">Lỗi: Tên đăng nhập đã tồn tại!</div>
+{% endif %}
+{% if request.query_params.get('error') == 'forbidden_role' %}
+<div class="alert alert-danger">Lỗi: Bạn không có quyền gán vai trò này.</div>
+{% endif %}
+
+<div class="tbl-card">
+    <div class="tb-tools">
+        <div class="tb-search">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <input type="text" id="userSearch" placeholder="Tìm tên đăng nhập, họ tên, SĐT..." aria-label="Tìm tài khoản" autocomplete="off">
+        </div>
+        <select id="roleFilter" class="form-select" aria-label="Lọc vai trò">
+            <option value="">Mọi vai trò</option>
+            <option value="customer">Khách hàng</option>
+            <option value="technician">Kỹ thuật viên</option>
+            <option value="manager">Quản lý</option>
+            <option value="admin">Admin</option>
+        </select>
+        <select id="activeFilter" class="form-select" aria-label="Lọc trạng thái">
+            <option value="">Mọi trạng thái</option>
+            <option value="1">Đang hoạt động</option>
+            <option value="0">Đã khóa</option>
+        </select>
+        <small class="tb-count" id="userCount">{{ users|length }} tài khoản</small>
+    </div>
+    <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0" id="userTable">
+        <thead>
+            <tr>
+                <th>Tên đăng nhập</th>
+                <th>Họ và tên</th>
+                <th>SĐT</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr class="user-row" data-role="{{ u.role }}" data-active="{{ 0 if u.is_active == 0 else 1 }}" data-search="{{ (u.username ~ ' ' ~ (u.full_name or '') ~ ' ' ~ (u.phone or '') ~ ' ' ~ (u.email or ''))|lower }}">
+                <td class="fw-bold text-nowrap">{{ u.username }}</td>
+                <td>{{ u.full_name }}</td>
+                <td class="text-nowrap">{{ u.phone or '—' }}</td>
+                <td>{{ u.email or '—' }}</td>
+                <td>
+                    {% if u.role == 'customer' %}
+                    <span class="pill pill-cust">Khách hàng</span>
+                    {% elif u.role == 'technician' %}
+                    <span class="pill pill-tech">Kỹ thuật viên</span>
+                    {% elif u.role == 'manager' %}
+                    <span class="pill pill-mgr">Quản lý</span>
+                    {% else %}
+                    <span class="pill pill-admin">{{ u.role }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if u.is_active == 0 %}
+                    <span class="pill pill-off">Đã khóa</span>
+                    <div style="font-size:.76rem;color:var(--lux-slate);margin-top:4px;">
+                        {% if u.leave_reason == 'Nghi viec' %}Đã nghỉ việc
+                        {% elif u.leave_reason == 'Di hoc nang cao' %}Đi học nâng cao
+                        {% elif u.leave_reason == 'Trai nghiem' %}Trải nghiệm bên ngoài
+                        {% elif u.leave_reason %}Lý do khác{% endif %}{% if u.leave_date %} · từ {{ u.leave_date[8:10] }}/{{ u.leave_date[5:7] }}/{{ u.leave_date[0:4] }}{% endif %}
+                        {% if u.return_date %}<br>Đã quay lại: {{ u.return_date[8:10] }}/{{ u.return_date[5:7] }}/{{ u.return_date[0:4] }}{% endif %}
+                    </div>
+                    {% else %}
+                    <span class="pill pill-on">{% if u.role == 'customer' %}Đang hoạt động{% else %}Đang làm việc{% endif %}</span>
+                    {% endif %}
+                </td>
+                <td class="text-nowrap">
+                    <button class="btn btn-sm btn-outline-dark rounded-pill px-3 me-1" data-bs-toggle="modal" data-bs-target="#infoUserModal{{ u.id }}" title="Xem thông tin">
+                        <i class="bi bi-eye me-1"></i>Xem
+                    </button>
+                    <button class="btn btn-sm btn-bronze rounded-pill px-3 me-1" data-bs-toggle="modal" data-bs-target="#editUserModal{{ u.id }}">
+                        Sửa
+                    </button>
+                    {% if u.is_active == 0 %}
+                    <form action="/manager/users/toggle-active" method="POST" class="d-inline" onsubmit="return confirm('Mở lại tài khoản {{ u.username }} (quay lại làm việc)?');">
+                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                        <input type="hidden" name="action" value="unlock">
+                        <button type="submit" class="btn btn-sm rounded-pill px-3" style="background:#2E7D4F;border:1px solid #2E7D4F;color:#fff;font-weight:700;"><i class="bi bi-unlock me-1"></i>Mở lại</button>
+                    </form>
+                    {% else %}
+                    <button class="btn btn-sm rounded-pill px-3" style="background:#fff;border:1px solid rgba(192,57,43,.5);color:#A93226;font-weight:700;" data-bs-toggle="modal" data-bs-target="#lockUserModal" data-uid="{{ u.id }}" data-uname="{{ u.username }}"><i class="bi bi-lock me-1"></i>Khóa</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center py-4" style="color:var(--lux-slate);">Chưa có tài khoản nào khác.</td>
+            </tr>
+            {% endfor %}
+            <tr id="userNoResult" style="display:none;">
+                <td colspan="6" class="text-center py-4" style="color:var(--lux-slate);"><i class="bi bi-search d-block fs-4 mb-1"></i>Không tìm thấy tài khoản nào khớp.</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<script>
+(function () {
+    var q = document.getElementById('userSearch');
+    if (!q) return;
+    var roleSel = document.getElementById('roleFilter');
+    var activeSel = document.getElementById('activeFilter');
+    var rows = Array.prototype.slice.call(document.querySelectorAll('#userTable .user-row'));
+    var noRes = document.getElementById('userNoResult');
+    var countEl = document.getElementById('userCount');
+    function norm(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd'); }
+    function apply() {
+        var key = norm(q.value.trim()), role = roleSel.value, act = activeSel.value, vis = 0;
+        rows.forEach(function (r) {
+            var ok = (!key || norm(r.dataset.search).indexOf(key) !== -1) && (!role || r.dataset.role === role) && (!act || r.dataset.active === act);
+            r.style.display = ok ? '' : 'none';
+            if (ok) vis++;
+        });
+        if (noRes) noRes.style.display = vis === 0 && rows.length > 0 ? '' : 'none';
+        if (countEl) countEl.textContent = vis + ' tài khoản';
+    }
+    q.addEventListener('input', apply);
+    roleSel.addEventListener('change', apply);
+    activeSel.addEventListener('change', apply);
+})();
+</script>
+
+{% for u in users %}
+            <!-- Modal Xem Thông Tin -->
+            <div class="modal fade" id="infoUserModal{{ u.id }}" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header modal-lux-head">
+                            <h5 class="modal-title"><i class="bi bi-person-vcard me-2"></i>{{ u.full_name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="info-row"><span class="k">Tên đăng nhập</span><span class="v">{{ u.username }}</span></div>
+                                    <div class="info-row"><span class="k">Số điện thoại</span><span class="v">{{ u.phone or 'Chưa cập nhật' }}</span></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-row"><span class="k">Email</span><span class="v">{{ u.email or 'Chưa cập nhật' }}</span></div>
+                                    <div class="info-row"><span class="k">Địa chỉ</span><span class="v">{{ u.address or 'Chưa cập nhật' }}</span></div>
+                                    <div class="info-row"><span class="k">Vai trò</span><span class="v">
+                                        {% if u.role == 'customer' %}Khách hàng
+                                        {% elif u.role == 'technician' %}Kỹ thuật viên
+                                        {% elif u.role == 'manager' %}Quản lý
+                                        {% else %}{{ u.role }}{% endif %}
+                                    </span></div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            
+                            {% if u.role == 'customer' %}
+                                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-car-front"></i> Danh sách Xe & Lịch sử sửa chữa</h6>
+                                {% if u.vehicles %}
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Biển số</th>
+                                                    <th>Hãng/Mẫu</th>
+                                                    <th class="text-center">Số lần sửa</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for v in u.vehicles %}
+                                                <tr>
+                                                    <td class="fw-bold">{{ v.license_plate }}</td>
+                                                    <td>{{ v.make }} {{ v.model }}</td>
+                                                    <td class="text-center">{{ v.repair_orders | length }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted fst-italic">Khách hàng này chưa có xe nào trong hệ thống.</p>
+                                {% endif %}
+                                
+                            {% elif u.role == 'technician' %}
+                                <h6 class="fw-bold text-success mb-3"><i class="bi bi-person-badge"></i> Hồ sơ Kỹ thuật viên</h6>
+                                {% if u.employee_profile %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Chức danh:</strong> {{ u.employee_profile.job_title or 'Chưa cập nhật' }}</p>
+                                            <p><strong>Kinh nghiệm:</strong> {{ u.employee_profile.years_of_experience or '0' }} năm</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Khu vực làm việc:</strong> {{ u.employee_profile.work_area or 'Chưa cập nhật' }}</p>
+                                            <p><strong>Đánh giá (Sao):</strong> <i class="bi bi-star-fill text-warning"></i> {{ u.employee_profile.customer_rating_score or 'N/A' }}</p>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <p><strong>Kỹ năng chuyên môn:</strong> {{ u.employee_profile.technical_skills or 'Chưa cập nhật' }}</p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted fst-italic">Kỹ thuật viên này chưa cập nhật hồ sơ năng lực.</p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Sửa Thông Tin -->
+            <div class="modal fade" id="editUserModal{{ u.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="/manager/users/update" method="POST" class="modal-content">
+                        <div class="modal-header modal-lux-head">
+                            <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Sửa: {{ u.username }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="user_id" value="{{ u.id }}">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Họ và tên <span class="text-danger">*</span></label>
+                                <input type="text" name="full_name" class="form-control" value="{{ u.full_name }}" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Số điện thoại</label>
+                                    <input type="text" name="phone" class="form-control" value="{{ u.phone or '' }}" placeholder="Để liên hệ khi có việc">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Email</label>
+                                    <input type="email" name="email" class="form-control" value="{{ u.email or '' }}" placeholder="VD: ten@email.com">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Địa chỉ</label>
+                                <input type="text" name="address" class="form-control" value="{{ u.address or '' }}" placeholder="Số nhà, đường, phường/xã...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Vai trò</label>
+                                <select name="role" class="form-select">
+                                    <option value="{{ u.role }}" selected>
+                                        {% if u.role == 'customer' %}Khách hàng{% elif u.role == 'technician' %}Kỹ thuật viên{% elif u.role == 'manager' %}Quản lý{% else %}{{ u.role }}{% endif %} (hiện tại)
+                                    </option>
+                                    <option value="customer">Khách hàng</option>
+                                    {% if user.get('role') == 'admin' %}
+                                    <option value="technician">Kỹ thuật viên</option>
+                                    <option value="manager">Quản lý</option>
+                                    <option value="admin">Admin</option>
+                                    {% endif %}
+                                </select>
+                                {% if user.get('role') != 'admin' %}
+                                <div class="form-text">Tài khoản quản lý chỉ được chuyển về Khách hàng. Nâng lên thợ/quản lý cần admin.</div>
+                                {% endif %}
+                            </div>
+                            <hr>
+                            <div class="mb-0">
+                                <label class="form-label fw-semibold" style="color:#A93226;">Đổi mật khẩu (để trống nếu giữ nguyên)</label>
+                                <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới..." autocomplete="new-password">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-bronze rounded-pill px-4">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+<!-- Modal Thêm Tài Khoản -->
+<div class="modal fade" id="createUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/manager/users/create" method="POST" class="modal-content">
+            <div class="modal-header modal-lux-head">
+                <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Thêm tài khoản mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Tên đăng nhập <span class="text-danger">*</span></label>
+                    <input type="text" name="username" class="form-control" required autocomplete="off">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Mật khẩu <span class="text-danger">*</span></label>
+                    <input type="password" name="password" class="form-control" required autocomplete="new-password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Họ và tên <span class="text-danger">*</span></label>
+                    <input type="text" name="full_name" class="form-control" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Số điện thoại</label>
+                        <input type="text" name="phone" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="email" name="email" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-0">
+                    <label class="form-label fw-semibold">Vai trò <span class="text-danger">*</span></label>
+                    <select name="role" class="form-select">
+                        <option value="customer">Khách hàng</option>
+                        {% if user.get('role') == 'admin' %}
+                        <option value="technician">Kỹ thuật viên</option>
+                        <option value="manager">Quản lý</option>
+                        <option value="admin">Admin</option>
+                        {% endif %}
+                    </select>
+                    {% if user.get('role') != 'admin' %}
+                    <div class="form-text">Tài khoản quản lý chỉ được tạo tài khoản Khách hàng. Tạo thợ/quản lý cần admin.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-bronze rounded-pill px-4">Tạo tài khoản</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Khóa tài khoản (dùng chung) -->
+<div class="modal fade" id="lockUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/manager/users/toggle-active" method="POST" class="modal-content">
+            <div class="modal-header modal-lux-head">
+                <h5 class="modal-title"><i class="bi bi-lock me-2"></i>Khóa tài khoản: <span id="lockUname"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="user_id" id="lockUid" value="">
+                <input type="hidden" name="action" value="lock">
+                <div class="p-3 mb-3 rounded" style="background:rgba(192,57,43,.06);border:1px dashed rgba(192,57,43,.4);color:#8A5A32;font-size:.84rem;">Khóa xong tài khoản <strong>không đăng nhập được</strong>, thợ <strong>ẩn khỏi đội ngũ và các ô chọn</strong>. Mở lại bất cứ lúc nào khi quay lại làm.</div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="lockReason">Lý do <span class="text-danger">*</span></label>
+                    <select name="leave_reason" id="lockReason" class="form-select" required>
+                        <option value="Nghi viec">Đã nghỉ việc</option>
+                        <option value="Di hoc nang cao">Đi học nâng cao / đào tạo thêm</option>
+                        <option value="Trai nghiem">Trải nghiệm bên ngoài (có thể quay lại)</option>
+                        <option value="Khac">Lý do khác</option>
+                    </select>
+                </div>
+                <div class="mb-0">
+                    <label class="form-label fw-semibold" for="lockDate">Ngày nghỉ <span class="text-danger">*</span></label>
+                    <input type="date" name="leave_date" id="lockDate" class="form-control" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn rounded-pill px-4" style="background:#A93226;border:1px solid #A93226;color:#fff;font-weight:700;">Khóa tài khoản</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function () {
+    var modal = document.getElementById('lockUserModal');
+    if (!modal) return;
+    modal.addEventListener('show.bs.modal', function (ev) {
+        var btn = ev.relatedTarget;
+        if (!btn) return;
+        document.getElementById('lockUid').value = btn.dataset.uid || '';
+        document.getElementById('lockUname').textContent = btn.dataset.uname || '';
+        var d = document.getElementById('lockDate');
+        if (d && !d.value) {
+            var now = new Date();
+            d.value = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+        }
+    });
+})();
+</script>
+
+{% endblock %}

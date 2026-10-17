@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hóa Đơn Dịch Vụ - HD-{{ "{:04d}".format(invoice.id) }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; color: #000; background-color: #f8f9fa; }
+        .invoice-container { max-width: 900px; margin: 2rem auto; background: #fff; padding: 40px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .header-logo { font-size: 26px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+        .invoice-title { text-align: center; font-size: 28px; font-weight: bold; margin: 20px 0 10px; text-transform: uppercase; }
+        .invoice-status { text-align: center; font-size: 16px; margin-bottom: 30px; font-style: italic; }
+        .section-title { font-size: 16px; font-weight: bold; border-bottom: 2px solid #000; margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px; text-transform: uppercase; }
+        
+        .info-table { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
+        .info-table td { padding: 4px 0; vertical-align: top; }
+        .info-table td:nth-child(odd) { font-weight: bold; width: 20%; }
+        .info-table td:nth-child(even) { width: 30%; }
+        
+        .items-table { width: 100%; margin-bottom: 20px; border-collapse: collapse; text-align: center; }
+        .items-table th, .items-table td { border: 1px solid #000; padding: 8px; }
+        .items-table th { background-color: #f1f1f1; font-weight: bold; }
+        .items-table td.text-start { text-align: left; }
+        .items-table td.text-end { text-align: right; }
+
+        .summary-table { width: 40%; margin-left: auto; margin-bottom: 20px; border-collapse: collapse; }
+        .summary-table td { padding: 6px; }
+        .summary-table td:first-child { font-weight: bold; text-align: left; }
+        .summary-table td:last-child { text-align: right; font-weight: bold; }
+        .total-row { border-top: 2px solid #000; font-size: 1.1em; color: #d9534f; }
+        
+        .checkbox-box { display: inline-block; width: 14px; height: 14px; border: 1px solid #000; margin-right: 8px; vertical-align: middle; text-align: center; line-height: 14px; font-size: 12px; font-weight: bold; }
+        
+        .signature-area { margin-top: 50px; display: flex; justify-content: space-around; text-align: center; }
+        .signature-box { width: 40%; }
+        .signature-space { height: 100px; }
+        
+        .no-print-bar { text-align: center; padding: 15px; background: #e9ecef; margin-bottom: 20px; border-radius: 8px; }
+        
+        @media print {
+            body { background: none; margin: 0; }
+            .invoice-container { box-shadow: none; margin: 0; padding: 0; width: 100%; max-width: none; }
+            .no-print-bar { display: none !important; }
+            @page { margin: 1cm; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-container">
+    <div class="no-print-bar d-print-none">
+        <button onclick="window.print()" class="btn px-4 fw-bold" style="background:#1E1E1E;color:#fff;border:none;"><i class="bi bi-printer me-1"></i>In hóa đơn</button>
+        <button onclick="window.history.back()" class="btn btn-outline-secondary ms-2">Trở về</button>
+    </div>
+
+    <!-- Header & Info -->
+    <div class="d-flex justify-content-between border-bottom pb-3">
+        <div>
+            <div class="header-logo">THREEH WORKSHOP</div>
+            <div>Địa chỉ: Tháp đôi Prime Thái Nguyên, số 1 Hoàng Văn Thụ, Phan Đình Phùng, Thái Nguyên</div>
+            <div>Điện thoại: 0981.888.888</div>
+            <div>Email: support@threeh.vn</div>
+            <div>Mã số thuế: 0123456789</div>
+            <div>Kỹ thuật viên: {{ invoice.repair_order.technician.full_name if invoice.repair_order.technician else 'Không xác định' }}</div>
+        </div>
+        <div class="text-end">
+            <h4 class="mb-1 text-danger fw-bold">Mã HĐ: HD-{{ "{:04d}".format(invoice.id) }}</h4>
+            <div>Ngày lập: {{ invoice.created_at.strftime('%d/%m/%Y') }}</div>
+            <div class="mt-2">
+                <strong>Trạng thái:</strong><br>
+                <span class="checkbox-box">{{ '✓' if invoice.status == 'Unpaid' else '' }}</span> Chưa thanh toán<br>
+                <span class="checkbox-box">{{ '✓' if invoice.status == 'Paid' else '' }}</span> Đã thanh toán
+            </div>
+        </div>
+    </div>
+
+    <div class="invoice-title">HÓA ĐƠN DỊCH VỤ SỬA CHỮA Ô TÔ</div>
+
+    <!-- I. THÔNG TIN KHÁCH HÀNG & XE -->
+    <div class="section-title">1. THÔNG TIN KHÁCH HÀNG & XE</div>
+    <table class="info-table">
+        <tr>
+            <td>Khách hàng:</td>
+            <td>{{ invoice.repair_order.vehicle.owner.full_name or 'Khách vãng lai' }}</td>
+            <td>Biển số xe:</td>
+            <td style="font-size: 1.1em; font-weight: bold;">{{ invoice.repair_order.vehicle.license_plate }}</td>
+        </tr>
+        <tr>
+            <td>Số điện thoại:</td>
+            <td>{{ invoice.repair_order.vehicle.owner.phone or '(Chưa cập nhật)' }}</td>
+            <td>Hãng / Dòng xe:</td>
+            <td>{{ invoice.repair_order.vehicle.make or '(Chưa cập nhật)' }} {{ invoice.repair_order.vehicle.model or '' }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ invoice.repair_order.vehicle.owner.email or '(Chưa cập nhật)' }}</td>
+            <td>Năm sản xuất:</td>
+            <td>{{ invoice.repair_order.vehicle.manufacture_year or '(Chưa cập nhật)' }}</td>
+        </tr>
+        <tr>
+            <td>Loại xe:</td>
+            <td>{{ invoice.repair_order.vehicle.color or '(Trống)' }} / {{ invoice.repair_order.vehicle.fuel_type or '(Trống)' }}</td>
+            <td>Số VIN:</td>
+            <td>{{ invoice.repair_order.vehicle.vin or '(Chưa cập nhật)' }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Số KM lúc nhận:</td>
+            <td>{{ "{:,}".format(invoice.repair_order.current_odo) if invoice.repair_order.current_odo else '(Chưa cập nhật)' }}</td>
+        </tr>
+        <tr>
+            <td>Ngày sửa xong:</td>
+            <td>{{ invoice.repair_order.completed_at.strftime('%d/%m/%Y %H:%M') if invoice.repair_order.completed_at else '(Chưa cập nhật)' }}</td>
+            <td>Số KM sau sửa:</td>
+            <td>{{ "{:,}".format(invoice.repair_order.final_odo) if invoice.repair_order.final_odo else '(Chưa cập nhật)' }}</td>
+        </tr>
+    </table>
+
+    <!-- II. CHI TIẾT DỊCH VỤ & PHỤ TÙNG -->
+    <div class="section-title">2. CHI TIẾT SỬA CHỮA & PHỤ TÙNG THAY THẾ</div>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th style="width: 5%">STT</th>
+                <th style="width: 45%" class="text-start">Nội dung / Tên phụ tùng</th>
+                <th style="width: 10%">ĐVT</th>
+                <th style="width: 10%">SL</th>
+                <th style="width: 15%" class="text-end">Đơn giá (VNĐ)</th>
+                <th style="width: 15%" class="text-end">Thành tiền (VNĐ)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set parts_total = namespace(value=0) %}
+            {% for item in invoice.repair_order.used_parts %}
+                {% set parts_total.value = parts_total.value + (item.quantity * item.unit_price) %}
+            {% endfor %}
+            
+            {% set calc_subtotal = invoice.subtotal %}
+            {% if not calc_subtotal or calc_subtotal == 0 %}
+                {% set calc_subtotal = invoice.total_amount - (invoice.vat_amount or 0) + (invoice.discount or 0) %}
+            {% endif %}
+            
+            {% set service_cost = calc_subtotal - parts_total.value %}
+            {% if service_cost < 0 %}
+                {% set service_cost = invoice.repair_order.estimated_cost or 0 %}
+            {% endif %}
+
+            <!-- Tiền công sửa chữa -->
+            <tr>
+                <td>1</td>
+                <td class="text-start">Công bảo dưỡng / sửa chữa và các dịch vụ khác</td>
+                <td>Gói</td>
+                <td>1</td>
+                <td class="text-end">{{ "{:,.0f}".format(service_cost) }}</td>
+                <td class="text-end">{{ "{:,.0f}".format(service_cost) }}</td>
+            </tr>
+            <!-- Phụ tùng thay thế -->
+            {% for item in invoice.repair_order.used_parts %}
+            <tr>
+                <td>{{ loop.index + 1 }}</td>
+                <td class="text-start">
+                    <strong>{{ item.part.name if item.part else 'Phụ tùng' }}</strong><br>
+                    <small>
+                        Mã: {{ item.part.part_number if item.part and item.part.part_number else '(Chưa có)' }}
+                        {% if item.part and item.part.brand %} | Hãng: {{ item.part.brand }}{% endif %}
+                        {% if item.part and item.part.origin %} | XX: {{ item.part.origin }}{% endif %}
+                        {% if item.part and item.part.oem_code %}<br>OEM: {{ item.part.oem_code }}{% endif %}
+                        {% if item.part and item.part.warranty_period %}<br>Bảo hành: {{ item.part.warranty_period }}{% endif %}
+                    </small>
+                </td>
+                <td>Cái</td>
+                <td>{{ item.quantity }}</td>
+                <td class="text-end">{{ "{:,.0f}".format(item.unit_price) }}</td>
+                <td class="text-end">{{ "{:,.0f}".format(item.quantity * item.unit_price) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if invoice.repair_order.completion_notes %}
+    <div class="section-title">Biên bản nghiệm thu sau sửa chữa</div>
+    <p><strong>Số ODO sau sửa:</strong> {{ "{:,}".format(invoice.repair_order.final_odo) if invoice.repair_order.final_odo else '---' }} km</p>
+    <p style="white-space: pre-wrap;">{{ invoice.repair_order.completion_notes }}</p>
+    {% endif %}
+
+    <!-- III. TỔNG KẾT THANH TOÁN -->
+    <div class="row">
+        <div class="col-6">
+            <div class="section-title">3. THÔNG TIN BẢO HÀNH & THANH TOÁN</div>
+            <p><strong>Nội dung bảo hành:</strong><br>{{ invoice.warranty_info }}</p>
+            
+            <p class="mt-3 mb-1"><strong>Phương thức thanh toán:</strong></p>
+            <div>
+                <span class="checkbox-box">{{ '✓' if invoice.payment_method == 'Tiền mặt' else '' }}</span> Tiền mặt<br>
+                <span class="checkbox-box">{{ '✓' if invoice.payment_method == 'Chuyển khoản' else '' }}</span> Chuyển khoản<br>
+                <span class="checkbox-box">{{ '✓' if invoice.payment_method == 'Ví điện tử' else '' }}</span> Ví điện tử<br>
+                <span class="checkbox-box">{{ '✓' if invoice.payment_method == 'Thẻ ngân hàng' else '' }}</span> Thẻ ngân hàng<br>
+            </div>
+        </div>
+        
+        <div class="col-6">
+            <table class="summary-table">
+                <tr>
+                    <td>Tạm tính:</td>
+                    <td>{{ "{:,.0f}".format(invoice.subtotal) }} VNĐ</td>
+                </tr>
+                <tr>
+                    <td>Thuế VAT (10%):</td>
+                    <td>{{ "{:,.0f}".format(invoice.vat_amount) }} VNĐ</td>
+                </tr>
+                <tr>
+                    <td>Giảm giá:</td>
+                    <td>{{ "{:,.0f}".format(invoice.discount) }} VNĐ</td>
+                </tr>
+                <tr class="total-row">
+                    <td>TỔNG THANH TOÁN:</td>
+                    <td>{{ "{:,.0f}".format(invoice.total_amount) }} VNĐ</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- IV. CHỮ KÝ -->
+    <div class="signature-area">
+        <div class="signature-box">
+            <strong>NGƯỜI LẬP HÓA ĐƠN</strong><br>
+            <small>(Ký và ghi rõ họ tên)</small>
+            <div class="signature-space"></div>
+            <div class="text-uppercase fw-bold">{{ invoice.repair_order.technician.full_name if invoice.repair_order.technician else '' }}</div>
+        </div>
+        <div class="signature-box">
+            <strong>KHÁCH HÀNG</strong><br>
+            <small>(Ký và ghi rõ họ tên)</small>
+            <div class="signature-space"></div>
+            <div class="text-uppercase fw-bold">{{ invoice.repair_order.vehicle.owner.full_name or '' }}</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

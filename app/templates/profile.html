@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+
+{% block title %}Hồ sơ cá nhân - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    .profile-hero {
+        background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 55%, #A65E2F 130%);
+        border-radius: 20px;
+        color: #fff;
+        padding: 28px;
+        position: relative;
+        overflow: hidden;
+        margin-top: 16px;
+    }
+    .profile-hero::after {
+        content: "";
+        position: absolute;
+        width: 340px;
+        height: 340px;
+        right: -110px;
+        top: -110px;
+        background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .avatar-circle {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.18);
+        border: 2px solid rgba(255,255,255,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 800;
+        flex: 0 0 84px;
+        overflow: hidden;
+    }
+    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.25);
+        padding: 5px 13px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .profile-card {
+        background: #fff;
+        border: 1px solid #ececec;
+        border-radius: 18px;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.05);
+        margin-bottom: 18px;
+        overflow: hidden;
+    }
+    .profile-card-head {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fcfcfc;
+    }
+    .profile-card-head i {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(200,121,65,0.12);
+        color: var(--copper-orange);
+    }
+    .profile-card-body { padding: 20px; }
+    .form-label { font-weight: 600; font-size: 0.88rem; color: #475569; }
+    .form-control, .form-select { border-radius: 12px; border-color: #e2e8f0; }
+    .form-control:focus, .form-select:focus { border-color: #C87941; box-shadow: 0 0 0 4px rgba(200,121,65,0.14); }
+    .check-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px 14px; }
+    .save-bar {
+        position: sticky;
+        bottom: 16px;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(8px);
+        border: 1px solid #ececec;
+        border-radius: 16px;
+        padding: 12px 16px;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.1);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .nav-pills-profile .nav-link { border-radius: 12px; color: #334155; font-weight: 600; }
+    .nav-pills-profile .nav-link.active { background: #1e1e1e; color: #fff; }
+    @media (max-width: 767.98px) {
+        .profile-hero { padding: 20px; }
+    }
+</style>
+
+<!-- HERO -->
+<div class="profile-hero">
+    <div class="d-flex gap-3 align-items-center position-relative" style="z-index:1; flex-wrap: wrap;">
+        <div class="avatar-circle">
+            {% if db_user.employee_profile and db_user.employee_profile.avatar_url %}
+            <img src="{{ db_user.employee_profile.avatar_url }}" alt="avatar">
+            {% else %}
+            {{ (db_user.full_name or db_user.username or 'U')[:1]|upper }}
+            {% endif %}
+        </div>
+        <div class="flex-grow-1" style="min-width: 220px;">
+            <h3 class="mb-1 fw-bold">{{ db_user.full_name or db_user.username }}</h3>
+            <div class="d-flex gap-2 flex-wrap align-items-center">
+                <span class="role-badge">
+                    {% if db_user.role == 'technician' %}<i class="bi bi-wrench"></i> Kỹ thuật viên
+                    {% elif db_user.role == 'manager' %}<i class="bi bi-briefcase"></i> Quản lý
+                    {% elif db_user.role == 'admin' %}<i class="bi bi-shield-lock"></i> Admin
+                    {% else %}<i class="bi bi-person"></i> Khách hàng{% endif %}
+                </span>
+                <span class="small" style="opacity:.85">@{{ db_user.username }}</span>
+            </div>
+            <div class="small mt-2" style="opacity:.9">
+                {% if db_user.phone %}<span class="me-3"><i class="bi bi-telephone me-1"></i>{{ db_user.phone }}</span>{% endif %}
+                {% if db_user.email %}<span><i class="bi bi-envelope me-1"></i>{{ db_user.email }}</span>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if request.query_params.get('success') %}
+<div class="alert alert-success mt-3 mb-0">Cập nhật hồ sơ thành công!</div>
+{% endif %}
+
+<form action="/profile/update" method="POST" class="mt-3">
+<div class="row g-3">
+    <!-- CỘT TRÁI: MENU NHANH -->
+    <div class="col-lg-3">
+        <div class="profile-card">
+            <div class="profile-card-head"><i class="bi bi-grid"></i> Hồ sơ</div>
+            <div class="profile-card-body">
+                <div class="nav flex-column nav-pills nav-pills-profile gap-1" role="tablist">
+                    <a class="nav-link active" href="#sec-account">Thông tin chung</a>
+                    <a class="nav-link" href="#sec-contact">Liên hệ</a>
+                    {% if db_user.role in ['technician', 'manager'] %}
+                    <a class="nav-link" href="#sec-job">Nghề nghiệp</a>
+                    <a class="nav-link" href="#sec-skill">Chuyên môn</a>
+                    <a class="nav-link" href="#sec-edu">Trình độ</a>
+                    <a class="nav-link" href="#sec-work">Kinh nghiệm</a>
+                    {% endif %}
+                    <a class="nav-link" href="#sec-security">Bảo mật</a>
+                </div>
+                <hr>
+                <div class="small text-muted">
+                    <div class="mb-1"><i class="bi bi-person-badge me-1"></i> {{ db_user.username }}</div>
+                    {% if db_user.role == 'customer' and db_user.vehicles %}
+                    <div><i class="bi bi-car-front me-1"></i> {{ db_user.vehicles|length }} xe đang quản lý</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CỘT PHẢI -->
+    <div class="col-lg-9">
+        <!-- Thông tin chung -->
+        <div class="profile-card" id="sec-account">
+            <div class="profile-card-head"><i class="bi bi-person-vcard"></i> Thông tin chung</div>
+            <div class="profile-card-body">
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input type="text" class="form-control bg-light" value="{{ db_user.username }}" disabled>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Họ và tên *</label>
+                        <input type="text" name="full_name" class="form-control" value="{{ db_user.full_name or '' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" name="phone" class="form-control" value="{{ db_user.phone or '' }}" placeholder="VD: 0981...">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="{{ db_user.email or '' }}" placeholder="VD: ban@email.com">
+                    </div>
+                    {% if db_user.role in ['technician', 'manager'] %}
+                    {% set ep = db_user.employee_profile %}
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Năm sinh</label>
+                        <input type="number" name="dob_year" class="form-control" value="{{ ep.dob_year if ep else '' }}" placeholder="VD: 1995">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Giới tính</label>
+                        <select name="gender" class="form-select">
+                            <option value="">Chọn</option>
+                            <option value="Nam" {% if ep and ep.gender == 'Nam' %}selected{% endif %}>Nam</option>
+                            <option value="Nữ" {% if ep and ep.gender == 'Nữ' %}selected{% endif %}>Nữ</option>
+                        </select>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Liên hệ -->
+        <div class="profile-card" id="sec-contact">
+            <div class="profile-card-head"><i class="bi bi-geo-alt"></i> Thông tin liên hệ</div>
+            <div class="profile-card-body">
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" name="address" class="form-control" value="{{ db_user.address or '' }}" placeholder="Số nhà, đường, phường/xã, tỉnh/thành...">
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" name="birth_date" class="form-control" value="{{ db_user.birth_date or '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Kênh liên hệ ưu tiên</label>
+                        <select name="preferred_contact" class="form-select">
+                            <option value="">-- Chọn kênh --</option>
+                            <option value="phone" {% if db_user.preferred_contact == 'phone' %}selected{% endif %}>Điện thoại</option>
+                            <option value="zalo" {% if db_user.preferred_contact == 'zalo' %}selected{% endif %}>Zalo</option>
+                            <option value="email" {% if db_user.preferred_contact == 'email' %}selected{% endif %}>Email</option>
+                            <option value="facebook" {% if db_user.preferred_contact == 'facebook' %}selected{% endif %}>Facebook</option>
+                        </select>
+                    </div>
+                </div>
+                {% if db_user.role == 'customer' and db_user.vehicles %}
+                <div class="alert alert-light border mb-0">
+                    <strong><i class="bi bi-car-front me-1"></i>Xe của bạn ({{ db_user.vehicles|length }}):</strong>
+                    <span class="text-muted">{{ db_user.vehicles|map(attribute='license_plate')|join(', ') }}</span>
+                    <a href="/my-vehicles" class="ms-2">Quản lý xe →</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if db_user.role in ['technician', 'manager'] %}
+        {% set ep = db_user.employee_profile %}
+        <!-- Nghề nghiệp -->
+        <div class="profile-card" id="sec-job">
+            <div class="profile-card-head"><i class="bi bi-briefcase"></i> Nghề nghiệp</div>
+            <div class="profile-card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Chức danh</label>
+                        <select name="job_title" class="form-select">
+                            <option value="">Chọn chức danh</option>
+                            {% for title in ["Kỹ thuật viên sửa chữa ô tô", "Thợ máy", "Thợ điện – điện lạnh ô tô", "Thợ đồng sơn", "Kỹ thuật viên chẩn đoán lỗi", "Quản đốc xưởng"] %}
+                            <option value="{{ title }}" {% if ep and ep.job_title == title %}selected{% endif %}>{{ title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Garage đang làm việc</label>
+                        <input type="text" name="garage_name" class="form-control" value="{{ ep.garage_name if ep else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Năm kinh nghiệm</label>
+                        <input type="number" name="years_of_experience" class="form-control" value="{{ ep.years_of_experience if ep else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Ngày vào làm</label>
+                        <input type="date" name="hire_date" class="form-control" value="{{ ep.hire_date if ep else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Khu vực làm việc</label>
+                        <input type="text" name="work_area" class="form-control" value="{{ ep.work_area if ep else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Ảnh đại diện (link)</label>
+                        <input type="url" name="avatar_url" class="form-control" value="{{ ep.avatar_url if ep else '' }}" placeholder="https://...">
+                    </div>
+                    <div class="col-12 mb-0">
+                        <label class="form-label">Vị trí từng làm</label>
+                        <input type="text" name="past_roles" class="form-control" value="{{ ep.past_roles if ep else '' }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chuyên môn -->
+        <div class="profile-card" id="sec-skill">
+            <div class="profile-card-head"><i class="bi bi-tools"></i> Chuyên môn kỹ thuật</div>
+            <div class="profile-card-body">
+                {% set skills = (ep.technical_skills or '').split(',') if ep and ep.technical_skills else [] %}
+                <div class="check-grid">
+                    {% for skill in ["Sửa chữa động cơ", "Hộp số", "Hệ thống điện – ECU", "Điều hòa ô tô", "Phanh, gầm, treo", "Xe điện/hybrid", "Chẩn đoán bằng máy scan", "Bảo dưỡng định kỳ"] %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="technical_skills" value="{{ skill }}" id="skill_{{ loop.index }}" {% if skill in skills %}checked{% endif %}>
+                        <label class="form-check-label" for="skill_{{ loop.index }}">{{ skill }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Trình độ -->
+        <div class="profile-card" id="sec-edu">
+            <div class="profile-card-head"><i class="bi bi-mortarboard"></i> Trình độ & chứng chỉ</div>
+            <div class="profile-card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Trường đào tạo</label>
+                        <input type="text" name="education_school" class="form-control" value="{{ ep.education_school if ep else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Bằng cấp</label>
+                        <select name="education_degree" class="form-select">
+                            <option value="">Chọn bằng cấp</option>
+                            <option value="Trung cấp" {% if ep and ep.education_degree == 'Trung cấp' %}selected{% endif %}>Trung cấp</option>
+                            <option value="Cao đẳng" {% if ep and ep.education_degree == 'Cao đẳng' %}selected{% endif %}>Cao đẳng</option>
+                            <option value="Đại học" {% if ep and ep.education_degree == 'Đại học' %}selected{% endif %}>Đại học</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Chứng chỉ nghề</label>
+                        {% set trade_certs = (ep.trade_certificates or '').split(',') if ep and ep.trade_certificates else [] %}
+                        <div class="d-flex flex-wrap gap-3">
+                            {% for cert in ["Sửa chữa cơ khí", "Điện ô tô", "Đồng sơn", "Chẩn đoán"] %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="trade_certificates" value="{{ cert }}" id="cert_{{ loop.index }}" {% if cert in trade_certs %}checked{% endif %}>
+                                <label class="form-check-label" for="cert_{{ loop.index }}">{{ cert }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Đào tạo hãng xe</label>
+                        <input type="text" name="brand_certificates" class="form-control" value="{{ ep.brand_certificates if ep else '' }}" placeholder="VD: Toyota, Hyundai...">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">An toàn lao động</label>
+                        <input type="text" name="safety_certificates" class="form-control" value="{{ ep.safety_certificates if ep else '' }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kinh nghiệm + liên hệ công việc -->
+        <div class="profile-card" id="sec-work">
+            <div class="profile-card-head"><i class="bi bi-clock-history"></i> Kinh nghiệm & liên hệ công việc</div>
+            <div class="profile-card-body">
+                <div class="mb-3">
+                    <label class="form-label">Garage từng làm</label>
+                    <textarea name="past_garages" class="form-control" rows="2">{{ ep.past_garages if ep else '' }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Loại xe đã từng sửa</label>
+                    {% set vtypes = (ep.vehicle_types or '').split(',') if ep and ep.vehicle_types else [] %}
+                    <div class="d-flex flex-wrap gap-3">
+                        {% for vt in ["Xe Nhật", "Xe Hàn", "Xe Đức", "Xe Mỹ", "Xe tải"] %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="vehicle_types" value="{{ vt }}" id="vt_{{ loop.index }}" {% if vt in vtypes %}checked{% endif %}>
+                            <label class="form-check-label" for="vt_{{ loop.index }}">{{ vt }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Dự án nổi bật</label>
+                    <textarea name="key_projects" class="form-control" rows="2">{{ ep.key_projects if ep else '' }}</textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Zalo</label>
+                        <input type="text" name="zalo_link" class="form-control" value="{{ ep.zalo_link if ep else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Facebook</label>
+                        <input type="text" name="facebook_link" class="form-control" value="{{ ep.facebook_link if ep else '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">LinkedIn</label>
+                        <input type="text" name="linkedin_link" class="form-control" value="{{ ep.linkedin_link if ep else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Địa chỉ garage</label>
+                        <input type="text" name="garage_address" class="form-control" value="{{ ep.garage_address if ep else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Điểm đánh giá (0-5)</label>
+                        <input type="number" step="0.1" max="5" min="0" name="customer_rating_score" class="form-control" value="{{ ep.customer_rating_score if ep else '' }}">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Phản hồi khách hàng</label>
+                        <textarea name="feedback_summary" class="form-control" rows="2">{{ ep.feedback_summary if ep else '' }}</textarea>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Mạng xã hội</label>
+                        <input type="text" name="social_profiles" class="form-control" value="{{ ep.social_profiles if ep else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Video hướng dẫn (link)</label>
+                        <input type="text" name="tutorial_videos" class="form-control" value="{{ ep.tutorial_videos if ep else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Bài viết kỹ thuật (link)</label>
+                        <input type="text" name="tech_posts" class="form-control" value="{{ ep.tech_posts if ep else '' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Cộng đồng ô tô</label>
+                        <input type="text" name="community_participation" class="form-control" value="{{ ep.community_participation if ep else '' }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Bảo mật -->
+        <div class="profile-card" id="sec-security">
+            <div class="profile-card-head"><i class="bi bi-shield-lock"></i> Bảo mật</div>
+            <div class="profile-card-body">
+                <label class="form-label">Đổi mật khẩu mới (để trống nếu không đổi)</label>
+                <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới..." autocomplete="new-password">
+            </div>
+        </div>
+
+        <div class="save-bar">
+            <span class="text-muted small"><i class="bi bi-info-circle me-1"></i>Kiểm tra kỹ trước khi lưu thay đổi.</span>
+            <button type="submit" class="btn btn-dark px-4 rounded-pill"><i class="bi bi-check2-circle me-1"></i>Lưu thay đổi</button>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

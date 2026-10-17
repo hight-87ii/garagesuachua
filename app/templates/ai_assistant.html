@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block title %}AI Diagnostic Assistant - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== Light luxury — AI Diagnostic Assistant ===== */
+    .pg-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 20px; }
+    .pg-head h1 { font-size: 1.65rem; margin: 0; font-weight: 650; letter-spacing: -.02em; }
+    .pg-sub { color: var(--lux-slate); font-size: .86rem; margin: 6px 0 0; max-width: 640px; }
+    .live-dot { display: inline-flex; align-items: center; gap: 7px; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #2E7D4F; background: rgba(46,125,79,.09); border: 1px solid rgba(46,125,79,.25); border-radius: 999px; padding: .35em .9em; }
+    .live-dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #2E7D4F; box-shadow: 0 0 0 0 rgba(46,125,79,.5); animation: pulse 1.8s infinite; }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 7px rgba(46,125,79,0); } 100% { box-shadow: 0 0 0 0 rgba(46,125,79,0); } }
+
+    .panel { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 16px; box-shadow: 0 1px 3px rgba(30,30,30,.04); overflow: hidden; }
+    @media (prefers-reduced-motion: reduce) {
+        .live-dot::before { animation: none; }
+        .ai-loading .spinner { animation-duration: 2.4s; }
+        .chip-sym:hover, .btn-analyze:hover { transform: none; }
+    }
+    .panel-head { display: flex; align-items: center; gap: 9px; padding: 14px 22px; border-bottom: 1px solid var(--lux-hairline); background: var(--lux-ivory); font-size: .73rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--lux-graphite); }
+    .panel-head i { color: var(--copper-orange); }
+    .panel-body { padding: 24px; }
+
+    .console-label { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 7px; display: block; }
+    .sym-textarea {
+        width: 100%; min-height: 132px; resize: vertical;
+        border: 1px solid var(--lux-hairline); background: var(--lux-ivory);
+        border-radius: 14px; padding: 16px 18px; font-size: .98rem; line-height: 1.65;
+        color: var(--lux-graphite); transition: border-color .25s, box-shadow .25s, background .25s;
+    }
+    .sym-textarea:focus { outline: none; background: #fff; border-color: var(--copper-orange); box-shadow: 0 0 0 4px rgba(200,121,65,.13); }
+    .sym-textarea::placeholder { color: var(--lux-slate); opacity: 1; }
+
+    .chip-sym {
+        border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-slate);
+        border-radius: 999px; padding: .4rem .95rem; font-size: .78rem; font-weight: 600;
+        cursor: pointer; transition: all .22s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .chip-sym:hover { border-color: var(--copper-orange); color: var(--lux-bronze-deep); background: rgba(200,121,65,.05); transform: translateY(-1px); }
+    .chip-sym i { color: var(--copper-orange); font-size: .78rem; }
+
+    .btn-analyze {
+        background: var(--lux-graphite); border: none; color: #fff;
+        font-weight: 700; letter-spacing: .04em; padding: .72rem 2.2rem; font-size: .95rem;
+        display: inline-flex; align-items: center; gap: 9px;
+    }
+    .btn-analyze:hover { background: var(--copper-orange); transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(200,121,65,.6); }
+    .btn-analyze:disabled { opacity: .7; transform: none; }
+
+    .ai-result {
+        background: var(--lux-ivory); border: 1px solid var(--lux-hairline);
+        border-left: 3px solid var(--copper-orange); border-radius: 14px;
+        padding: 22px 24px; font-size: .93rem; line-height: 1.7; color: var(--lux-graphite);
+    }
+    .ai-result:empty::before {
+        content: "Kết quả phân tích sẽ hiển thị tại đây — AI trả về nguyên nhân khả năng và đề xuất xử lý.";
+        color: var(--lux-slate); font-size: .87rem; font-style: italic;
+    }
+    .ai-result h5 { font-size: 1.02rem; font-weight: 700; letter-spacing: -.01em; margin-bottom: .8rem; }
+    .ai-result h5.text-danger { color: #B03A2E !important; }
+    .ai-result h5.text-success { color: #2E7D4F !important; }
+    .ai-result li { font-size: .92rem; margin-bottom: .55rem; line-height: 1.6; }
+    .ai-result p, .ai-result .fs-5 { font-size: .95rem !important; }
+    .ai-result hr { border: 0; border-top: 1px solid var(--lux-hairline); opacity: 1 !important; margin: 1.1rem 0; }
+    .ai-loading { display: flex; align-items: center; gap: 12px; color: var(--lux-slate); font-size: .9rem; }
+    .ai-loading .spinner { width: 18px; height: 18px; border: 2.5px solid var(--lux-hairline); border-top-color: var(--copper-orange); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .how-step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px dashed var(--lux-hairline); }
+    .how-step:last-child { border-bottom: none; padding-bottom: 0; }
+    .how-step:first-child { padding-top: 0; }
+    .how-num {
+        flex: 0 0 30px; height: 30px; border-radius: 50%;
+        background: var(--lux-graphite); color: #E0A375;
+        display: flex; align-items: center; justify-content: center;
+        font-size: .8rem; font-weight: 700;
+    }
+    .how-step h6 { font-size: .88rem; font-weight: 700; margin: 3px 0 3px; color: var(--lux-graphite); }
+    .how-step p { font-size: .8rem; color: var(--lux-slate); margin: 0; line-height: 1.55; }
+
+    .tip-list { list-style: none; margin: 0; padding: 0; font-size: .85rem; }
+    .tip-list li { padding: 7px 0 7px 24px; position: relative; color: var(--lux-slate); border-bottom: 1px dashed var(--lux-hairline); line-height: 1.5; }
+    .tip-list li:last-child { border-bottom: none; }
+    .tip-list li::before { content: "\2713"; position: absolute; left: 2px; top: 7px; color: var(--copper-orange); font-weight: 700; }
+
+    .mini-label { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 5px; }
+    .hist-card { background: var(--lux-sand); border: 1px solid var(--lux-hairline); border-radius: 10px; padding: 10px 13px; font-size: .82rem; color: var(--lux-slate); margin-top: 8px; }
+</style>
+
+<div class="pg-head">
+    <div>
+        <h1>Trợ lý khách hàng AI</h1>
+        <p class="pg-sub">Hỏi đáp dịch vụ, lịch sử xe, hóa đơn, đặt lịch hẹn — AI trả lời kèm gợi ý dịch vụ, ước tính giá và lịch nháp.</p>
+    </div>
+    <span class="live-dot">AI đang sẵn sàng</span>
+</div>
+
+<div class="row g-4">
+    <!-- ===== Khung nhập & kết quả ===== -->
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-head"><i class="bi bi-robot"></i> Khung chat khách hàng</div>
+            <div class="panel-body">
+
+                <div class="mb-4">
+                    <label class="console-label" for="vehicle-select"><i class="bi bi-car-front me-1"></i>Bối cảnh xe (tùy chọn)</label>
+                    <select class="form-select" id="vehicle-select">
+                        <option value="">— Phân tích tổng quát, không áp dụng dữ liệu xe cụ thể —</option>
+                        {% for v in vehicles %}
+                        <option value="{{ v.id }}">
+                            {{ v.license_plate }} · {{ v.make }} {{ v.model }}{% if v.owner %} · {{ v.owner.full_name }}{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="hist-card d-none" id="ctx-hint">
+                        <i class="bi bi-info-circle me-1" style="color: var(--copper-orange);"></i>
+                        Chọn xe để AI đối chiếu <strong>lịch sử sửa chữa gần đây</strong> của xe trong hệ thống.
+                    </div>
+                </div>
+
+                <label class="console-label" for="ai-input"><i class="bi bi-chat-square-text me-1"></i>Tin nhắn <span class="text-danger">*</span></label>
+                <textarea class="sym-textarea mb-3" id="ai-input" placeholder="Ví dụ: Xe của tôi có lịch sử bảo dưỡng nào? Hóa đơn chưa thanh toán? Đặt lịch ngày mai..."></textarea>
+
+                <div class="d-flex flex-wrap gap-2 mb-4" id="sym-chips">
+                    <button type="button" class="chip-sym" data-sym="Xe kêu cót két khi phanh ở tốc độ thấp"><i class="bi bi-ear"></i> Kêu khi phanh</button>
+                    <button type="button" class="chip-sym" data-sym="Đèn check engine trên taplo sáng"><i class="bi bi-lightbulb"></i> Đèn check engine</button>
+                    <button type="button" class="chip-sym" data-sym="Máy rung nhẹ ở vòng tua cầm chừng"><i class="bi bi-activity"></i> Máy rung</button>
+                    <button type="button" class="chip-sym" data-sym="Điều hòa không mát, thổi ra hơi ấm"><i class="bi bi-snow"></i> Điều hòa không mát</button>
+                    <button type="button" class="chip-sym" data-sym="Xe hết bình, đề không nổ"><i class="bi bi-battery-half"></i> Hết bình</button>
+                    <button type="button" class="chip-sym" data-sym="Xe bị giật cục ở số thấp"><i class="bi bi-speedometer2"></i> Bị giật</button>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-analyze" type="button" id="ai-btn"><i class="bi bi-send me-1"></i> Gửi tin nhắn</button>
+                        <button class="btn btn-outline-dark rounded-pill px-4" type="button" id="ai-clear" style="font-weight:600;">Xóa</button>
+                    </div>
+                    <small style="font-size: .76rem; color: var(--lux-slate);"><i class="bi bi-keyboard me-1"></i>Ctrl + Enter để phân tích nhanh</small>
+                </div>
+
+                <hr style="margin: 1.4rem 0;">
+
+                <label class="console-label"><i class="bi bi-graph-up-arrow me-1"></i> Trả lời</label>
+                <div class="ai-result" id="ai-result" role="status"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Khối hướng dẫn (dưới khung chính) ===== -->
+    <div class="col-12">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="panel h-100">
+                    <div class="panel-head"><i class="bi bi-signpost-split"></i> Cách hoạt động</div>
+            <div class="panel-body">
+                <div class="how-step">
+                    <div class="how-num">1</div>
+                    <div>
+                        <h6>Mô tả triệu chứng</h6>
+                        <p>Ghi âm thanh, đèn báo, thời điểm xuất hiện — kèm chọn xe nếu muốn đối chiếu lịch sử.</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="how-num">2</div>
+                    <div>
+                        <h6>AI phân tích + RAG</h6>
+                        <p>Gemini kết hợp tri thức sửa chữa và tra cứu cẩm nang, tài liệu nội bộ của garage.</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="how-num">3</div>
+                    <div>
+                        <h6>Đề xuất xử lý</h6>
+                        <p>Trả về nguyên nhân khả năng kèm khuyến nghị — mang xe tới garage để kiểm tra chính xác.</p>
+                    </div>
+                </div>
+            </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel h-100">
+                    <div class="panel-head"><i class="bi bi-lightbulb-fill"></i> Mô tả thế nào là tốt?</div>
+            <div class="panel-body">
+                <ul class="tip-list">
+                    <li>Nêu <strong>âm thanh / mùi / rung</strong> và khi nào xuất hiện</li>
+                    <li>Ghi <strong>đèn cảnh báo</strong> trên taplo (nếu có)</li>
+                    <li>Đề cập <strong>tần suất</strong>: liên tục hay thỉnh thoảng</li>
+                    <li>Cho biết <strong>ODO hiện tại</strong> để AI ước tính độ mòn</li>
+                </ul>
+                <div class="hist-card mt-3">
+                    <i class="bi bi-shield-exclamation me-1" style="color: var(--copper-orange);"></i>
+                    Kết quả là <strong>tham khảo sơ bộ</strong> — chưa thay thế kiểm tra trực tiếp tại xưởng.
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputEl = document.getElementById('ai-input');
+        const resultBox = document.getElementById('ai-result');
+        const vehicleSelect = document.getElementById('vehicle-select');
+        const ctxHint = document.getElementById('ctx-hint');
+
+        // Gợi ý triệu chứng nhanh
+        document.querySelectorAll('#sym-chips .chip-sym').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                inputEl.value = chip.dataset.sym;
+                inputEl.focus();
+            });
+        });
+
+        // Nhấn Ctrl+Enter
+        inputEl.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                document.getElementById('ai-btn').click();
+            }
+        });
+
+        // Xóa nội dung + kết quả đã lưu
+        document.getElementById('ai-clear').addEventListener('click', function () {
+            inputEl.value = '';
+            resultBox.innerHTML = '';
+            chatHistory = [];
+            sessionStorage.removeItem('ai_chat_input');
+            sessionStorage.removeItem('ai_chat_result');
+            sessionStorage.removeItem('ai_customer_history');
+            inputEl.focus();
+        });
+
+        // Khôi phục trạng thái từ sessionStorage
+        const savedInput = sessionStorage.getItem('ai_chat_input');
+        const savedResult = sessionStorage.getItem('ai_chat_result');
+        const savedVehicleId = sessionStorage.getItem('ai_chat_vehicle_id');
+        if (savedInput) inputEl.value = savedInput;
+        if (savedVehicleId && vehicleSelect) vehicleSelect.value = savedVehicleId;
+        if (savedResult) resultBox.innerHTML = savedResult;
+        if (vehicleSelect && vehicleSelect.value) ctxHint.classList.remove('d-none');
+
+        if (vehicleSelect) {
+            vehicleSelect.addEventListener('change', function () {
+                ctxHint.classList.toggle('d-none', !vehicleSelect.value);
+            });
+        }
+    });
+
+    // Lịch sử hội thoại gửi kèm mỗi request (ChatIn.history)
+    let chatHistory = [];
+    try { chatHistory = JSON.parse(sessionStorage.getItem('ai_customer_history') || '[]'); } catch (e) { chatHistory = []; }
+
+    function escHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+    function fmtVnd(n) { return Number(n || 0).toLocaleString('vi-VN') + 'đ'; }
+
+    function renderChatReply(data) {
+        let html = '<div class="mb-3">' + escHtml(data.message || '').replace(/\n/g, '<br>') + '</div>';
+        if (data.suggestions && data.suggestions.length) {
+            html += '<div class="hist-card"><strong><i class="bi bi-tools me-1"></i>Dịch vụ gợi ý</strong><ul class="tip-list mt-1">';
+            data.suggestions.forEach(function (s) {
+                html += '<li>' + escHtml(s.name) + ' — ' + fmtVnd(s.price) +
+                    (s.promo ? ' <span class="badge bg-danger">Khuyến mãi</span>' : '') + '</li>';
+            });
+            html += '</ul></div>';
+        }
+        if (data.estimate) {
+            html += '<div class="hist-card"><i class="bi bi-cash-coin me-1"></i>Ước tính sơ bộ: <strong>' +
+                fmtVnd(data.estimate.min) + ' – ' + fmtVnd(data.estimate.max) +
+                '</strong> (chưa gồm công/VAT)</div>';
+        }
+        if (data.draft) {
+            html += '<div class="hist-card"><i class="bi bi-calendar-check me-1"></i>Đã tạo lịch nháp #' +
+                escHtml(data.draft.id) + ': xe ' + escHtml(data.draft.plate) + ' ngày ' +
+                escHtml(data.draft.date) + (data.draft.time ? ' giờ ' + escHtml(data.draft.time) : ' (chưa chốt giờ)') +
+                ' — trạng thái Pending. Vào Đặt lịch hẹn để xem lại/xác nhận.</div>';
+        }
+        if (data.needs && data.needs.length) {
+            html += '<div class="hist-card"><i class="bi bi-question-circle me-1"></i>Còn thiếu: ' +
+                escHtml(data.needs.join('; ')) + '</div>';
+        }
+        return html;
+    }
+
+    document.getElementById('ai-btn').addEventListener('click', async function () {
+        const input = document.getElementById('ai-input').value;
+        const resultBox = document.getElementById('ai-result');
+        const vehicleSelect = document.getElementById('vehicle-select');
+        const vehicleId = vehicleSelect && vehicleSelect.value ? parseInt(vehicleSelect.value, 10) : null;
+
+        if (input.trim() === '') {
+            resultBox.innerHTML = '<div class="mb-0" style="color:#B03A2E; font-size:.9rem;"><i class="bi bi-exclamation-triangle me-1"></i>Bạn chưa nhập tin nhắn. Hãy nhập câu hỏi hoặc chọn một gợi ý bên trên.</div>';
+            return;
+        }
+
+        const btn = document.getElementById('ai-btn');
+        btn.disabled = true;
+
+        // Hiển thị trạng thái đang tải
+        resultBox.innerHTML = '<div class="ai-loading"><span class="spinner"></span> Đang trả lời...</div>';
+
+        sessionStorage.setItem('ai_chat_input', input);
+        sessionStorage.setItem('ai_chat_vehicle_id', vehicleSelect ? vehicleSelect.value : '');
+
+        try {
+            // Stream NDJSON (/agent/customer/chat/stream): event meta (JSON cau truc)
+            // den truoc, cac delta text chay dan -> cam giac <2s.
+            const response = await fetch('/agent/customer/chat/stream', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: input, vehicle_id: vehicleId, history: chatHistory })
+            });
+            if (response.status === 401) {
+                resultBox.innerHTML = '<div class="mb-0" style="color:#A93226; font-size:.9rem;"><i class="bi bi-box-arrow-in-right me-1"></i>Bạn cần <a href="/login" class="fw-bold" style="color:#A93226;">đăng nhập</a> để chat với AI.</div>';
+                return;
+            }
+            if (!response.ok) {
+                let detail = 'Không nhận được phản hồi.';
+                try { const err = await response.json(); detail = err.detail || detail; } catch (e) {}
+                resultBox.innerHTML = '<div class="mb-0" style="color:#B03A2E; font-size:.9rem;"><i class="bi bi-exclamation-triangle me-1"></i>Lỗi: ' + escHtml(detail) + '</div>';
+                return;
+            }
+            resultBox.innerHTML = '<div class="mb-3" id="ai-msg"></div><div id="ai-extra"></div>';
+            const msgEl = document.getElementById('ai-msg');
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buf = '', meta = null, fullMessage = '', streamDone = false;
+            while (!streamDone) {
+                const { done, value } = await reader.read();
+                if (value) buf += decoder.decode(value, { stream: true });
+                let idx;
+                while ((idx = buf.indexOf('\n')) >= 0) {
+                    const line = buf.slice(0, idx).trim();
+                    buf = buf.slice(idx + 1);
+                    if (!line) continue;
+                    let evt = null;
+                    try { evt = JSON.parse(line); } catch (e) { continue; }
+                    if (evt.type === 'meta') { meta = evt.data || {}; }
+                    else if (evt.type === 'delta') {
+                        fullMessage += evt.text || '';
+                        msgEl.innerText = fullMessage;
+                    }
+                    else if (evt.type === 'done') { streamDone = true; break; }
+                }
+                if (done) break;
+            }
+            const data = Object.assign({ message: fullMessage }, meta || {});
+            const finalResult = renderChatReply(data);
+            resultBox.innerHTML = finalResult;
+            sessionStorage.setItem('ai_chat_input', '');
+            document.getElementById('ai-input').value = '';
+            sessionStorage.setItem('ai_chat_result', finalResult);
+            chatHistory.push({ sender: 'user', text: input });
+            chatHistory.push({ sender: 'model', text: data.message || '' });
+            if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+            sessionStorage.setItem('ai_customer_history', JSON.stringify(chatHistory));
+        } catch (error) {
+            resultBox.innerHTML = '<div class="mb-0" style="color:#B03A2E; font-size:.9rem;"><i class="bi bi-wifi-off me-1"></i>Lỗi kết nối AI. Vui lòng thử lại.</div>';
+            sessionStorage.removeItem('ai_chat_result');
+        } finally {
+            btn.disabled = false;
+        }
+    });
+</script>
+{% endblock %}

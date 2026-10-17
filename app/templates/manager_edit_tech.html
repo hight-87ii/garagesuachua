@@ -1,0 +1,575 @@
+{% extends "base.html" %}
+
+{% block title %}Thông tin cá nhân - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    .mgr-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding: 22px 0 16px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 18px; }
+    .mgr-head h1 { font-size: 1.45rem; margin: 0; font-weight: 700; letter-spacing: -.02em; display: flex; align-items: center; gap: 10px; }
+    .mgr-head h1 i { color: var(--copper-orange); }
+    .mgr-sub { color: var(--lux-slate); font-size: .85rem; margin: 6px 0 0; }
+    .emp-hero { background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%); border: 1px solid rgba(200,121,65,.25); border-radius: 18px; color: #fff; padding: 24px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .emp-hero h2 { color: #fff; font-size: 1.3rem; margin: 0; letter-spacing: -.02em; }
+    .emp-hero .sub { color: rgba(255,255,255,.75); font-size: .84rem; margin-top: 3px; }
+    .emp-avatar { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,.35); flex: 0 0 84px; background: #2D2D2D; }
+    .emp-avatar-fallback { width: 84px; height: 84px; border-radius: 50%; background: #2D2D2D; border: 2px solid rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #E0A375; flex: 0 0 84px; }
+    .emp-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 12px; }
+    .emp-stats .n { font-size: 1.25rem; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.3; }
+    .emp-stats .l { font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,.65); }
+    .pill { display: inline-block; font-size: .74rem; font-weight: 700; border-radius: 999px; padding: .3em .85em; white-space: nowrap; border: 1px solid; }
+    .pill-on { background: rgba(123,199,154,.14); color: #7BC79A; border-color: rgba(123,199,154,.4); }
+    .pill-off { background: rgba(255,255,255,.08); color: #F2B8AC; border-color: rgba(255,255,255,.25); }
+    .info-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+    .info-card .ch { padding: 12px 18px; border-bottom: 1px solid var(--lux-hairline); font-weight: 700; font-size: .88rem; color: var(--lux-graphite); background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); display: flex; align-items: center; gap: 8px; }
+    .info-card .ch i { color: var(--copper-orange); }
+    .info-card .cb { padding: 14px 18px; }
+    .info-row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--lux-hairline); font-size: .88rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .k { color: var(--lux-slate); font-size: .74rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding-top: 3px; flex-shrink: 0; }
+    .info-row .v { font-weight: 600; text-align: right; color: var(--lux-graphite); word-break: break-word; }
+    .btn-bronze { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; }
+    .btn-bronze:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+    .form-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 16px; overflow: hidden; }
+    .form-card .card-header { background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); border-bottom: 1px solid var(--lux-hairline); padding: 14px 20px; }
+    .form-card .card-header h5 { color: var(--lux-graphite); font-size: 1rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .form-card .card-header h5 i { color: var(--copper-orange); }
+    .form-card .accordion-button:not(.collapsed) { background: var(--lux-ivory); color: var(--lux-graphite); box-shadow: none; }
+    .form-card .accordion-button:focus { box-shadow: 0 0 0 3px rgba(200,121,65,.15); border-color: transparent; }
+    .form-card .accordion-button { font-size: .9rem; font-weight: 600; color: var(--lux-graphite); }
+</style>
+
+<div class="mgr-head">
+    <div>
+        <h1><i class="bi bi-person-vcard"></i>Hồ sơ nội bộ: {{ db_user.full_name }}</h1>
+        <p class="mgr-sub">@{{ db_user.username }} · {{ {'customer': 'Khách hàng', 'technician': 'Kỹ thuật viên', 'manager': 'Quản lý', 'admin': 'Admin'}.get(db_user.role, db_user.role) }}{% if db_user.is_active == 0 %} · <strong style="color:#A93226;">Đã khóa</strong>{% endif %}</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        {% if is_view_mode %}
+        <a href="/manager/technician/{{ db_user.id }}/edit" class="btn btn-bronze"><i class="bi bi-pencil-square me-1"></i>Sửa hồ sơ</a>
+        {% if db_user.role == 'technician' %}
+        <a href="/our-team/{{ db_user.id }}" class="btn btn-sm btn-outline-dark rounded-pill px-3 align-self-center">Xem trang công khai</a>
+        {% endif %}
+        {% else %}
+        <a href="/manager/technician/{{ db_user.id }}/view" class="btn btn-sm btn-outline-dark rounded-pill px-3 align-self-center">Về chế độ xem</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if is_view_mode %}
+{% set ep = db_user.employee_profile %}
+<div class="emp-hero mb-3">
+    {% if ep and ep.avatar_url %}
+    <img src="{{ ep.avatar_url }}" alt="Ảnh {{ db_user.full_name }}" class="emp-avatar">
+    {% else %}
+    <div class="emp-avatar-fallback" aria-hidden="true">{{ (db_user.full_name or 'U')[0]|upper }}</div>
+    {% endif %}
+    <div class="flex-grow-1" style="min-width:220px;">
+        <h2>{{ db_user.full_name }}</h2>
+        <div class="sub">{{ ep.job_title if ep and ep.job_title else ({'technician': 'Kỹ thuật viên', 'manager': 'Quản lý', 'admin': 'Admin', 'customer': 'Khách hàng'}.get(db_user.role, '')) }}{% if ep and ep.work_area %} · {{ ep.work_area }}{% endif %}</div>
+        <div class="mt-2 d-flex gap-2 flex-wrap align-items-center">
+            {% if db_user.is_active == 0 %}
+            <span class="pill pill-off"><i class="bi bi-lock me-1"></i>Đã khóa{% if db_user.leave_reason == 'Nghi viec' %} · Nghỉ việc{% elif db_user.leave_reason == 'Di hoc nang cao' %} · Đi học{% elif db_user.leave_reason == 'Trai nghiem' %} · Trải nghiệm{% endif %}{% if db_user.leave_date %} · từ {{ db_user.leave_date }}{% endif %}</span>
+            {% else %}
+            <span class="pill pill-on"><i class="bi bi-check-circle me-1"></i>Đang làm việc</span>
+            {% endif %}
+            {% if db_user.return_date %}<span style="font-size:.78rem;color:rgba(255,255,255,.7);">Quay lại: {{ db_user.return_date }}</span>{% endif %}
+        </div>
+        <div class="emp-stats">
+            <div><div class="n">{{ stats.done }}</div><div class="l">Việc hoàn thành</div></div>
+            <div><div class="n">{% if stats.avg %}{{ stats.avg }} <small style="font-size:.8rem;color:rgba(255,255,255,.65);">({{ stats.nrate }})</small>{% else %}—{% endif %}</div><div class="l">Điểm đánh giá</div></div>
+            <div><div class="n">{{ stats.open }}</div><div class="l">Việc đang mở</div></div>
+        </div>
+    </div>
+    <div class="d-flex flex-column gap-2">
+        {% if db_user.is_active == 0 %}
+        <form action="/manager/users/toggle-active" method="POST" onsubmit="return confirm('Mở lại tài khoản {{ db_user.username }}?');">
+            <input type="hidden" name="user_id" value="{{ db_user.id }}">
+            <input type="hidden" name="action" value="unlock">
+            <button type="submit" class="btn btn-light rounded-pill px-4 fw-bold w-100"><i class="bi bi-unlock me-1"></i>Mở lại</button>
+        </form>
+        {% else %}
+        <a href="/manager/users" class="btn btn-light rounded-pill px-4 fw-bold"><i class="bi bi-people me-1"></i>Quản lý TK</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="info-card">
+            <div class="ch"><i class="bi bi-person-lines-fill"></i>Liên lạc</div>
+            <div class="cb" style="padding-top:8px;padding-bottom:8px;">
+                <div class="info-row"><span class="k">SĐT</span><span class="v">{{ db_user.phone or '—' }}</span></div>
+                <div class="info-row"><span class="k">Email</span><span class="v">{{ db_user.email or '—' }}</span></div>
+                <div class="info-row"><span class="k">Địa chỉ</span><span class="v">{{ db_user.address or '—' }}</span></div>
+                {% if ep and (ep.zalo_link or ep.facebook_link or ep.linkedin_link) %}
+                <div class="info-row"><span class="k">Mạng xã hội</span><span class="v" style="font-size:.82rem;">{{ [ep.zalo_link, ep.facebook_link, ep.linkedin_link]|select|join(' · ') }}</span></div>
+                {% endif %}
+                {% if ep and ep.garage_address %}<div class="info-row"><span class="k">Địa chỉ xưởng</span><span class="v">{{ ep.garage_address }}</span></div>{% endif %}
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="ch"><i class="bi bi-patch-check"></i>Chứng chỉ & đào tạo</div>
+            <div class="cb" style="padding-top:8px;padding-bottom:8px;">
+                <div class="info-row"><span class="k">Trường đào tạo</span><span class="v">{{ ep.education_school if ep and ep.education_school else '—' }}{% if ep and ep.education_degree %} · {{ ep.education_degree }}{% endif %}</span></div>
+                <div class="info-row"><span class="k">Chứng chỉ nghề</span><span class="v">{{ ep.trade_certificates if ep and ep.trade_certificates else '—' }}</span></div>
+                <div class="info-row"><span class="k">Đào tạo hãng xe</span><span class="v">{{ ep.brand_certificates if ep and ep.brand_certificates else '—' }}</span></div>
+                <div class="info-row"><span class="k">An toàn LĐ</span><span class="v">{{ ep.safety_certificates if ep and ep.safety_certificates else '—' }}</span></div>
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="ch"><i class="bi bi-clock-history"></i>Quá trình làm việc</div>
+            <div class="cb">
+                {% if ep and (ep.past_garages or ep.key_projects or ep.past_roles) %}
+                    {% if ep.past_roles %}<p class="mb-2" style="font-size:.88rem;"><strong>Vị trí từng làm:</strong> {{ ep.past_roles }}</p>{% endif %}
+                    {% if ep.past_garages %}<p class="mb-2" style="font-size:.88rem;"><strong>Garage từng làm:</strong><br>{{ ep.past_garages.replace('\n', '<br>')|safe }}</p>{% endif %}
+                    {% if ep.key_projects %}<p class="mb-2" style="font-size:.88rem;"><strong>Dự án nổi bật:</strong> {{ ep.key_projects }}</p>{% endif %}
+                    <p class="mb-0" style="font-size:.88rem;"><strong>Tại ThreeH:</strong> {{ stats.done }} xe hoàn thành{% if ep.hire_date %} · vào làm {{ ep.hire_date }}{% endif %}</p>
+                {% else %}
+                <p class="text-muted mb-0" style="font-size:.88rem;">Đang cập nhật.</p>
+                {% endif %}
+                {% if ep and (ep.tutorial_videos or ep.tech_posts or ep.social_profiles or ep.community_participation) %}
+                <hr class="my-2">
+                <p class="mb-1" style="font-size:.82rem;color:var(--lux-slate);"><i class="bi bi-globe me-1" style="color:var(--copper-orange);"></i>
+                {% if ep.tutorial_videos %}<a href="{{ ep.tutorial_videos }}" target="_blank" rel="noopener">Video</a> · {% endif %}{% if ep.tech_posts %}<a href="{{ ep.tech_posts }}" target="_blank" rel="noopener">Bài viết</a> · {% endif %}{{ ep.social_profiles or '' }} {{ ep.community_participation or '' }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% if ep and ep.technical_skills %}
+        <div class="info-card">
+            <div class="ch"><i class="bi bi-tools"></i>Chuyên môn</div>
+            <div class="cb"><div style="font-size:.88rem;color:var(--lux-graphite);line-height:1.7;">{{ ep.technical_skills }}{% if ep.vehicle_types %}<br><span style="color:var(--lux-slate);">Dòng xe: {{ ep.vehicle_types }}</span>{% endif %}</div></div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-lg-6">
+        <div class="info-card">
+            <div class="ch"><i class="bi bi-person-badge"></i>Tài khoản & trạng thái</div>
+            <div class="cb" style="padding-top:8px;padding-bottom:8px;">
+                <div class="info-row"><span class="k">Tên đăng nhập</span><span class="v">{{ db_user.username }}</span></div>
+                <div class="info-row"><span class="k">Vai trò</span><span class="v">{{ {'customer': 'Khách hàng', 'technician': 'Kỹ thuật viên', 'manager': 'Quản lý', 'admin': 'Admin'}.get(db_user.role, db_user.role) }}</span></div>
+                <div class="info-row"><span class="k">Trạng thái</span><span class="v">{% if db_user.is_active == 0 %}Đã khóa{% else %}Đang hoạt động{% endif %}</span></div>
+                {% if db_user.is_active == 0 %}
+                <div class="info-row"><span class="k">Lý do</span><span class="v">{% if db_user.leave_reason == 'Nghi viec' %}Nghỉ việc{% elif db_user.leave_reason == 'Di hoc nang cao' %}Đi học nâng cao{% elif db_user.leave_reason == 'Trai nghiem' %}Trải nghiệm bên ngoài{% else %}{{ db_user.leave_reason or '—' }}{% endif %}{% if db_user.leave_date %} · từ {{ db_user.leave_date }}{% endif %}</span></div>
+                {% endif %}
+                {% if db_user.return_date %}<div class="info-row"><span class="k">Quay lại làm</span><span class="v">{{ db_user.return_date }}</span></div>{% endif %}
+                {% if ep %}<div class="info-row"><span class="k">Năm sinh / Giới tính</span><span class="v">{{ ep.dob_year or '—' }}{% if ep.gender %} · {{ ep.gender }}{% endif %}</span></div>{% endif %}
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="ch"><i class="bi bi-wrench-adjustable"></i>Việc đang phụ trách ({{ stats.open }})</div>
+            <div class="cb" style="padding-top:8px;padding-bottom:8px;">
+                {% if open_orders %}
+                    {% for o in open_orders[:5] %}
+                    <div class="info-row"><span class="k">#RO-{{ o.id }} · {{ o.vehicle.license_plate if o.vehicle else '—' }}</span><span class="v" style="max-width:60%;">{{ (o.symptoms or '')|truncate(60) }}</span></div>
+                    {% endfor %}
+                    {% if stats.open > 5 %}<p class="mb-0 mt-2" style="font-size:.8rem;color:var(--lux-slate);">+ {{ stats.open - 5 }} việc khác — xem ở Bảng công việc.</p>{% endif %}
+                {% else %}
+                <p class="text-muted mb-0" style="font-size:.88rem;">Không vướng việc nào — sẵn sàng nhận đơn mới.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="ch"><i class="bi bi-star-fill"></i>Đánh giá từ khách hàng</div>
+            <div class="cb">
+                {% if stats.avg %}
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div style="font-size:2rem;font-weight:800;color:var(--lux-graphite);line-height:1.3;">{{ stats.avg }}<small style="font-size:.9rem;color:var(--lux-slate);">/5</small></div>
+                    <div style="font-size:.8rem;color:var(--lux-slate);">{{ stats.nrate }} lượt chấm sau sửa chữa</div>
+                </div>
+                {% for s in (5, 4, 3, 2, 1) %}
+                {% set c = stats.dist.get(s, 0) %}
+                <div class="d-flex align-items-center gap-2 mb-1" style="font-size:.78rem;">
+                    <span style="width:14px;color:var(--lux-slate);font-weight:700;">{{ s }}</span>
+                    <div class="flex-grow-1" style="height:7px;background:var(--lux-sand);border-radius:99px;overflow:hidden;">
+                        <div style="height:100%;width:{{ (c * 100 / stats.nrate)|round|int if stats.nrate else 0 }}%;background:linear-gradient(90deg,#C87941,#E0A375);border-radius:99px;"></div>
+                    </div>
+                    <span style="width:26px;text-align:right;color:var(--lux-slate);font-variant-numeric:tabular-nums;">{{ c }}</span>
+                </div>
+                {% endfor %}
+                {% for r in reviews %}
+                <div class="mt-2 p-2 rounded" style="background:var(--lux-ivory);border:1px solid var(--lux-hairline);font-size:.84rem;">
+                    <i class="bi bi-star-fill me-1" style="color:var(--copper-orange);font-size:.72rem;"></i><strong>{{ r.service_rating }}/5</strong>
+                    <span style="color:var(--lux-slate);"> · {{ r.completed_at.strftime('%d/%m/%Y') if r.completed_at else '' }}</span><br>
+                    <span style="color:var(--lux-graphite);">“{{ (r.symptoms or '')|truncate(100) }}”</span>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted mb-0" style="font-size:.88rem;">Chưa có lượt chấm nào.</p>
+                {% endif %}
+                {% if ep and ep.feedback_summary %}
+                <p class="mt-2 mb-0" style="font-size:.88rem;font-style:italic;color:var(--lux-graphite);">“{{ ep.feedback_summary }}”</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="row pt-2 justify-content-center">
+    <div class="col-md-8">
+        <div class="form-card">
+            <div class="card-header">
+                <h5><i class="bi bi-person-vcard"></i>Hồ sơ: {{ db_user.full_name }}</h5>
+            </div>
+            <div class="card-body p-4">
+                {% if request.query_params.get('success') %}
+                <div class="alert alert-success">Cập nhật thông tin thành công!</div>
+                {% endif %}
+                
+                <form action="/manager/technician/{{ db_user.id }}/update" method="POST" id="editTechForm">
+                    <!-- Cơ bản (Dành cho mọi user) -->
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Tên đăng nhập (Không thể đổi)</label>
+                        <input type="text" class="form-control bg-light" value="{{ db_user.username }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Họ và Tên</label>
+                        <input type="text" name="full_name" class="form-control" value="{{ db_user.full_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Số điện thoại</label>
+                        <input type="text" name="phone" class="form-control" value="{{ db_user.phone or '' }}" placeholder="Nhập số điện thoại...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Email</label>
+                        <input type="email" name="email" class="form-control" value="{{ db_user.email or '' }}" placeholder="Nhập email...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Địa chỉ</label>
+                        <input type="text" name="address" class="form-control" value="{{ db_user.address or '' }}" placeholder="Số nhà, đường, phường/xã...">
+                    </div>
+                    
+                    {% if db_user.role in ['technician', 'manager'] %}
+                    {% set ep = db_user.employee_profile %}
+                    <h5 class="mt-4 mb-3 border-bottom pb-2">Hồ sơ Kỹ thuật viên / Nhân viên</h5>
+                    
+                    <div class="accordion mb-4" id="employeeProfileAccordion">
+                        
+                        <!-- 1. Cơ bản -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    1. Thông tin nhận dạng cơ bản
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Năm sinh</label>
+                                            <input type="number" name="dob_year" class="form-control" value="{{ ep.dob_year or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Giới tính</label>
+                                            <select name="gender" class="form-select">
+                                                <option value="">Chọn giới tính</option>
+                                                <option value="Nam" {% if ep and ep.gender == 'Nam' %}selected{% endif %}>Nam</option>
+                                                <option value="Nữ" {% if ep and ep.gender == 'Nữ' %}selected{% endif %}>Nữ</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Khu vực làm việc</label>
+                                            <input type="text" name="work_area" class="form-control" value="{{ ep.work_area or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Link Ảnh đại diện</label>
+                                            <input type="url" name="avatar_url" class="form-control" value="{{ ep.avatar_url or '' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Nghề nghiệp -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    2. Thông tin nghề nghiệp
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Chức danh</label>
+                                            <select name="job_title" class="form-select">
+                                                <option value="">Chọn chức danh</option>
+                                                {% for title in ["Kỹ thuật viên sửa chữa ô tô", "Thợ máy", "Thợ điện – điện lạnh ô tô", "Thợ đồng sơn", "Kỹ thuật viên chẩn đoán lỗi", "Quản đốc xưởng"] %}
+                                                <option value="{{ title }}" {% if ep and ep.job_title == title %}selected{% endif %}>{{ title }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Garage/xưởng đang làm việc</label>
+                                            <input type="text" name="garage_name" class="form-control" value="{{ ep.garage_name or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Số năm kinh nghiệm</label>
+                                            <input type="number" name="years_of_experience" class="form-control" value="{{ ep.years_of_experience or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Ngày nhận vào làm</label>
+                                            <input type="date" name="hire_date" class="form-control" value="{{ ep.hire_date or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Các vị trí từng làm trước đây</label>
+                                            <input type="text" name="past_roles" class="form-control" value="{{ ep.past_roles or '' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Chuyên môn kỹ thuật -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    3. Chuyên môn kỹ thuật
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    {% set skills = (ep.technical_skills or '').split(',') if ep and ep.technical_skills else [] %}
+                                    <div class="row">
+                                        {% for skill in ["Sửa chữa động cơ", "Hộp số", "Hệ thống điện – ECU", "Điều hòa ô tô", "Phanh, gầm, treo", "Xe điện/hybrid", "Chẩn đoán bằng máy scan", "Bảo dưỡng định kỳ"] %}
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="technical_skills" value="{{ skill }}" id="skill_{{ loop.index }}" {% if skill in skills %}checked{% endif %}>
+                                                <label class="form-check-label" for="skill_{{ loop.index }}">{{ skill }}</label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Trình độ và chứng chỉ -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                    4. Trình độ và chứng chỉ
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Trường nghề/TT đào tạo</label>
+                                            <input type="text" name="education_school" class="form-control" value="{{ ep.education_school or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Bằng cấp</label>
+                                            <select name="education_degree" class="form-select">
+                                                <option value="">Chọn bằng cấp</option>
+                                                <option value="Trung cấp" {% if ep and ep.education_degree == 'Trung cấp' %}selected{% endif %}>Trung cấp</option>
+                                                <option value="Cao đẳng" {% if ep and ep.education_degree == 'Cao đẳng' %}selected{% endif %}>Cao đẳng</option>
+                                                <option value="Đại học" {% if ep and ep.education_degree == 'Đại học' %}selected{% endif %}>Đại học</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Chứng chỉ nghề</label>
+                                            {% set trade_certs = (ep.trade_certificates or '').split(',') if ep and ep.trade_certificates else [] %}
+                                            <div class="d-flex flex-wrap gap-3">
+                                                {% for cert in ["Sửa chữa cơ khí", "Điện ô tô", "Đồng sơn", "Chẩn đoán"] %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="trade_certificates" value="{{ cert }}" id="cert_{{ loop.index }}" {% if cert in trade_certs %}checked{% endif %}>
+                                                    <label class="form-check-label" for="cert_{{ loop.index }}">{{ cert }}</label>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Các khóa đào tạo hãng xe</label>
+                                            <input type="text" name="brand_certificates" class="form-control" value="{{ ep.brand_certificates or '' }}" placeholder="VD: Toyota, Hyundai...">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Chứng chỉ an toàn lao động</label>
+                                            <input type="text" name="safety_certificates" class="form-control" value="{{ ep.safety_certificates or '' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Kinh nghiệm làm việc -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                                    5. Kinh nghiệm làm việc
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Garage từng làm & Thời gian</label>
+                                        <textarea name="past_garages" class="form-control" rows="2" placeholder="Tên Garage - Thời gian làm việc">{{ ep.past_garages or '' }}</textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Loại xe đã từng sửa</label>
+                                        {% set vtypes = (ep.vehicle_types or '').split(',') if ep and ep.vehicle_types else [] %}
+                                        <div class="d-flex flex-wrap gap-3">
+                                            {% for vt in ["Xe Nhật", "Xe Hàn", "Xe Đức", "Xe Mỹ", "Xe tải"] %}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="vehicle_types" value="{{ vt }}" id="vt_{{ loop.index }}" {% if vt in vtypes %}checked{% endif %}>
+                                                <label class="form-check-label" for="vt_{{ loop.index }}">{{ vt }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Các dự án/công việc nổi bật</label>
+                                        <textarea name="key_projects" class="form-control" rows="2">{{ ep.key_projects or '' }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Thông liên hệ -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSix">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                                    6. Thông tin liên hệ công việc
+                                </button>
+                            </h2>
+                            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Zalo liên hệ</label>
+                                            <input type="text" name="zalo_link" class="form-control" value="{{ ep.zalo_link or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Facebook/LinkedIn</label>
+                                            <input type="text" name="facebook_link" class="form-control" value="{{ ep.facebook_link or '' }}">
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Địa chỉ Garage</label>
+                                            <input type="text" name="garage_address" class="form-control" value="{{ ep.garage_address or '' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7. Đánh giá và uy tín -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSeven">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven">
+                                    7. Đánh giá và uy tín nghề nghiệp
+                                </button>
+                            </h2>
+                            <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Điểm đánh giá (1-5 sao)</label>
+                                            <input type="number" step="0.1" max="5" min="0" name="customer_rating_score" class="form-control" value="{{ ep.customer_rating_score or '' }}">
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Nhận xét của khách hàng / Phản hồi</label>
+                                            <textarea name="feedback_summary" class="form-control" rows="3">{{ ep.feedback_summary or '' }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 8. Hoạt động online -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingEight">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight">
+                                    8. Hoạt động online
+                                </button>
+                            </h2>
+                            <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#employeeProfileAccordion">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Hồ sơ mạng xã hội (Forum, Group)</label>
+                                            <input type="text" name="social_profiles" class="form-control" value="{{ ep.social_profiles or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Video hướng dẫn (Link)</label>
+                                            <input type="text" name="tutorial_videos" class="form-control" value="{{ ep.tutorial_videos or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Bài đăng kỹ thuật (Link)</label>
+                                            <input type="text" name="tech_posts" class="form-control" value="{{ ep.tech_posts or '' }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Tham gia cộng đồng ô tô</label>
+                                            <input type="text" name="community_participation" class="form-control" value="{{ ep.community_participation or '' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if db_user.role == 'customer' and db_user.vehicles %}
+                    <h5 class="mt-4 mb-3 border-bottom pb-2">Lịch sử sửa chữa & Bảo dưỡng</h5>
+                    {% for vehicle in db_user.vehicles %}
+                    <div class="card mb-3 border-info">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="bi bi-car-front"></i> Xe: {{ vehicle.license_plate }} - {{ vehicle.make }} {{ vehicle.model }}</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            {% if vehicle.repair_orders %}
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover mb-0 align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Ngày tiếp nhận</th>
+                                            <th>Triệu chứng / Yêu cầu</th>
+                                            <th>Chi phí dự kiến</th>
+                                            <th>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in vehicle.repair_orders|sort(attribute='created_at', reverse=true) %}
+                                        <tr>
+                                            <td>{{ order.reception_datetime[:10] if order.reception_datetime else order.created_at.strftime('%Y-%m-%d') }}</td>
+                                            <td>{{ order.symptoms }}</td>
+                                            <td>{{ "{:,}".format(order.estimated_cost) if order.estimated_cost else "0" }} đ</td>
+                                            <td>
+                                                {% if order.status == 'Completed' %}
+                                                <span class="badge bg-success">Hoàn thành</span>
+                                                {% elif order.status == 'In Progress' %}
+                                                <span class="badge bg-warning text-dark">Đang sửa</span>
+                                                {% else %}
+                                                <span class="badge bg-secondary">{{ order.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p class="p-3 mb-0 text-muted">Chưa có lịch sử sửa chữa nào cho xe này.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Đổi mật khẩu mới (Để trống nếu không đổi)</label>
+                        <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới...">
+                    </div>
+                    <div class="mt-4 text-end">
+                        <a href="/manager/technician/{{ db_user.id }}/view" class="btn btn-outline-dark rounded-pill px-4 me-2">Quay lại</a>
+                        <button type="submit" class="btn btn-bronze rounded-pill px-4"><i class="bi bi-save me-2"></i>Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

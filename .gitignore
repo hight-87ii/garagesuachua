@@ -1,0 +1,52 @@
+# Bí mật cục bộ
+.streamlit/secrets.toml
+.env
+
+# Dữ liệu vận hành có thể chứa thông tin cá nhân
+data/smartdorm.db
+data/smartdorm.db-shm
+data/smartdorm.db-wal
+data/ktx.db
+data/ktx.db-shm
+data/ktx.db-wal
+data/ktx_registrations.csv
+data/geocode_cache.json
+data/private_backup/
+
+# Môi trường ảo Python
+venv/
+.venv/
+env/
+
+# Tệp tạm và cache
+__pycache__/
+*.py[cod]
+*.tmp
+.pytest_cache/
+.impeccable/
+
+# Bản sao lưu và ảnh render chỉ dùng nội bộ, không đưa vào gói nộp
+*.before_refresh_*.docx
+*.before_refresh_*.pptx
+*.backup.docx
+artifacts/ppt_render_*/
+.tools/
+
+# Upload vận hành (ảnh/video xe, hóa đơn) — không commit lên git
+app/static/uploads/
+*.mp4
+*.mov
+*.webm
+
+# Database vận hành
+garage.db
+garage.db-shm
+garage.db-wal
+*.db-shm
+*.db-wal
+
+# Backup truoc rebuild RAG (ingest_knowledge.py)
+backup/
+
+# Log vận hành local (AI metrics/PII-safe JSONL)
+logs/

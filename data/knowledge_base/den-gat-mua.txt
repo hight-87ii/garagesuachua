@@ -1,0 +1,19 @@
+[MANUAL] Đèn chiếu sáng, gạt mưa, còi, cầu chì
+Áp dụng cho: Xe con dùng bóng halogen/LED, gạt mưa điện 12V
+Ngày hiệu lực: 01/01/2026
+
+1. ĐÈN CHIẾU SÁNG
+- Đèn mờ một bên: thường do bóng già hoặc chóa ố — thay bóng đúng công suất, không tự ý lắp bóng công suất lớn gây chảy chóa và quá tải dây.
+- Độ đèn LED/xenon: phải có bi cầu gom sáng, chỉnh tâm đúng để không chói xe đối diện (đăng kiểm siết). Đấu nối phải qua rơ-le riêng, không trích dây zin bừa bãi gây chập cháy.
+- Đèn báo lỗi trên táp-lô sau khi thay LED là do thiếu trở (canbus) — lắp thêm trở hoặc dùng bóng có canbus.
+
+2. GẠT MƯA VÀ PHUN NƯỚC RỬA KÍNH
+- Lưỡi gạt vệt, kêu, bỏ sót vùng: thay lưỡi (6-12 tháng/lần tùy phơi nắng). Thay cả cần nếu lò xo ép yếu.
+- Tia phun yếu/lệch: thông kim phun bằng kim nhỏ, kiểm tra mô-tơ bơm và mức nước rửa kính (pha nước chuyên dụng chống ố, không dùng nước lã lâu ngày gây đóng cặn và nghẹt).
+- Mùa mưa nên phủ nano kính lái để nước cuộn nhanh, giảm tải gạt mưa.
+
+3. CÒI VÀ CẢM BIẾN LÙI/CAMERA
+Còi rè, lúc kêu lúc không: kiểm tra tiếp điểm vô-lăng (cáp còi) và rơ-le. Cảm biến lùi báo sai liên tục thường do bám bẩn hoặc lệch góc sau va quẹt nhẹ — vệ sinh và hiệu chỉnh trước khi kết luận hỏng.
+
+4. CẦU CHÌ VÀ RƠ-LE
+Thiết bị điện nào chết đột ngột thì kiểm tra cầu chì bảo vệ mạch đó TRƯỚC (sơ đồ in trên nắp hộp cầu chì). Thay đúng trị số ampe — thay cầu chì lớn hơn để "khỏi đứt" là cách nhanh nhất gây cháy dây. Mang theo vài cầu chì dự phòng các trị số phổ biến trong xe.

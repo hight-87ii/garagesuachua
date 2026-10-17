@@ -1,0 +1,23 @@
+[MANUAL] Thước lái, góc đặt bánh xe, hệ thống treo
+Áp dụng cho: Xe con dẫn động cầu trước/sau, lái trợ lực điện/thủy lực
+Ngày hiệu lực: 01/01/2026
+
+1. DẤU HIỆU CẦN CHỈNH THƯỚC LÁI (CĂN CHỈNH GÓC ĐẶT BÁNH)
+- Thả tay lái xe bị kéo sang một bên trên đường phẳng.
+- Vô-lăng lệch tâm khi đi thẳng.
+- Lốp mòn lệch một vai (mòn trong hoặc mòn ngoài).
+- Vừa sụp ổ gà mạnh, leo lề, hoặc thay rotuyn/giảm xóc/thước lái.
+
+2. BA GÓC CƠ BẢN
+Camber (độ nghiêng bánh nhìn từ trước), Caster (độ nghiêng trục lái nhìn ngang), Toe (độ chụm/xòe nhìn từ trên). Máy căn chỉnh 3D tại ThreeH đo cả 3 góc và đưa về đúng thông số hãng, sai số dưới 0,1 độ.
+
+3. HỆ THỐNG TREO VÀ GIẢM XÓC
+- Dấu hiệu hỏng: xe bồng bềnh qua gờ, kêu lục cục khi qua ổ gà, dầu chảy ướt thân phuộc, lốp mòn lượn sóng.
+- Giảm xóc thay theo cặp cùng trục. Cao su chân máy, rotuyn trụ/đứng, thanh cân bằng nứt rách thì thay đồng bộ để khỏi tháo lắp nhiều lần tốn công.
+- Sau khi thay chi tiết gầm liên quan góc bánh, BẮT BUỘC căn chỉnh thước lái lại.
+
+4. TRỢ LỰC LÁI
+Trợ lực điện (EPS): nặng lái kèm đèn báo vô-lăng thì kiểm tra mô-tơ/cảm biến góc lái, không cố đánh lái chết tại chỗ nhiều. Trợ lực dầu: kiểm tra mức dầu, tiếng hú khi đánh lái là dấu hiệu bơm yếu hoặc thiếu dầu.
+
+5. CHẠY THỬ NGHIỆM THU
+Sau căn chỉnh, kỹ thuật viên chạy thử đường thẳng và ôm cua, xác nhận xe đi thẳng, vô-lăng trả lái đều, không rung. Biên bản thông số trước/sau in kèm cho khách đối chiếu.

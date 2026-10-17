@@ -1,0 +1,660 @@
+{% extends "base.html" %}
+
+{% block title %}Xe của tôi - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    /* ============ LIGHT LUXURY · THAN CHÌ & ĐỒNG ============ */
+    :root {
+        --lux-ivory: #FCFBF9;
+        --lux-sand: #F4F1EC;
+        --lux-hairline: #E4DFD8;
+        --lux-bronze: #C87941;
+        --lux-bronze-deep: #A65E2F;
+        --lux-graphite: #1E1E1E;
+        --lux-slate: #6B6560;
+    }
+    .veh-page { padding-top: 1.6rem; }
+
+    /* --- Kicker + tiêu đề --- */
+    .lux-kicker {
+        font-size: 0.7rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--lux-bronze);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .lux-kicker::before {
+        content: "";
+        width: 34px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--lux-bronze), transparent);
+    }
+    .lux-title {
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 300;
+        letter-spacing: -0.02em;
+        color: var(--lux-graphite);
+        margin: 0;
+    }
+    .lux-title strong { font-weight: 700; }
+    .lux-sub { color: var(--lux-slate); font-size: 0.92rem; font-weight: 400; }
+
+    /* --- Thanh thống kê (hairline, không khối màu) --- */
+    .lux-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 0;
+        background: #fff;
+        border: 1px solid var(--lux-hairline);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(30,30,30,0.03);
+    }
+    .lux-stat {
+        padding: 15px 20px;
+        border-right: 1px solid var(--lux-hairline);
+        position: relative;
+        min-width: 0;
+    }
+    .lux-stat:last-child { border-right: none; }
+    .lux-stat .lbl {
+        font-size: 0.63rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--lux-slate);
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .lux-stat .val {
+        font-size: 1.35rem;
+        font-weight: 300;
+        color: var(--lux-graphite);
+        letter-spacing: -0.02em;
+        margin-top: 2px;
+    }
+    .lux-stat .val b { font-weight: 700; }
+    .lux-stat .val .unit { font-size: 0.8rem; color: var(--lux-slate); font-weight: 500; }
+    .lux-stat::after {
+        content: "";
+        position: absolute;
+        left: 22px; right: 22px; bottom: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--lux-bronze), transparent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .6s cubic-bezier(.22,1,.36,1);
+    }
+    .lux-stat:hover::after { transform: scaleX(1); }
+    @media (max-width: 767.98px) {
+        .lux-stats { grid-template-columns: repeat(2, 1fr); }
+        .lux-stat { border-bottom: 1px solid var(--lux-hairline); }
+        .lux-stat:nth-child(2n) { border-right: none; }
+        .lux-stat:nth-child(n+3) { border-bottom: none; }
+    }
+
+    /* Header */
+    .veh-head-row { align-items: flex-end; }
+    .veh-head-copy { flex: 1 1 320px; min-width: 0; max-width: 660px; }
+    .veh-head-row .btn-lux { flex-shrink: 0; white-space: nowrap; }
+
+    /* --- Nút --- */
+    .btn-lux {
+        background: var(--lux-graphite);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 11px 26px;
+        font-size: 0.87rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        position: relative;
+        overflow: hidden;
+        transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s;
+        box-shadow: 0 6px 18px rgba(30,30,30,0.14);
+    }
+    .btn-lux::after {
+        content: "";
+        position: absolute;
+        top: 0; left: -80%;
+        width: 55%; height: 100%;
+        background: linear-gradient(100deg, transparent, rgba(255,255,255,0.35), transparent);
+        transform: skewX(-20deg);
+        transition: left .55s ease;
+    }
+    .btn-lux:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 10px 26px rgba(30,30,30,0.2); }
+    .btn-lux:hover::after { left: 130%; }
+    .btn-lux:active { transform: translateY(0); }
+
+    .btn-lux-ghost {
+        background: transparent;
+        color: var(--lux-graphite);
+        border: 1px solid var(--lux-hairline);
+        border-radius: 999px;
+        padding: 10px 24px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        transition: all .3s cubic-bezier(.22,1,.36,1);
+    }
+    .btn-lux-ghost:hover {
+        border-color: var(--lux-bronze);
+        color: var(--lux-bronze-deep);
+        background: rgba(200,121,65,0.05);
+        transform: translateY(-2px);
+    }
+
+    /* --- Card xe --- */
+    .veh-card {
+        background: #fff;
+        border: 1px solid var(--lux-hairline);
+        border-radius: 18px;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        transition: transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s, border-color .45s;
+        box-shadow: 0 1px 3px rgba(30,30,30,0.04);
+        opacity: 0;
+        transform: translateY(26px);
+        animation: luxRise .8s cubic-bezier(.22,1,.36,1) forwards;
+        animation-delay: var(--d, 0s);
+    }
+    @keyframes luxRise { to { opacity: 1; transform: translateY(0); } }
+    .veh-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 26px 50px -20px rgba(30,30,30,0.22);
+        border-color: #d8d1c8;
+    }
+    /* ánh sáng quét ngang khi hover */
+    .veh-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: -90%;
+        width: 60%; height: 100%;
+        background: linear-gradient(100deg, transparent, rgba(200,121,65,0.07), transparent);
+        transform: skewX(-18deg);
+        transition: left .8s ease;
+        z-index: 3;
+        pointer-events: none;
+    }
+    .veh-card:hover::before { left: 140%; }
+    /* đường đồng mảnh trên cùng */
+    .veh-card::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--lux-bronze), #E2B08A 45%, transparent 90%);
+        opacity: 0;
+        transition: opacity .45s;
+        z-index: 4;
+    }
+    .veh-card:hover::after { opacity: 1; }
+
+    .veh-head {
+        padding: 22px 24px 18px;
+        background: linear-gradient(165deg, var(--lux-ivory) 0%, var(--lux-sand) 100%);
+        border-bottom: 1px solid var(--lux-hairline);
+        position: relative;
+    }
+    .veh-badge-no {
+        position: absolute;
+        top: 18px; right: 22px;
+        font-size: 0.66rem;
+        letter-spacing: 0.2em;
+        color: #B9B1A7;
+        font-weight: 600;
+    }
+    .plate {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        background: var(--lux-graphite);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.12em;
+        padding: 9px 16px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(30,30,30,0.18), inset 0 1px 0 rgba(255,255,255,0.12);
+        position: relative;
+    }
+    .plate::before {
+        content: "";
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--lux-bronze);
+        box-shadow: 0 0 0 3px rgba(200,121,65,0.25);
+    }
+    .veh-name {
+        margin: 14px 0 0;
+        font-size: 1.12rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--lux-graphite);
+    }
+    .veh-meta { font-size: 0.8rem; color: var(--lux-slate); margin-top: 3px; }
+    .pill-lux {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 5px 11px;
+        border-radius: 999px;
+        border: 1px solid;
+    }
+    .pill-ok { color: #1F7A4D; border-color: rgba(31,122,77,0.3); background: rgba(31,122,77,0.06); }
+    .pill-exp { color: var(--lux-slate); border-color: var(--lux-hairline); background: #fff; }
+    .pill-none { color: #A09A93; border-color: transparent; background: transparent; padding-left: 0; }
+
+    .veh-body { padding: 20px 24px 22px; display: flex; flex-direction: column; flex-grow: 1; }
+
+    /* ODO lớn + thanh bảo dưỡng */
+    .odo-line { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .odo-line .lbl {
+        font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--lux-slate); font-weight: 600;
+    }
+    .odo-num {
+        font-size: 1.55rem;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--lux-graphite);
+        font-variant-numeric: tabular-nums;
+    }
+    .odo-num b { font-weight: 700; }
+    .odo-num .unit { font-size: 0.78rem; color: var(--lux-slate); font-weight: 500; margin-left: 3px; }
+
+    .svc-track {
+        height: 5px;
+        background: var(--lux-sand);
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+    }
+    .svc-fill {
+        height: 100%;
+        width: 0;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--lux-bronze-deep), var(--lux-bronze), #E2B08A);
+        transition: width 1.4s cubic-bezier(.22,1,.36,1) .35s;
+        position: relative;
+    }
+    .svc-fill::after {
+        content: "";
+        position: absolute;
+        right: 0; top: 50%;
+        transform: translateY(-50%);
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2.5px solid var(--lux-bronze);
+        box-shadow: 0 1px 4px rgba(30,30,30,0.2);
+    }
+    .svc-note {
+        display: flex; justify-content: space-between;
+        font-size: 0.74rem; color: var(--lux-slate); margin-top: 7px;
+    }
+    .svc-note b { color: var(--lux-bronze-deep); font-weight: 700; }
+
+    /* Thông số */
+    .spec-list { margin-top: 16px; border-top: 1px solid var(--lux-hairline); }
+    .spec {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--lux-hairline);
+        font-size: 0.86rem;
+    }
+    .spec:last-child { border-bottom: none; }
+    .spec .k {
+        color: var(--lux-slate);
+        font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+    }
+    .spec .v { font-weight: 600; color: var(--lux-graphite); text-align: right; max-width: 62%; }
+    .spec .v.mono { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+
+    .veh-actions { margin-top: auto; padding-top: 18px; display: flex; gap: 9px; }
+    .veh-actions .btn-lux, .veh-actions .btn-lux-ghost { padding: 9px 16px; font-size: 0.8rem; flex-grow: 1; text-align: center; }
+    .btn-odo {
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        border: 1px solid var(--lux-hairline);
+        background: #fff;
+        color: var(--lux-slate);
+        display: inline-flex; align-items: center; justify-content: center;
+        transition: all .3s cubic-bezier(.22,1,.36,1);
+        flex-shrink: 0;
+        align-self: center;
+    }
+    .btn-odo:hover { border-color: var(--lux-bronze); color: var(--lux-bronze); transform: rotate(-12deg) scale(1.06); }
+
+    /* Empty state */
+    .empty-lux {
+        background: #fff;
+        border: 1px dashed var(--lux-hairline);
+        border-radius: 20px;
+        padding: 60px 24px;
+        text-align: center;
+    }
+    .empty-lux .ring {
+        width: 74px; height: 74px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        border: 1px solid var(--lux-hairline);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem;
+        color: var(--lux-bronze);
+        background: var(--lux-ivory);
+        box-shadow: 0 0 0 8px rgba(200,121,65,0.05);
+        animation: pulseRing 2.6s ease-in-out infinite;
+    }
+    @keyframes pulseRing {
+        0%,100% { box-shadow: 0 0 0 8px rgba(200,121,65,0.05); }
+        50% { box-shadow: 0 0 0 14px rgba(200,121,65,0.02); }
+    }
+
+    /* Modal */
+    .modal-content { border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 30px 70px -25px rgba(30,30,30,0.4); }
+    .modal-head-lux {
+        background: var(--lux-graphite);
+        color: #fff;
+        padding: 18px 24px;
+        border-bottom: 2px solid var(--lux-bronze);
+        position: relative;
+    }
+    .modal-head-lux .ttl {
+        font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 600;
+    }
+    .modal-head-lux h5 { font-size: 1.05rem; font-weight: 600; margin: 0; }
+    .modal-head-lux .btn-close { filter: invert(1); opacity: .7; }
+    .modal-head-lux .btn-close:hover { opacity: 1; }
+    .form-lux label {
+        font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase;
+        color: var(--lux-slate); font-weight: 600; margin-bottom: 6px;
+    }
+    .form-lux .form-control, .form-lux .form-select {
+        border: 1px solid var(--lux-hairline);
+        border-radius: 10px;
+        background: var(--lux-ivory);
+        font-size: 0.92rem;
+        padding: 10px 14px;
+        transition: border-color .25s, box-shadow .25s, background .25s;
+    }
+    .form-lux .form-control:focus, .form-lux .form-select:focus {
+        background: #fff;
+        border-color: var(--lux-bronze);
+        box-shadow: 0 0 0 3px rgba(200,121,65,0.12);
+    }
+    .section-lux {
+        font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--lux-bronze-deep); font-weight: 700;
+        padding-bottom: 8px; border-bottom: 1px solid var(--lux-hairline);
+        margin: 4px 0 16px;
+    }
+    .btn-lux-sm { padding: 9px 22px; font-size: 0.82rem; }
+
+    @media (prefers-reduced-motion: reduce) {
+        .veh-card { animation: none; opacity: 1; transform: none; }
+        .btn-lux::after, .veh-card::before { display: none; }
+    }
+</style>
+
+<div class="veh-page">
+
+    <!-- ===== HEADER ===== -->
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4 veh-head-row">
+        <div class="veh-head-copy">
+            <div class="lux-kicker">Bộ sưu tập của bạn</div>
+            <h1 class="lux-title">Xe <strong>của tôi</strong></h1>
+            <p class="lux-sub mb-0 mt-1">Hồ sơ phương tiện, quãng đường và bảo hành — được theo dõi chính xác đến từng km.</p>
+        </div>
+        <button class="btn btn-lux" data-bs-toggle="modal" data-bs-target="#addVehicleModal">
+            <i class="bi bi-plus-lg me-2"></i>Thêm xe mới
+        </button>
+    </div>
+
+    <!-- ===== THỐNG KÊ ===== -->
+    <div class="lux-stats mb-4">
+        <div class="lux-stat">
+            <div class="lbl">Tổng xe</div>
+            <div class="val"><b data-count="{{ vehicles|length }}">0</b></div>
+        </div>
+        <div class="lux-stat">
+            <div class="lbl">Tổng ODO</div>
+            <div class="val"><b data-count="{{ vehicles|sum(attribute='current_odo') or 0 }}">0</b> <span class="unit">km</span></div>
+        </div>
+        <div class="lux-stat">
+            <div class="lbl">Còn bảo hành</div>
+            <div class="val"><b data-count="{{ vehicles|selectattr('warranty_status', 'equalto', 'Còn bảo hành')|list|length }}">0</b> <span class="unit">xe</span></div>
+        </div>
+        <div class="lux-stat">
+            <div class="lbl">Chu kỳ BD</div>
+            <div class="val"><b>5.000</b> <span class="unit">km</span></div>
+        </div>
+    </div>
+
+    <!-- ===== DANH SÁCH XE ===== -->
+    <div class="row g-4">
+        {% for v in vehicles %}
+        {% set odo = v.current_odo or 0 %}
+        {% set next_svc = ((odo // 5000) + 1) * 5000 %}
+        {% set km_left = next_svc - odo %}
+        {% set svc_pct = ((odo % 5000) * 100 / 5000)|round(0, 'ceil')|int %}
+        <div class="col-lg-6">
+            <div class="veh-card" style="--d: {{ (loop.index0 * 0.12)|round(2) }}s;">
+                <!-- Đầu thẻ -->
+                <div class="veh-head">
+                    <span class="veh-badge-no">NO. {{ "%02d"|format(loop.index) }}</span>
+                    <span class="plate">{{ v.license_plate }}</span>
+                    <h5 class="veh-name">{{ v.make }} {{ v.model }}{% if v.version %} <span style="font-weight:400; color:var(--lux-slate);">· {{ v.version }}</span>{% endif %}</h5>
+                    <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-2">
+                        <span class="veh-meta">{{ v.manufacture_year or '—' }} · {{ v.color or '—' }} · {{ v.fuel_type or 'Chưa rõ nhiên liệu' }}</span>
+                        {% if v.warranty_status == 'Còn bảo hành' %}
+                            <span class="pill-lux pill-ok"><i class="bi bi-shield-check"></i>Còn bảo hành</span>
+                        {% elif v.warranty_status == 'Hết bảo hành' %}
+                            <span class="pill-lux pill-exp"><i class="bi bi-shield-slash"></i>Hết bảo hành</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Thân thẻ -->
+                <div class="veh-body">
+                    <div class="odo-line">
+                        <span class="lbl">Odometer</span>
+                        <span class="odo-num"><b data-count="{{ odo }}">0</b><span class="unit">km</span></span>
+                    </div>
+                    <div class="svc-track">
+                        <div class="svc-fill" data-w="{{ svc_pct }}"></div>
+                    </div>
+                    <div class="svc-note">
+                        <span>Bảo dưỡng kế tiếp · {{ "{:,}".format(next_svc).replace(",", ".") }} km</span>
+                        <span>Còn <b>{{ "{:,}".format(km_left).replace(",", ".") }} km</b></span>
+                    </div>
+
+                    <div class="spec-list">
+                        <div class="spec"><span class="k">Số khung (VIN)</span><span class="v mono">{{ v.vin or '—' }}</span></div>
+                        <div class="spec"><span class="k">Số máy</span><span class="v mono">{{ v.engine_number or '—' }}</span></div>
+                        <div class="spec"><span class="k">Mục đích</span><span class="v">{{ v.usage_type or '—' }}</span></div>
+                    </div>
+
+                    <div class="veh-actions">
+                        <a href="/my-appointments#bookNow" class="btn btn-lux"><i class="bi bi-calendar-check me-1"></i>Đặt lịch</a>
+                        <a href="/my-invoices" class="btn btn-lux-ghost">Hóa đơn</a>
+                        <button class="btn-odo" title="Cập nhật ODO" data-bs-toggle="modal" data-bs-target="#updateOdoModal{{ v.id }}"><i class="bi bi-pencil"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Cập nhật ODO -->
+            <div class="modal fade" id="updateOdoModal{{ v.id }}" tabindex="-1">
+                <div class="modal-dialog modal-sm modal-dialog-centered">
+                    <form action="/my-vehicles/update-odo" method="POST" class="modal-content">
+                        <div class="modal-head-lux">
+                            <div class="ttl">Odometer</div>
+                            <h5>Cập nhật ODO</h5>
+                            <button type="button" class="btn-close position-absolute end-0 top-50 translate-middle-y me-3" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body form-lux">
+                            <input type="hidden" name="vehicle_id" value="{{ v.id }}">
+                            <label>Xe {{ v.license_plate }}</label>
+                            <input type="number" name="new_odo" class="form-control" value="{{ odo }}" min="{{ odo }}" required>
+                            <small class="text-muted">Giá trị phải ≥ {{ "{:,}".format(odo).replace(",", ".") }} km</small>
+                        </div>
+                        <div class="modal-footer border-top-0 bg-white">
+                            <button type="button" class="btn btn-lux-ghost btn-sm" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-lux btn-lux-sm">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="empty-lux">
+                <div class="ring"><i class="bi bi-car-front"></i></div>
+                <div class="lux-kicker" style="justify-content:center;">Garage trống</div>
+                <h4 class="fw-light mb-2">Chưa có xe nào trong bộ sưu tập</h4>
+                <p class="text-muted mb-4" style="max-width:440px; margin:0 auto;">Thêm chiếc xe đầu tiên để theo dõi quãng đường, lịch bảo dưỡng và đặt lịch hẹn ưu tiên.</p>
+                <button class="btn btn-lux" data-bs-toggle="modal" data-bs-target="#addVehicleModal"><i class="bi bi-plus-lg me-2"></i>Thêm xe ngay</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ===== MODAL THÊM XE ===== -->
+<div class="modal fade" id="addVehicleModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <form action="/my-vehicles/add" method="POST" class="modal-content form-lux">
+            <div class="modal-head-lux position-relative">
+                <div class="ttl">Garage của tôi</div>
+                <h5>Đăng ký xe mới</h5>
+                <button type="button" class="btn-close position-absolute end-0 top-50 translate-middle-y me-3" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+
+                <div class="section-lux">Thông tin nhận diện</div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label>Biển số xe <span class="text-danger">*</span></label>
+                        <input type="text" name="license_plate" class="form-control" placeholder="VD: 51H-123.45" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Màu xe</label>
+                        <input type="text" name="color" class="form-control" placeholder="VD: Trắng ngọc trai">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Hãng xe <span class="text-danger">*</span></label>
+                        <input type="text" name="make" class="form-control" placeholder="VD: Mercedes-Benz" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Dòng xe (Model) <span class="text-danger">*</span></label>
+                        <input type="text" name="model" class="form-control" placeholder="VD: C200" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Phiên bản</label>
+                        <input type="text" name="version" class="form-control" placeholder="VD: AMG Line">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Năm sản xuất</label>
+                        <input type="number" name="manufacture_year" class="form-control" placeholder="VD: 2024">
+                    </div>
+                    <div class="col-md-8">
+                        <label>Nhiên liệu</label>
+                        <select name="fuel_type" class="form-select">
+                            <option value="">-- Chọn loại --</option>
+                            <option value="Xăng">Xăng</option>
+                            <option value="Dầu (Diesel)">Dầu (Diesel)</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Điện (EV)">Điện (EV)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-lux mt-4">Thông tin kỹ thuật &amp; giấy tờ</div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label>Số khung (VIN)</label>
+                        <input type="text" name="vin" class="form-control" placeholder="Nhập số khung...">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Số máy</label>
+                        <input type="text" name="engine_number" class="form-control" placeholder="Nhập số máy...">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Số km hiện tại (ODO)</label>
+                        <input type="number" name="current_odo" class="form-control" placeholder="VD: 15000">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Mục đích sử dụng</label>
+                        <select name="usage_type" class="form-select">
+                            <option value="">-- Chọn mục đích --</option>
+                            <option value="Cá nhân / Gia đình">Cá nhân / Gia đình</option>
+                            <option value="Kinh doanh dịch vụ">Kinh doanh dịch vụ</option>
+                            <option value="Xe công ty">Xe công ty</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Ngày đăng ký xe</label>
+                        <input type="date" name="registration_date" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Ngày mua xe</label>
+                        <input type="date" name="purchase_date" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Bảo hành hãng</label>
+                        <select name="warranty_status" class="form-select">
+                            <option value="">-- Chọn trạng thái --</option>
+                            <option value="Còn bảo hành">Còn bảo hành</option>
+                            <option value="Hết bảo hành">Hết bảo hành</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer border-top bg-white">
+                <button type="button" class="btn btn-lux-ghost" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-lux">Lưu thông tin xe</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+/* Đếm số tăng dần */
+(function () {
+    const nums = document.querySelectorAll('[data-count]');
+    const dur = 1100;
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    nums.forEach(el => {
+        const target = parseInt(el.dataset.count, 10) || 0;
+        if (target === 0) { el.textContent = '0'; return; }
+        let start = null;
+        const step = ts => {
+            if (!start) start = ts;
+            const p = Math.min((ts - start) / dur, 1);
+            el.textContent = Math.round(ease(p) * target).toLocaleString('vi-VN');
+            if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    });
+
+    /* Thanh bảo dưỡng trượt vào */
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.svc-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Tiếp Nhận - Xe {{ order.vehicle.license_plate }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; color: #000; background-color: #f8f9fa; }
+        .ticket-container { max-width: 900px; margin: 2rem auto; background: #fff; padding: 40px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .header-logo { font-size: 26px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+        .ticket-title { text-align: center; font-size: 28px; font-weight: bold; margin: 20px 0 30px; text-transform: uppercase; }
+        .section-title { font-size: 18px; font-weight: bold; border-bottom: 2px solid #000; margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px; text-transform: uppercase; }
+        
+        .info-table, .checklist-table { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
+        .info-table td { padding: 6px 0; vertical-align: top; }
+        .info-table td:nth-child(odd) { font-weight: bold; width: 20%; }
+        .info-table td:nth-child(even) { width: 30%; }
+        
+        .checklist-table td { padding: 6px 0; width: 25%; }
+        
+        .checkbox-box { display: inline-block; width: 14px; height: 14px; border: 1px solid #000; margin-right: 8px; vertical-align: middle; text-align: center; line-height: 14px; font-size: 12px; font-weight: bold; }
+        .checkbox-box.checked { background-color: #e9ecef; content: '✓'; }
+
+        .image-box { border: 1px solid #ccc; padding: 5px; text-align: center; margin-top: 10px; max-width: 300px; }
+        .image-box img { max-width: 100%; height: auto; display: block; }
+        
+        .signature-area { margin-top: 50px; display: flex; justify-content: space-around; text-align: center; }
+        .signature-box { width: 40%; }
+        .signature-space { height: 100px; }
+        
+        .no-print-bar { text-align: center; padding: 15px; background: #e9ecef; margin-bottom: 20px; border-radius: 8px; }
+        
+        @media print {
+            body { background: none; margin: 0; }
+            .ticket-container { box-shadow: none; margin: 0; padding: 0; width: 100%; max-width: none; }
+            .no-print-bar { display: none !important; }
+            @page { margin: 1cm; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ticket-container">
+    <div class="no-print-bar d-print-none">
+        <button onclick="window.print()" class="btn btn-primary px-4 fw-bold">🖨️ In Phiếu Tiếp Nhận</button>
+        <a href="/tech/dashboard" class="btn btn-outline-secondary ms-2">Về Bảng Điều Khiển</a>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between border-bottom pb-3">
+        <div>
+            <div class="header-logo">THREEH WORKSHOP</div>
+            <div>Địa chỉ: Tháp đôi Prime Thái Nguyên, số 1 Hoàng Văn Thụ, Phan Đình Phùng, Thái Nguyên</div>
+            <div>Hotline: 0981.888.888 - Email: support@threeh.vn</div>
+        </div>
+        <div class="text-end">
+            <h4 class="mb-1 text-danger fw-bold">Phiếu Số: #RO-{{ order.id }}</h4>
+            <div>Ngày lập: {{ order.reception_datetime.replace('T', ' ') if order.reception_datetime else '' }}</div>
+        </div>
+    </div>
+
+    <div class="ticket-title">PHIẾU TIẾP NHẬN BÀN GIAO XE</div>
+
+    <!-- I. THÔNG TIN KHÁCH HÀNG & XE -->
+    <div class="section-title">I. THÔNG TIN KHÁCH HÀNG & XE</div>
+    <table class="info-table">
+        <tr>
+            <td>Khách hàng:</td>
+            <td>{{ order.vehicle.owner.full_name or 'Khách vãng lai' }}</td>
+            <td>Biển số xe:</td>
+            <td style="font-size: 1.2em; font-weight: bold;">{{ order.vehicle.license_plate }}</td>
+        </tr>
+        <tr>
+            <td>Số điện thoại:</td>
+            <td>{{ order.vehicle.owner.phone or 'Không có' }}</td>
+            <td>Hãng / Dòng xe:</td>
+            <td>{{ order.vehicle.make or '---' }} {{ order.vehicle.model or '' }}</td>
+        </tr>
+        <tr>
+            <td>Địa chỉ:</td>
+            <td colspan="3">{{ order.vehicle.owner.address or '---' }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ order.vehicle.owner.email or '---' }}</td>
+            <td>Năm SX:</td>
+            <td>{{ order.vehicle.manufacture_year or '---' }}</td>
+        </tr>
+        <tr>
+            <td>Người giao xe:</td>
+            <td>{{ order.deliverer_name }}</td>
+            <td>Số VIN / Số máy:</td>
+            <td>{{ order.vehicle.VIN or '---' }} / {{ order.vehicle.engine_number or '---' }}</td>
+        </tr>
+    </table>
+
+    <!-- II. TÌNH TRẠNG TIẾP NHẬN & PHỤ KIỆN -->
+    <div class="section-title">II. TÌNH TRẠNG TIẾP NHẬN & PHỤ KIỆN</div>
+    <table class="info-table" style="margin-bottom: 15px;">
+        <tr>
+            <td>Số ODO (km):</td>
+            <td>{{ "{:,}".format(order.current_odo) if order.current_odo else '---' }}</td>
+            <td>Mức nhiên liệu:</td>
+            <td>{{ order.fuel_level or '---' }}</td>
+        </tr>
+        <tr>
+            <td>Hư hỏng ngoại thất:</td>
+            <td colspan="3">{{ order.exterior_scratches if order.exterior_scratches else 'Không ghi nhận hư hỏng' }}</td>
+        </tr>
+        <tr>
+            <td>Phụ kiện trên xe:</td>
+            <td colspan="3">{{ order.personal_belongings if order.personal_belongings else 'Không có' }}</td>
+        </tr>
+        <tr>
+            <td>Số lượng chìa khóa:</td>
+            <td colspan="3"><strong>{{ order.key_count or 1 }} chìa</strong></td>
+        </tr>
+    </table>
+
+    {% if order.vehicle_images %}
+    <div class="image-box">
+        <div class="fw-bold mb-1"><small>Ảnh hiện trạng (chụp lúc nhận):</small></div>
+        <img src="{{ order.vehicle_images }}" alt="Ảnh xe">
+    </div>
+    {% endif %}
+
+    <!-- III. YÊU CẦU SỬA CHỮA & KỸ THUẬT -->
+    <div class="section-title">III. YÊU CẦU SỬA CHỮA & TÌNH TRẠNG LỖI</div>
+    <table class="info-table" style="margin-bottom: 5px;">
+        <tr>
+            <td>Yêu cầu sửa chữa:</td>
+            <td colspan="3" style="font-weight: bold;">{{ order.symptoms }}</td>
+        </tr>
+        <tr>
+            <td>Mức độ lỗi:</td>
+            <td>{{ order.symptom_severity or 'Chưa phân loại' }}</td>
+            <td>Âm thanh lạ:</td>
+            <td>{{ order.abnormal_sounds or 'Không' }}</td>
+        </tr>
+        <tr>
+            <td>Đèn cảnh báo:</td>
+            <td colspan="3">{{ order.warning_lights if order.warning_lights else 'Không có đèn cảnh báo' }}</td>
+        </tr>
+    </table>
+    
+    {% if order.ai_diagnosis %}
+    <div class="mt-2 p-2 bg-light border" style="border-radius: 5px;">
+        <strong>Chẩn đoán sơ bộ (AI Support):</strong><br>
+        <small>{{ order.ai_diagnosis }}</small>
+    </div>
+    {% endif %}
+
+    <div class="mt-4" style="font-size: 0.9em; font-style: italic; text-align: justify;">
+        <strong>Cam kết:</strong> Bằng việc ký vào biên bản này, Khách hàng xác nhận tình trạng xe và đồ vật cá nhân để lại trên xe đúng như liệt kê. Garage từ chối giải quyết các khiếu nại về tài sản không được kê khai. Phiếu có giá trị làm cơ sở để đối chiếu khi bàn giao lại xe sau khi sửa chữa.
+    </div>
+
+    <!-- Chữ ký -->
+    <div class="signature-area">
+        <div class="signature-box">
+            <strong>ĐẠI DIỆN GARAGE (NHẬN XE)</strong><br>
+            <small>(Ký và ghi rõ họ tên)</small>
+            <div class="signature-space"></div>
+            <div class="text-uppercase fw-bold">{{ order.technician.full_name if order.technician else '' }}</div>
+        </div>
+        <div class="signature-box">
+            <strong>KHÁCH HÀNG / NGƯỜI GIAO XE</strong><br>
+            <small>(Ký và ghi rõ họ tên)</small>
+            <div class="signature-space"></div>
+            <div class="text-uppercase fw-bold">{{ order.deliverer_name }}</div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <small>Mã tra cứu trên hệ thống: <strong>{{ order.id }} - {{ order.vehicle.license_plate }}</strong></small>
+    </div>
+</div>
+
+</body>
+<script>
+    window.onload = function() {
+        window.print();
+    };
+</script>
+</html>

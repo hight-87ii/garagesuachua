@@ -1,0 +1,21 @@
+[GUIDELINE] Ắc quy, máy phát, máy đề
+Áp dụng cho: Xe xăng/dầu điện 12V (ắc quy chì-axit và EFB/AGM cho xe có i-Stop)
+Ngày hiệu lực: 01/01/2026
+
+1. TUỔI THỌ ẮC QUY
+Trung bình 2-3 năm (khí hậu nóng rút ngắn còn ~2 năm). Xe có chế độ dừng/khởi động tự động (i-Stop) BẮT BUỘC dùng ắc quy EFB/AGM đúng chủng loại, dùng ắc quy thường sẽ nhanh hỏng và lỗi hệ thống.
+
+2. DẤU HIỆU ẮC QUY YẾU
+- Đề dai, đề 2-3 lần mới nổ, nhất là buổi sáng.
+- Đèn pha mờ khi chưa nổ máy, sáng bình thường sau khi nổ (máy phát còn tốt).
+- Đèn báo ắc quy sáng khi đang chạy = máy phát không sạc (nguy hiểm hơn ắc quy yếu).
+- Cọc bình đóng muối trắng/xanh, dây mass lỏng gây sụt áp.
+
+3. KIỂM TRA TẠI XƯỞNG
+Đo điện áp (đủ ~12,4-12,7V khi tắt máy), đo dòng khởi động lạnh (CCA) bằng máy chuyên dụng, kiểm tra dòng sạc của máy phát (13,7-14,7V khi nổ máy) và dòng rò khi tắt máy (rò lớn làm hết bình qua đêm — thường do độ thêm thiết bị điện).
+
+4. CÂU BÌNH ĐÚNG CÁCH (KHI HẾT BÌNH DỌC ĐƯỜNG)
+Kẹp đỏ vào cọc (+) bình hết, đầu đỏ còn lại vào (+) bình cứu; kẹp đen vào (-) bình cứu, đầu đen còn lại kẹp vào MASS SƯỜN XE (không kẹp trực tiếp (-) bình hết để tránh tia lửa gần khí ắc quy). Nổ xe cứu 3-5 phút rồi mới đề xe hết bình. Tuyệt đối không câu ngược cực.
+
+5. THAY ẮC QUY
+Chọn đúng dung lượng (Ah) và cọc (thuận/nghịch) theo khay xe. Xe nhiều hộp điện tử nên thay bằng máy nuôi nguồn để khỏi mất nhớ ghế, kính một chạm, mã radio. Bình cũ được thu hồi đúng quy định (chì và axit độc hại), có trừ tiền bình cũ vào hóa đơn.

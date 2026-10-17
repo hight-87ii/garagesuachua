@@ -1,0 +1,18 @@
+[GUIDELINE] Đặt lịch hẹn, tiếp nhận xe và nghiệm thu
+Áp dụng cho: Mọi khách hàng đặt lịch qua web, điện thoại, hoặc đến trực tiếp
+Ngày hiệu lực: 01/01/2026
+
+1. ĐẶT LỊCH HẸN
+Khách cung cấp: biển số xe, hạng mục cần làm, ngày giờ mong muốn, số điện thoại. Lịch ở trạng thái Chờ xác nhận; xưởng gọi lại xác nhận trong giờ hành chính. Đến trễ quá 30 phút mà không báo, lịch tự nhường cho khách khác. Lịch qua AI chatbot tạo ở trạng thái nháp — khách vào mục Đặt lịch hẹn xem lại và xác nhận.
+
+2. TIẾP NHẬN XE
+Cố vấn dịch vụ cùng khách kiểm tra: ODO hiện tại, mức nhiên liệu, vết xước ngoại thất (chụp ảnh), đồ đạc cá nhân trong xe, số chìa khóa giao nhận. Hai bên ký phiếu tiếp nhận ghi đầy đủ các mục trên — đây là căn cứ đối chiếu khi giao xe, tránh tranh cãi vết xước có sẵn.
+
+3. BÁO GIÁ VÀ DUYỆT
+Sau kiểm tra, xưởng gửi báo giá chi tiết từng hạng mục (vật tư + công). Khách duyệt toàn bộ hoặc từng phần qua ký trực tiếp/zalo/tin nhắn. Xe chỉ được sửa các mục đã duyệt. Thời gian hẹn giao xe tính từ lúc duyệt báo giá, không tính từ lúc nhận xe.
+
+4. NGHIỆM THU VÀ GIAO XE
+Khách kiểm tra: hạng mục đã làm đúng báo giá, chạy thử cùng kỹ thuật viên với lỗi vận hành, ngoại thất/ODO/đồ đạc khớp phiếu tiếp nhận, hóa đơn rõ ràng. Ký biên bản nghiệm thu rồi mới thanh toán và nhận xe.
+
+5. HỖ TRỢ ĐẶC BIỆT
+Xe cứu hộ (không đi được): gọi hotline để điều xe kéo, phí cứu hộ nội thành được trừ 50% khi sửa tại xưởng. Khách chờ lấy xe trong ngày được bố trí phòng chờ, wifi, nước uống; xe để qua đêm được bảo quản trong xưởng có camera.

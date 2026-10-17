@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Garage Management{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --warm-white: #F9F9F8;
+            --concrete-gray: #E5E5E5;
+            --charcoal-black: #1A1A1A;
+            --dark-graphite: #2D2D2D;
+            --natural-wood: #D4A373;
+            --copper-orange: #C87941;
+            --text-light: #F9F9F8;
+            --text-dark: #1A1A1A;
+            --text-muted: #666666;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--warm-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        /* Navbar Styling */
+        .navbar-premium {
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-premium .navbar-brand {
+            color: var(--text-light);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .navbar-premium .nav-link {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .navbar-premium .nav-link:hover, .navbar-premium .nav-link.active {
+            color: var(--copper-orange);
+        }
+
+        .btn-copper {
+            background-color: transparent;
+            color: var(--copper-orange);
+            border: 1px solid var(--copper-orange);
+            padding: 0.5rem 1.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-copper:hover {
+            background-color: var(--copper-orange);
+            color: var(--warm-white);
+        }
+
+        /* Custom Section Padding */
+        .section-padding {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--charcoal-black);
+        }
+        
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        .footer-premium {
+            background-color: var(--charcoal-black);
+            color: var(--text-light);
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-premium h5 {
+            color: var(--warm-white);
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-premium a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-premium a:hover {
+            color: var(--copper-orange);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 3rem;
+            padding-top: 2rem;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Premium Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-premium fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="bi bi-gear-wide-connected text-copper me-2" style="color: var(--copper-orange);"></i>
+                THREEH WORKSHOP
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#premiumNavbar" aria-controls="premiumNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-2 text-light"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="premiumNavbar">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">Garage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gallery">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#team">Technicians</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reviews">Reviews</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    {% if user %}
+                        <a href="/my-appointments" class="nav-link text-light me-3 d-none d-lg-block">Dashboard</a>
+                        <a href="/logout" class="nav-link text-muted me-3 text-decoration-underline" style="font-size: 0.8rem;">Logout</a>
+                    {% else %}
+                        <a href="/login" class="nav-link text-light me-3 d-none d-lg-block">Login</a>
+                    {% endif %}
+                    <a href="/my-appointments" class="btn btn-copper">Book Service</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="footer-premium" id="contact">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 pe-lg-5">
+                    <a class="navbar-brand d-flex align-items-center mb-3 text-light fs-4 fw-bold text-decoration-none" href="/">
+                        <i class="bi bi-gear-wide-connected text-copper me-2" style="color: var(--copper-orange);"></i>
+                        THREEH WORKSHOP
+                    </a>
+                    <p class="mb-4" style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">
+                        <strong>Uy tín - Chuyên nghiệp - Tận tâm</strong><br>
+                        Xế yêu của bạn xứng đáng được chăm sóc tốt nhất.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="fs-5"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="fs-5"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="fs-5"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5>Services</h5>
+                    <ul class="list-unstyled d-flex flex-column gap-2">
+                        <li><a href="#services">Engine Repair</a></li>
+                        <li><a href="#services">Diagnostics</a></li>
+                        <li><a href="#services">Electrical</a></li>
+                        <li><a href="#services">Maintenance</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5>Company</h5>
+                    <ul class="list-unstyled d-flex flex-column gap-2">
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#team">Our Team</a></li>
+                        <li><a href="#gallery">Projects</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled d-flex flex-column gap-3 mb-0" style="color: rgba(255,255,255,0.6); font-size: 0.95rem;">
+                        <li class="d-flex">
+                            <i class="bi bi-geo-alt me-3 fs-5" style="color: var(--copper-orange);"></i>
+                            <div>Số 450 Đường Bắc Sơn (gần ngã tư giao Minh Cầu), Phường Hoàng Văn Thụ, TP. Thái Nguyên.</div>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <i class="bi bi-telephone me-3 fs-5" style="color: var(--copper-orange);"></i>
+                            <div>0988 123 456</div>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <i class="bi bi-clock me-3 fs-5" style="color: var(--copper-orange);"></i>
+                            <div>Giờ làm việc: 08:00 - 18:00 (Thứ 2 - Thứ 7)</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row footer-bottom">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; 2026 ThreeH Workshop. All rights reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Smooth Scroll for internal links -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

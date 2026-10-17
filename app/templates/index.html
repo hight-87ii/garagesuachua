@@ -1,0 +1,1101 @@
+{% extends "base.html" %}
+
+{% block title %}Trang chủ - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-custom: #C87941;
+        --bg-custom: #FAF9F7;
+    }
+    body {
+        background-color: var(--bg-custom);
+    }
+    .hero-section {
+        background: linear-gradient(rgba(30,30,30,0.84), rgba(30,30,30,0.72)), url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=2000&auto=format&fit=crop') center/cover;
+        color: white;
+        padding: 80px 20px;
+        border-radius: 22px;
+        margin-bottom: 40px;
+        border: 1px solid rgba(200,121,65,.25);
+    }
+    .hero-section h1 { color: #fff; letter-spacing: -.02em; }
+    .hero-kicker { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #E0A375; margin-bottom: 10px; }
+    .btn-hero { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; border-radius: 999px; padding: .8rem 2rem; }
+    .btn-hero:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+    .btn-hero-ghost { background: transparent; border: 1px solid rgba(255,255,255,.5); color: #fff; font-weight: 600; border-radius: 999px; padding: .8rem 2rem; }
+    .btn-hero-ghost:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,.08); }
+    .mkt-h { font-weight: 700; text-align: center; margin-bottom: 8px; letter-spacing: -.02em; color: var(--lux-graphite); }
+    .mkt-sub { text-align: center; color: var(--lux-slate); margin-bottom: 24px; font-size: .92rem; }
+    .service-card {
+        border-radius: 16px;
+        border: 1px solid var(--lux-hairline);
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(30,30,30,.04);
+        transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s;
+        padding: 24px;
+    }
+    .service-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 36px -22px rgba(30,30,30,.4);
+    }
+    .icon-box-large {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: rgba(200,121,65,0.1);
+        color: var(--primary-custom);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+        margin-bottom: 15px;
+    }
+    .promo-card {
+        border-radius: 16px;
+        border: 1px dashed rgba(200,121,65,.55);
+        background-color: #FFFDFB;
+        padding: 24px;
+    }
+    .blog-card {
+        border-radius: 16px;
+        border: 1px solid var(--lux-hairline);
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(30,30,30,.04);
+        padding: 24px;
+    }
+    .blog-card h6 { color: var(--lux-graphite); }
+    .blog-card p { color: var(--lux-slate); }
+    .why-panel {
+        border-radius: 22px;
+        border: 1px solid var(--lux-hairline);
+        background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%);
+        color: #fff;
+    }
+    .why-panel li { color: rgba(255,255,255,.88); }
+    .why-panel strong { color: #fff; }
+    .why-ico { width: 52px; height: 52px; border-radius: 14px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.18); display: inline-flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #E0A375; }
+    .footer-section {
+        background-color: #1E1E1E;
+        color: white;
+        border-radius: 22px;
+        padding: 40px 28px;
+        margin-top: 40px;
+        border: 1px solid rgba(200,121,65,.25);
+    }
+    .footer-section h4, .footer-section h5 { color: #fff; }
+    .footer-section .fh-sub { color: #E0A375; }
+    .footer-section p, .footer-section li { color: rgba(255,255,255,.78); }
+    .footer-section a { color: #fff; }
+    @media (prefers-reduced-motion: reduce) { .service-card:hover { transform: none; } }
+
+    /* ===== Dashboard khách hàng ===== */
+    .greet-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 0.75rem; padding: 22px 0 16px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 18px; }
+    .greet-head h4 { font-size: 1.35rem; letter-spacing: -.02em; }
+    .greet-sub { color: var(--lux-slate); font-size: .86rem; margin: 4px 0 0; }
+    .kpi-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; box-shadow: 0 1px 3px rgba(30,30,30,.04); padding: 1.1rem 1.25rem; height: 100%; transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s; }
+    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -20px rgba(30,30,30,.35); }
+    .kpi-card .kpi-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex: 0 0 44px; }
+    .kpi-card .kpi-value { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; color: var(--lux-graphite); font-variant-numeric: tabular-nums; }
+    .kpi-card .kpi-label { font-size: 0.76rem; color: var(--lux-slate); font-weight: 700; letter-spacing: .03em; }
+    .kpi-card.alert { border-color: rgba(192,57,43,.4); background: rgba(192,57,43,.04); }
+    .sect-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; box-shadow: 0 1px 3px rgba(30,30,30,.04); margin-bottom: 1.25rem; overflow: hidden; }
+    .sect-head { padding: 1rem 1.4rem; border-bottom: 1px solid var(--lux-hairline); font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; color: var(--lux-graphite); }
+    .sect-body { padding: 1.4rem; }
+    .veh-card { border: 1px solid var(--lux-hairline); border-radius: 14px; background: var(--lux-ivory); padding: 1.2rem 1.3rem; height: 100%; transition: transform .25s, box-shadow .25s, border-color .25s; }
+    .veh-card:hover { border-color: #D8D1C8; box-shadow: 0 14px 30px -20px rgba(30,30,30,.35); transform: translateY(-2px); }
+    .veh-plate { font-weight: 700; font-size: 1rem; background: var(--lux-graphite); color: #fff; border: 1px solid var(--lux-graphite); padding: 3px 12px; border-radius: 8px; display: inline-block; letter-spacing: .04em; }
+    .odo-bar { height: 7px; border-radius: 999px; background: var(--lux-hairline); overflow: hidden; }
+    .odo-bar > div { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #C87941, #E0A375); }
+    .badge-soft { background: rgba(200,121,65,0.12); color: var(--lux-bronze-deep); border: 1px solid rgba(200,121,65,0.3); font-weight: 700; font-size: .75rem; }
+    .badge-ok { background: rgba(46,125,79,.1); color: #2E7D4F; border: 1px solid rgba(46,125,79,.3); font-weight: 700; font-size: .75rem; }
+    .btn-copper { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; border-radius: 999px; padding: 0.5rem 1.4rem; }
+    .btn-copper:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+    .info-tile { border: 1px solid var(--lux-hairline); border-radius: 14px; padding: 1.2rem 1.3rem; background: #fff; height: 100%; }
+    .info-tile .tile-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lux-slate); font-weight: 700; }
+    .empty-mini { color: var(--lux-slate); font-size: 0.9rem; }
+    .empty-mini i { color: #D8D1C8; }
+    .tbl-head th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lux-slate); font-weight: 700; border-bottom: 1px solid var(--lux-hairline); }
+    /* ===== Trang chủ nhân viên kỹ thuật ===== */
+    .th-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 13px; margin-bottom: 1.35rem; }
+    .th-date { display: inline-flex; align-items: center; gap: 7px; font-size: .78rem; font-weight: 600; color: var(--lux-slate); background: #fff; border: 1px solid var(--lux-hairline); border-radius: 999px; padding: .32em .95em; margin-top: 9px; }
+    .th-date i { color: var(--copper-orange); }
+
+    .th-kpi { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; padding: 1rem 1.15rem; height: 100%; box-shadow: 0 1px 3px rgba(30,30,30,.04); transition: transform .2s, box-shadow .2s; position: relative; overflow: hidden; }
+    .th-kpi:hover { transform: translateY(-3px); box-shadow: 0 10px 24px -12px rgba(30,30,30,.28); }
+    .th-kpi .kv { font-size: 1.55rem; font-weight: 700; letter-spacing: -.02em; color: var(--lux-graphite); font-variant-numeric: tabular-nums; line-height: 1.15; }
+    .th-kpi .kl { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-top: 3px; }
+    .th-kpi .kn { font-size: .76rem; color: var(--lux-slate); margin-top: 7px; line-height: 1.4; }
+    .th-kpi .ki { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; background: var(--kc-soft, rgba(200,121,65,.1)); color: var(--kc, var(--copper-orange)); }
+
+    .th-row { display: flex; align-items: center; gap: 13px; padding: 12px 0; border-bottom: 1px dashed var(--lux-hairline); }
+    .th-row:last-child { border-bottom: none; padding-bottom: 2px; }
+    .th-plate { font-weight: 700; font-size: .8rem; letter-spacing: .04em; background: var(--lux-graphite); color: #fff; padding: 3.5px 9px; border-radius: 7px; white-space: nowrap; align-self: flex-start; margin-top: 2px; }
+    .th-main { flex: 1; min-width: 0; }
+    .th-main .t1 { font-size: .88rem; font-weight: 600; color: var(--lux-graphite); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .th-main .t2 { font-size: .76rem; color: var(--lux-slate); margin-top: 2px; }
+    .th-st { font-size: .7rem; font-weight: 700; letter-spacing: .05em; border-radius: 999px; padding: .26em .75em; white-space: nowrap; border: 1px solid; }
+    .th-st-pending { background: rgba(191,144,0,.1); color: #8A6D00; border-color: rgba(191,144,0,.35); }
+    .th-st-prog { background: rgba(200,121,65,.1); color: #A65E2F; border-color: rgba(200,121,65,.4); }
+    .th-st-done { background: rgba(46,125,79,.1); color: #2E7D4F; border-color: rgba(46,125,79,.3); }
+    .th-link { font-size: .78rem; font-weight: 700; color: var(--copper-orange); text-decoration: none; white-space: nowrap; }
+    .th-link:hover { text-decoration: underline; }
+
+    .th-act { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border: 1px solid var(--lux-hairline); border-radius: 12px; background: var(--lux-ivory); text-decoration: none; transition: border-color .2s, background .2s; margin-bottom: 9px; }
+    .th-act:last-child { margin-bottom: 0; }
+    .th-act:hover { border-color: var(--copper-orange); background: #fff; }
+    .th-act .ai { width: 36px; height: 36px; border-radius: 10px; background: rgba(200,121,65,.1); color: var(--copper-orange); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .th-act .at { flex: 1; font-size: .84rem; font-weight: 600; color: var(--lux-graphite); }
+    .th-act .as { display: block; font-size: .75rem; font-weight: 500; color: var(--lux-slate); margin-top: 1px; }
+    .th-act .apill { font-size: .78rem; font-weight: 700; color: var(--lux-bronze-deep); background: rgba(200,121,65,.1); border: 1px solid rgba(200,121,65,.3); border-radius: 999px; padding: .15em .7em; font-variant-numeric: tabular-nums; }
+    .th-act .arrow { color: var(--lux-slate); font-size: .85rem; }
+
+    .th-appt { display: flex; gap: 12px; padding: 11px 10px; align-items: flex-start; border-bottom: 1px dashed var(--lux-hairline); border-radius: 10px; }
+    .th-appt:last-child { border-bottom: none; }
+    .th-appt.today { background: rgba(200,121,65,.05); border: 1px solid rgba(200,121,65,.28); margin-bottom: 7px; padding: 11px 12px; }
+    .th-appt .adate { text-align: center; background: #fff; border: 1px solid var(--concrete-gray); border-radius: 9px; padding: 5px 8px; min-width: 52px; align-self: flex-start; }
+    .th-appt.today .adate { border-color: rgba(200,121,65,.5); }
+    .th-appt .adate .d { font-size: .95rem; font-weight: 700; color: var(--lux-graphite); line-height: 1.1; }
+    .th-appt .adate .m { font-size: .58rem; text-transform: uppercase; color: var(--copper-orange); font-weight: 700; letter-spacing: .08em; }
+    .th-appt .ainfo { flex: 1; min-width: 0; }
+    .th-appt .ainfo .n { font-size: .85rem; font-weight: 700; color: var(--lux-graphite); }
+    .th-appt .ainfo .s { font-size: .8rem; color: var(--lux-graphite); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .th-now { font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: var(--lux-bronze-deep, #A65E2F); border-radius: 999px; padding: .2em .65em; }
+
+    .th-stock { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px dashed var(--concrete-gray); font-size: .84rem; }
+    .th-stock:last-child { border-bottom: none; }
+    .th-stock .sn { font-weight: 600; color: var(--lux-graphite); }
+    .th-stock .sm { font-size: .75rem; color: var(--lux-slate); display: block; margin-top: 1px; }
+    .th-stock .sq { font-weight: 700; color: #B03A2E; background: rgba(192,57,43,.08); border: 1px solid rgba(192,57,43,.25); padding: .16em .65em; border-radius: 999px; font-size: .78rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .th-empty { text-align: center; padding: 26px 14px; color: var(--text-muted); font-size: .85rem; background: var(--warm-white); border: 1px dashed var(--concrete-gray); border-radius: 12px; line-height: 1.5; }
+    .th-empty i { display: block; font-size: 1.6rem; color: #D8D1C8; margin-bottom: 7px; }
+
+    @media (max-width: 767.98px) {
+        .greet-head .quick-actions { width: 100%; }
+        .greet-head .quick-actions .btn { flex: 1; }
+    }
+</style>
+
+{# ============ CHƯA ĐĂNG NHẬP: banner thời tiết trên cùng ============ #}
+{% if not user %}
+<div class="card mb-4" id="weather-banner" style="display: none; border: 1px solid var(--lux-hairline); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04);">
+    <div class="row g-0">
+        <div class="col-md-4 d-flex flex-column justify-content-center" id="weather-left-panel" style="padding: 24px; background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%); color: #fff;">
+            <h5 class="fw-bold mb-1" id="weather-greeting" style="color:#fff;">Chào buổi sáng!</h5>
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-cloud-sun fs-1 me-3" id="weather-icon-main" style="color:#E0A375;"></i>
+                <div>
+                    <h2 class="fw-bold mb-0" id="weather-temp-main" style="color:#fff;">--°C</h2>
+                    <p class="mb-0 fw-bold" id="weather-desc-main" style="color:rgba(255,255,255,.85);">Đang tải...</p>
+                </div>
+            </div>
+            <div class="mt-2 rounded" style="padding: 16px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16);">
+                <small class="fw-bold" style="color:#fff;"><i class="bi bi-lightbulb-fill"></i> Gợi ý hôm nay:</small>
+                <p class="mb-1 small" id="weather-advice-main" style="color:#fff;">Đang lấy dữ liệu...</p>
+                <small class="fw-bold text-warning" id="warning-label" style="display: none;"><i class="bi bi-exclamation-triangle-fill"></i> Chú ý:</small>
+                <p class="mb-0 small fw-bold text-warning" id="weather-warning-main"></p>
+            </div>
+        </div>
+        <div class="col-md-8 bg-white" style="padding: 24px;">
+            <h6 class="fw-bold mb-3">Dự báo theo giờ hôm nay</h6>
+            <div class="d-flex overflow-auto" id="hourly-forecast-container" style="gap: 15px; scrollbar-width: none;">
+                <div class="text-muted small">Đang tải dự báo...</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{# ============ NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP ============ #}
+{% if user %}
+
+{# ---------- KHÁCH HÀNG: Dashboard cá nhân ---------- #}
+{% if user.get('role') == 'customer' or not user.get('role') %}
+
+<!-- Tiêu đề + hành động nhanh -->
+<div class="greet-head mb-4">
+    <div>
+        <h4 class="fw-bold mb-0">Xin chào {{ user.get('name') or user.get('sub') or 'bạn' }}</h4>
+        <p class="greet-sub" id="todayLabel">Chăm sóc xe của bạn đúng hẹn, minh bạch từng km.</p>
+    </div>
+    <div class="d-flex gap-2 quick-actions flex-wrap">
+        <a href="/my-appointments#bookNow" class="btn btn-copper btn-sm"><i class="bi bi-calendar-plus me-1"></i>Đặt lịch ngay</a>
+        <a href="/ai-assistant" class="btn btn-sm btn-outline-dark rounded-pill px-3"><i class="bi bi-robot me-1"></i>AI Tư vấn</a>
+    </div>
+</div>
+
+<!-- 4 KPI -->
+<div class="row g-3 mb-2">
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card">
+            <div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(200,121,65,0.12); color: var(--copper-orange);"><i class="bi bi-car-front"></i></div>
+                <div>
+                    <div class="kpi-value">{{ vehicles|length }} xe</div>
+                    <div class="kpi-label">Trong hồ sơ</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card">
+            <div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(13,117,165,0.1); color: #0d75a5;"><i class="bi bi-calendar-check"></i></div>
+                <div>
+                    <div class="kpi-value" style="font-size: 1.05rem; padding-top: 0.35rem;">
+                        {% if next_appt %}{{ next_appt.appointment_date[8:10] }}/{{ next_appt.appointment_date[5:7] }}{% if next_appt.appointment_time %} · {{ next_appt.appointment_time }}{% endif %}{% else %}Trống{% endif %}
+                    </div>
+                    <div class="kpi-label">Lịch hẹn sắp tới</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card {% if unpaid_total > 0 %}alert{% endif %}>
+            <div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(192,57,43,.09); color: #A93226;"><i class="bi bi-receipt"></i></div>
+                <div>
+                    <div class="kpi-value" {% if unpaid_total > 0 %}style="color: #A93226;"{% endif %}>{{ "{:,.0f}".format(unpaid_total) }} <small class="fs-6">đ</small></div>
+                    <div class="kpi-label">Hóa đơn chưa thanh toán</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card">
+            <div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(30,30,30,0.08); color: var(--charcoal-black);"><i class="bi bi-wrench-adjustable"></i></div>
+                <div>
+                    <div class="kpi-value" style="font-size: 1.05rem; padding-top: 0.35rem;">
+                        {% if active_order %}
+                            {% if active_order.status == 'In Progress' %}Đang sửa{% else %}Chờ tiếp nhận{% endif %}
+                        {% else %}Ổn định{% endif %}
+                    </div>
+                    <div class="kpi-label">Tình trạng xe tại garage</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Xe của tôi -->
+<div class="sect-card">
+    <div class="sect-head">
+        <span><i class="bi bi-car-front me-2" style="color: var(--copper-orange);"></i>Xe của bạn</span>
+        <a href="/my-vehicles" class="btn btn-sm btn-outline-dark rounded-pill px-3"><i class="bi bi-gear me-1"></i>Quản lý xe</a>
+    </div>
+    <div class="sect-body">
+        <div class="row g-3">
+            {% for v in vehicles %}
+            {% set odo = v.current_odo or 0 %}
+            {% set next_svc = ((odo // 5000) + 1) * 5000 %}
+            {% set km_left = next_svc - odo %}
+            {% set odo_pct = ((odo % 5000) * 100 / 5000)|round(0, 'floor') %}
+            <div class="col-md-6 col-xl-4">
+                <div class="veh-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <span class="veh-plate"><i class="bi bi-car-front me-1"></i>{{ v.license_plate }}</span>
+                        {% if v.warranty_status %}
+                        <span class="badge rounded-pill badge-ok" style="font-size: 0.75rem;">{{ v.warranty_status }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="fw-bold mb-1">{{ v.make }} {{ v.model }}{% if v.manufacture_year %} · {{ v.manufacture_year }}{% endif %}</div>
+                    <div class="text-muted mb-3" style="font-size: 0.85rem;">
+                        {{ v.color or '---' }} · {{ v.fuel_type or '---' }}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-baseline mb-1">
+                        <small class="text-muted fw-bold">ODO HIỆN TẠI</small>
+                        <strong>{{ "{:,}".format(odo) }} km</strong>
+                    </div>
+                    <div class="odo-bar mb-1"><div style="width: {{ [odo_pct|int + 4, 100]|min }}%;"></div></div>
+                    <div class="d-flex justify-content-between" style="font-size: 0.8rem;">
+                        <span class="text-muted">Bảo dưỡng kế tiếp tại {{ "{:,}".format(next_svc) }} km</span>
+                        <span class="fw-bold" style="color: var(--copper-orange);">Còn {{ "{:,}".format(km_left) }} km</span>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="/my-vehicles" class="btn btn-sm btn-outline-dark rounded-pill px-3 flex-fill" style="font-size: 0.82rem;"><i class="bi bi-speedometer2 me-1"></i>Cập nhật ODO</a>
+                        <a href="/my-appointments#bookNow" class="btn btn-sm btn-copper flex-fill" style="font-size: 0.82rem;"><i class="bi bi-calendar-plus me-1"></i>Đặt lịch</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center empty-mini py-4">
+                <i class="bi bi-car-front fs-1 d-block mb-2" style="color: var(--copper-orange); opacity: 0.5;"></i>
+                Bạn chưa có xe nào trong hồ sơ.
+                <div class="mt-2"><a href="/my-vehicles" class="btn btn-sm btn-copper" style="padding: .55rem 1.3rem;">+ Thêm xe ngay</a></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Lịch hẹn sắp tới + Hóa đơn chờ -->
+<div class="row g-3 mb-2">
+    <div class="col-lg-6">
+        <div class="info-tile">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="tile-label"><i class="bi bi-calendar-event me-1" style="color: var(--copper-orange);"></i> Lịch hẹn sắp tới</span>
+                <a href="/my-appointments" class="small fw-bold text-decoration-none" style="color: var(--copper-orange);">Tất cả →</a>
+            </div>
+            {% if next_appt %}
+            <div class="fw-bold" style="font-size: 1.05rem;">{{ next_appt.appointment_date[8:10] }}/{{ next_appt.appointment_date[5:7] }}/{{ next_appt.appointment_date[0:4] }}{% if next_appt.appointment_time %} · {{ next_appt.appointment_time }}{% endif %}</div>
+            <div class="text-muted mb-2" style="font-size: 0.88rem;">
+                {{ next_appt.vehicle.license_plate if next_appt.vehicle else '---' }}
+                {% if next_appt.appointment_type == 'CarWash' %} · Rửa xe / Chăm sóc{% else %} · Sửa chữa / Bảo dưỡng{% endif %}
+            </div>
+            <p class="mb-2" style="font-size: 0.9rem;">{{ next_appt.symptoms|truncate(90) }}</p>
+            {% if next_appt.status == 'Pending' %}
+            <span class="badge rounded-pill" style="background: rgba(255,193,7,0.15); color: #b07d00; border: 1px solid rgba(255,193,7,0.4);">Chờ xác nhận</span>
+            {% else %}
+            <span class="badge rounded-pill" style="background: rgba(13,117,165,0.1); color: #0d75a5; border: 1px solid rgba(13,117,165,0.3);">Đã xác nhận</span>
+            {% endif %}
+            <a href="/my-appointments" class="btn btn-sm btn-outline-dark rounded-pill px-3 ms-2" style="font-size: 0.82rem;">Theo dõi</a>
+            {% else %}
+            <div class="empty-mini py-3 text-center">
+                <i class="bi bi-calendar-x fs-4 d-block mb-2" style="opacity: 0.5;"></i>
+                Bạn chưa có lịch hẹn nào sắp tới.
+                <div class="mt-2"><a href="/my-appointments#bookNow" class="btn btn-sm btn-copper" style="padding: .55rem 1.3rem;">Đặt lịch ngay</a></div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="info-tile">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="tile-label"><i class="bi bi-receipt me-1" style="color: var(--copper-orange);"></i> Hóa đơn của bạn</span>
+                <a href="/my-invoices" class="small fw-bold text-decoration-none" style="color: var(--copper-orange);">Tất cả →</a>
+            </div>
+            {% if unpaid_invoices %}
+            <div class="fw-bold" style="font-size: 1.05rem; color: #A93226;">{{ "{:,.0f}".format(unpaid_total) }} VNĐ</div>
+            <div class="text-muted mb-2" style="font-size: 0.88rem;">{{ unpaid_invoices|length }} hóa đơn đang chờ thanh toán</div>
+            {% for inv in unpaid_invoices[:2] %}
+            <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom: 1px dashed var(--concrete-gray); font-size: 0.9rem;">
+                <span>HD-{{ "%04d"|format(inv.id) }} · {{ inv.repair_order.vehicle.license_plate if inv.repair_order and inv.repair_order.vehicle else '---' }}</span>
+                <strong>{{ "{:,.0f}".format(inv.total_amount) }} đ</strong>
+            </div>
+            {% endfor %}
+            <a href="/my-invoices" class="btn btn-sm btn-copper mt-3" style="font-size: 0.85rem;">Xem & thanh toán <i class="bi bi-arrow-right ms-1"></i></a>
+            {% else %}
+            <div class="empty-mini py-3 text-center">
+                <i class="bi bi-check2-circle fs-4 d-block mb-2" style="color: #198754;"></i>
+                Không có hóa đơn nào chờ thanh toán. Tuyệt vời!
+                <div class="mt-2"><a href="/my-invoices" class="btn btn-sm btn-outline-dark rounded-pill px-3" style="padding-top:.55rem;padding-bottom:.55rem;">Xem lịch sử hóa đơn</a></div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Lịch sử sửa chữa gần đây -->
+<div class="sect-card">
+    <div class="sect-head">
+        <span><i class="bi bi-clock-history me-2" style="color: var(--copper-orange);"></i>Lịch sử sửa chữa gần đây</span>
+        <a href="/my-appointments" class="btn btn-sm btn-outline-dark rounded-pill px-3">Xem tất cả</a>
+    </div>
+    <div class="sect-body pt-2 pb-2">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="tbl-head">
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Xe</th>
+                        <th>Nội dung</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td class="text-nowrap">{{ order.created_at.strftime('%d/%m/%Y') if order.created_at else 'N/A' }}</td>
+                        <td class="fw-bold text-nowrap">{{ order.vehicle.license_plate if order.vehicle else '---' }}</td>
+                        <td>{{ order.symptoms|truncate(60) }}</td>
+                        <td>
+                            {% if order.status == 'Pending' %}
+                                <span class="badge rounded-pill" style="background: rgba(108,117,125,0.12); color: #6c757d; border: 1px solid rgba(108,117,125,0.3);">Chờ xử lý</span>
+                            {% elif order.status == 'In Progress' %}
+                                <span class="badge rounded-pill" style="background: rgba(255,193,7,0.15); color: #b07d00; border: 1px solid rgba(255,193,7,0.4);">Đang sửa</span>
+                            {% elif order.status == 'Completed' %}
+                                <span class="badge rounded-pill" style="background: rgba(25,135,84,0.1); color: #198754; border: 1px solid rgba(25,135,84,0.3);">Hoàn thành</span>
+                            {% else %}
+                                <span class="badge rounded-pill badge-soft">{{ order.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a href="/my-repairs/{{ order.id }}" class="fw-bold" style="font-size: 0.8rem; color: var(--copper-orange); text-decoration: none;">Chi tiết →</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 empty-mini">Chưa có lịch sử sửa chữa.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Ưu đãi cho bạn -->
+{% if promotions %}
+<div class="sect-card">
+    <div class="sect-head"><span><i class="bi bi-gift me-2" style="color: var(--copper-orange);"></i>Ưu đãi dành cho bạn</span></div>
+    <div class="sect-body">
+        <div class="row g-3">
+            {% for promo in promotions %}
+            <div class="col-md-4">
+                <div class="promo-card p-3 text-center h-100">
+                    <h6 class="fw-bold mb-1" style="color: var(--copper-orange);"><i class="bi bi-gift me-1"></i>{{ promo.title }}</h6>
+                    {% if promo.discount_percent > 0 %}
+                    <div class="fw-bold text-danger mb-1" style="font-size: 1.3rem;">Giảm {{ promo.discount_percent|round|int }}%</div>
+                    {% endif %}
+                    <p class="text-muted mb-2 small">{{ promo.description|truncate(90) }}</p>
+                    <a href="/my-appointments#bookNow" class="btn btn-sm btn-outline-warning fw-bold rounded-pill px-3" style="border-color: var(--copper-orange); color: var(--copper-orange);">Nhận ưu đãi</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Widget thời tiết (cuối dashboard) -->
+<div class="card mb-4" id="weather-banner" style="display: none; border: 1px solid var(--lux-hairline); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04);">
+    <div class="row g-0">
+        <div class="col-md-4 d-flex flex-column justify-content-center" id="weather-left-panel" style="padding: 24px; background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%); color: #fff;">
+            <h5 class="fw-bold mb-1" id="weather-greeting" style="color:#fff;">Chào buổi sáng!</h5>
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-cloud-sun fs-1 me-3" id="weather-icon-main" style="color:#E0A375;"></i>
+                <div>
+                    <h2 class="fw-bold mb-0" id="weather-temp-main" style="color:#fff;">--°C</h2>
+                    <p class="mb-0 fw-bold" id="weather-desc-main" style="color:rgba(255,255,255,.85);">Đang tải...</p>
+                </div>
+            </div>
+            <div class="mt-2 rounded" style="padding: 16px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16);">
+                <small class="fw-bold" style="color:#fff;"><i class="bi bi-lightbulb-fill"></i> Gợi ý hôm nay:</small>
+                <p class="mb-1 small" id="weather-advice-main" style="color:#fff;">Đang lấy dữ liệu...</p>
+                <small class="fw-bold text-warning" id="warning-label" style="display: none;"><i class="bi bi-exclamation-triangle-fill"></i> Chú ý:</small>
+                <p class="mb-0 small fw-bold text-warning" id="weather-warning-main"></p>
+            </div>
+        </div>
+        <div class="col-md-8 bg-white" style="padding: 24px;">
+            <h6 class="fw-bold mb-3">Dự báo theo giờ hôm nay</h6>
+            <div class="d-flex overflow-auto" id="hourly-forecast-container" style="gap: 15px; scrollbar-width: none;">
+                <div class="text-muted small">Đang tải dự báo...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    {% elif user.get('role') == 'technician' %}
+    {# ---------- NHÂN VIÊN KỸ THUẬT: Dashboard xưởng — light luxury ---------- #}
+
+    <!-- Tiêu đề + hành động nhanh -->
+    <div class="greet-head mb-4">
+        <div>
+            <h4 class="fw-bold mb-0">Xin chào {{ tech_stats.full_name if tech_stats else (user.get('name') or user.get('sub') or 'bạn') }}</h4>
+            <span class="th-date"><i class="bi bi-calendar3 me-1"></i>{{ tech_stats.weekday if tech_stats else '' }} · {{ tech_stats.today_str if tech_stats else '' }} · Ca sáng — ThreeH Workshop</span>
+        </div>
+        <div class="d-flex gap-2 quick-actions flex-wrap">
+            <a href="/tech/dashboard" class="btn btn-copper btn-sm"><i class="bi bi-grid-1x2 me-1"></i>Bảng công việc</a>
+            <a href="/tech/parts" class="btn btn-sm btn-outline-dark rounded-pill px-3"><i class="bi bi-box-seam me-1"></i>Kho phụ tùng</a>
+            <a href="/tech/services" class="btn btn-sm btn-outline-dark rounded-pill px-3"><i class="bi bi-wrench me-1"></i>Dịch vụ</a>
+        </div>
+    </div>
+
+    <!-- KPI cá nhân -->
+    <div class="th-kpis">
+        <div class="th-kpi" style="--kc:#C87941; --kc-soft:rgba(200,121,65,.1); animation-delay:.0s">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                    <div class="kv" data-count="{{ tech_stats.my_open if tech_stats else 0 }}">0</div>
+                    <div class="kl">Việc của tôi đang mở</div>
+                </div>
+                <div class="ki"><i class="bi bi-clipboard2-pulse"></i></div>
+            </div>
+            <div class="kn">Chờ tiếp nhận + đang sửa của bạn</div>
+        </div>
+        <div class="th-kpi" style="--kc:#1E1E1E; --kc-soft:rgba(30,30,30,.08); animation-delay:.07s">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                    <div class="kv" data-count="{{ tech_stats.my_repairing if tech_stats else 0 }}">0</div>
+                    <div class="kl">Đang sửa</div>
+                </div>
+                <div class="ki"><i class="bi bi-gear-wide-connected"></i></div>
+            </div>
+            <div class="kn">Xe đang nằm trên cầu lúc này</div>
+        </div>
+        <div class="th-kpi" style="--kc:#2E7D4F; --kc-soft:rgba(46,125,79,.1); animation-delay:.14s">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                    <div class="kv" data-count="{{ tech_stats.my_month_done if tech_stats else 0 }}">0</div>
+                    <div class="kl">Hoàn thành tháng này</div>
+                </div>
+                <div class="ki"><i class="bi bi-check2-circle"></i></div>
+            </div>
+            <div class="kn">Tổng cộng bạn đã bàn giao {{ tech_stats.my_total_done if tech_stats else 0 }} xe</div>
+        </div>
+        <div class="th-kpi" style="--kc:#B07D00; --kc-soft:rgba(191,144,0,.12); animation-delay:.21s">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                    <div class="kv" data-count="{{ pending_receptions }}">0</div>
+                    <div class="kl">Xưởng chờ tiếp nhận</div>
+                </div>
+                <div class="ki"><i class="bi bi-inbox"></i></div>
+            </div>
+            <div class="kn">Xe chưa lập phiếu tiếp nhận</div>
+        </div>
+        <div class="th-kpi" style="--kc:#5B6B7A; --kc-soft:rgba(91,107,122,.12); animation-delay:.28s">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                    <div class="kv" data-count="{{ tech_today_appts|length }}">0</div>
+                    <div class="kl">Lịch hẹn hôm nay</div>
+                </div>
+                <div class="ki"><i class="bi bi-calendar-check"></i></div>
+            </div>
+            <div class="kn">Khách được phân công cho bạn</div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <!-- Công việc của tôi -->
+        <div class="col-lg-7">
+            <div class="sect-card mb-0 h-100">
+                <div class="sect-head">
+                    <span><i class="bi bi-card-checklist me-2" style="color: var(--copper-orange);"></i>Công việc của tôi</span>
+                    <a href="/tech/dashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3">Xem tất cả <i class="bi bi-arrow-right ms-1"></i></a>
+                </div>
+                <div class="sect-body pt-2 pb-2">
+                    {% for order in recent_orders %}
+                    <div class="th-row">
+                        <span class="th-plate">{{ order.vehicle.license_plate if order.vehicle else '---' }}</span>
+                        <div class="th-main">
+                            <div class="t1">{{ order.symptoms|truncate(58) }}</div>
+                            <div class="t2"><i class="bi bi-calendar3 me-1"></i>{{ order.created_at.strftime('%d/%m/%Y') if order.created_at else '---' }}{% if order.estimated_cost %} · Báo giá {{ "{:,.0f}".format(order.estimated_cost) }} đ{% endif %}</div>
+                        </div>
+                        {% if order.status == 'Pending' %}
+                        <span class="th-st th-st-pending">Chờ xử lý</span>
+                        {% elif order.status == 'In Progress' %}
+                        <span class="th-st th-st-prog">Đang sửa</span>
+                        {% elif order.status == 'Completed' %}
+                        <span class="th-st th-st-done">Hoàn thành</span>
+                        {% else %}
+                        <span class="th-st th-st-pending">{{ order.status }}</span>
+                        {% endif %}
+                        <a class="th-link" href="/tech/dashboard">Mở →</a>
+                    </div>
+                    {% else %}
+                    <div class="th-empty"><i class="bi bi-clipboard-check"></i>Bạn chưa được phân công công việc nào.<br>Qua <strong>Bảng công việc</strong> để nhận đơn mới.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Cần xử lý -->
+        <div class="col-lg-5">
+            <div class="sect-card mb-0 h-100">
+                <div class="sect-head">
+                    <span><i class="bi bi-lightning-charge-fill me-2" style="color: var(--copper-orange);"></i>Cần xử lý hôm nay</span>
+                </div>
+                <div class="sect-body pt-3 pb-3">
+                    <a class="th-act" href="/tech/dashboard">
+                        <span class="ai"><i class="bi bi-clipboard-check"></i></span>
+                        <span class="at">Tiếp nhận xe mới<span class="as">Lập phiếu tiếp nhận cho xe chưa có phiếu</span></span>
+                        <span class="apill">{{ pending_receptions }}</span>
+                        <span class="arrow"><i class="bi bi-chevron-right"></i></span>
+                    </a>
+                    <a class="th-act" href="/tech/dashboard">
+                        <span class="ai"><i class="bi bi-cash-stack"></i></span>
+                        <span class="at">Theo dõi báo giá<span class="as">Báo giá đã gửi, chờ khách hàng duyệt</span></span>
+                        <span class="apill">{{ quotes_waiting }}</span>
+                        <span class="arrow"><i class="bi bi-chevron-right"></i></span>
+                    </a>
+                    <a class="th-act" href="/tech/parts">
+                        <span class="ai"><i class="bi bi-box-seam"></i></span>
+                        <span class="at">Kiểm tra tồn kho<span class="as">Phụ tùng sắp hết / dưới mức tối thiểu</span></span>
+                        <span class="apill">{{ low_stock_parts|length }}</span>
+                        <span class="arrow"><i class="bi bi-chevron-right"></i></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <!-- Lịch hẹn của tôi -->
+        <div class="col-lg-7">
+            <div class="sect-card mb-0 h-100">
+                <div class="sect-head">
+                    <span><i class="bi bi-calendar-event me-2" style="color: var(--copper-orange);"></i>Lịch hẹn của tôi</span>
+                    <small style="font-size: .78rem; color: var(--lux-slate);"><i class="bi bi-info-circle me-1"></i>Phân công theo KTV</small>
+                </div>
+                <div class="sect-body pt-2 pb-2">
+                    {% for appt in tech_appointments %}
+                    <div class="th-appt{% if tech_stats and appt.appointment_date == tech_stats.today_ymd %} today{% endif %}">
+                        <div class="adate">
+                            <div class="d">{{ appt.appointment_date[8:10] if appt.appointment_date else '--' }}</div>
+                            <div class="m">T{{ (appt.appointment_date[5:7]|int) if appt.appointment_date else '--' }}</div>
+                        </div>
+                        <div class="ainfo">
+                            <div class="n">{{ appt.user.full_name if appt.user else 'Khách vãng lai' }}
+                                {% if tech_stats and appt.appointment_date == tech_stats.today_ymd %}<span class="th-now ms-2">Hôm nay</span>{% endif %}
+                            </div>
+                            <div class="s">{{ appt.symptoms or 'Chưa mô tả triệu chứng' }}</div>
+                            <div class="t2" style="font-size: .78rem; color: var(--lux-slate); margin-top: 3px;">
+                                <i class="bi bi-clock me-1"></i>{{ appt.appointment_time or 'Chưa chốt giờ' }}
+                                · {{ 'Rửa xe / Chăm sóc' if appt.appointment_type == 'CarWash' else 'Sửa chữa / Bảo dưỡng' }}
+                            </div>
+                        </div>
+                        {% if appt.status == 'Pending' %}
+                        <span class="th-st th-st-pending">Chờ xác nhận</span>
+                        {% elif appt.status == 'Confirmed' %}
+                        <span class="th-st th-st-done">Đã xác nhận</span>
+                        {% else %}
+                        <span class="th-st th-st-prog">{{ appt.status }}</span>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="th-empty"><i class="bi bi-calendar-x"></i>Chưa có lịch hẹn nào được phân công cho bạn.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Tồn kho sắp hết -->
+        <div class="col-lg-5">
+            <div class="sect-card mb-0 h-100">
+                <div class="sect-head">
+                    <span><i class="bi bi-exclamation-triangle-fill me-2" style="color: var(--copper-orange);"></i>Tồn kho sắp hết</span>
+                    <a href="/tech/parts" class="btn btn-sm btn-outline-dark rounded-pill px-3">Mở kho <i class="bi bi-arrow-right ms-1"></i></a>
+                </div>
+                <div class="sect-body pt-2 pb-2">
+                    {% for p in low_stock_parts %}
+                    <div class="th-stock">
+                        <div>
+                            <span class="sn">{{ p.name }}</span>
+                            <span class="sm">{{ p.part_number or '---' }}{% if p.brand %} · {{ p.brand }}{% endif %}</span>
+                        </div>
+                        <span class="sq">{{ p.stock_quantity or 0 }}/{{ p.min_stock or 5 }}</span>
+                    </div>
+                    {% else %}
+                    <div class="th-empty"><i class="bi bi-shield-check"></i>Tồn kho đang ổn định — chưa mã nào dưới mức tối thiểu.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.th-kpi [data-count]').forEach(function (el) {
+                var target = parseInt(el.dataset.count, 10) || 0, start = null, dur = 900;
+                if (target === 0) { el.textContent = '0'; return; }
+                function step(ts) {
+                    if (!start) start = ts;
+                    var p = Math.min((ts - start) / dur, 1);
+                    el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+                    if (p < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        });
+    </script>
+    {% else %}
+    <!-- Khu vực của Quản lý: số liệu thật của xưởng + lối vào báo cáo chi tiết -->
+    <div class="greet-head mb-4">
+        <div>
+            <h4 class="fw-bold mb-0">Xin chào {{ user.get('name') or user.get('sub') or 'bạn' }}</h4>
+            <p class="greet-sub">Toàn cảnh xưởng hôm nay — số liệu lấy trực tiếp từ phiếu, lịch hẹn và hóa đơn.</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="/manager/overview" class="btn btn-copper btn-sm"><i class="bi bi-bar-chart-line me-1"></i>Báo cáo chi tiết</a>
+            <a href="/tech/dashboard" class="btn btn-sm btn-outline-dark rounded-pill px-3"><i class="bi bi-grid-1x2 me-1"></i>Bảng công việc xưởng</a>
+        </div>
+    </div>
+    <div class="row g-3 mb-2">
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card"><div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(200,121,65,.12); color: var(--copper-orange);"><i class="bi bi-car-front"></i></div>
+                <div><div class="kpi-value">{{ metrics.active_cars }}</div><div class="kpi-label">Xe đang sửa</div></div>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card"><div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(191,144,0,.12); color: #8A6D00;"><i class="bi bi-clipboard2-pulse"></i></div>
+                <div><div class="kpi-value">{{ metrics.today_jobs }}</div><div class="kpi-label">Việc chờ + đang làm</div></div>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card"><div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(46,125,79,.1); color: #2E7D4F;"><i class="bi bi-cash-stack"></i></div>
+                <div><div class="kpi-value">{{ "{:,.0f}".format(metrics.revenue) }} <small class="fs-6">đ</small></div><div class="kpi-label">Doanh thu đã xuất HĐ</div></div>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card {% if pending_issues_count > 0 %}alert{% endif %}"><div class="d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background: rgba(192,57,43,.09); color: #A93226;"><i class="bi bi-bell"></i></div>
+                <div><div class="kpi-value" {% if pending_issues_count > 0 %}style="color:#A93226;"{% endif %}>{{ pending_issues_count }}</div><div class="kpi-label">Lịch hẹn chờ xác nhận</div></div>
+            </div></div>
+        </div>
+    </div>
+    <div class="sect-card">
+        <div class="sect-head">
+            <span><i class="bi bi-clock-history me-2" style="color: var(--copper-orange);"></i>Phiếu mới nhất của xưởng</span>
+            <a href="/manager/overview" class="btn btn-sm btn-outline-dark rounded-pill px-3">Mở báo cáo đầy đủ</a>
+        </div>
+        <div class="sect-body pt-2 pb-2">
+            <div class="table-responsive"><table class="table align-middle mb-0">
+                <thead class="tbl-head"><tr><th>Mã</th><th>Biển số</th><th>Nội dung</th><th>Trạng thái</th></tr></thead>
+                <tbody>
+                    {% for order in recent_orders[:5] %}
+                    <tr>
+                        <td class="text-nowrap fw-bold">#RO-{{ order.id }}</td>
+                        <td class="fw-bold text-nowrap">{{ order.vehicle.license_plate if order.vehicle else '---' }}</td>
+                        <td>{{ order.symptoms|truncate(60) }}</td>
+                        <td>{% if order.status == 'In Progress' %}<span class="badge rounded-pill badge-soft">Đang sửa</span>{% elif order.status == 'Completed' %}<span class="badge rounded-pill badge-ok">Hoàn thành</span>{% else %}<span class="badge rounded-pill badge-soft">Chờ xử lý</span>{% endif %}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center py-4 empty-mini">Chưa có phiếu nào.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table></div>
+        </div>
+    </div>
+    {% endif %}
+
+{# ============ CHƯA ĐĂNG NHẬP: khu vực marketing ============ #}
+{% else %}
+
+<!-- 1. Hero Section -->
+<div class="hero-section text-center">
+    <div class="hero-kicker">ThreeH Workshop · Thái Nguyên</div>
+    <h1 class="display-4 fw-bold mb-3">ThreeH Workshop</h1>
+    <h3 class="fw-light mb-4 text-white">Chăm sóc xe thông minh<br>An tâm trên mọi hành trình</h3>
+    <p class="lead mb-4 text-white" style="opacity: 0.9;">
+        Dịch vụ sửa chữa chuyên nghiệp<br>
+        Kết hợp AI hỗ trợ chẩn đoán và quản lý bảo dưỡng
+    </p>
+    <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <a href="/login" class="btn btn-lg btn-hero fw-bold px-4">Đặt lịch ngay</a>
+        <a href="#services" class="btn btn-lg btn-hero-ghost fw-bold px-4">Tìm hiểu dịch vụ</a>
+    </div>
+</div>
+
+<!-- 2. Dịch vụ nổi bật -->
+<div id="services" class="mb-5 mt-5">
+    <h3 class="mkt-h">Dịch vụ nổi bật</h3>
+    <p class="mkt-sub">Bốn nhóm việc xưởng làm mỗi ngày — đặt lịch trước để được tiếp nhận đúng hẹn.</p>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card service-card h-100 text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box-large"><i class="bi bi-wrench-adjustable"></i></div>
+                </div>
+                <h5 class="fw-bold">Bảo dưỡng định kỳ</h5>
+                <p class="small" style="color:var(--lux-slate);">Thay dầu, lọc gió, kiểm tra toàn diện để xe luôn vận hành êm ái.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card service-card h-100 text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box-large"><i class="bi bi-gear-wide-connected"></i></div>
+                </div>
+                <h5 class="fw-bold">Sửa chữa tổng quát</h5>
+                <p class="small" style="color:var(--lux-slate);">Khắc phục mọi sự cố động cơ, hộp số, khung gầm nhanh chóng.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card service-card h-100 text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box-large"><i class="bi bi-lightning-charge"></i></div>
+                </div>
+                <h5 class="fw-bold">Điện - Điện lạnh</h5>
+                <p class="small" style="color:var(--lux-slate);">Kiểm tra ắc quy, hệ thống đèn, nạp ga điều hòa ô tô.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card service-card h-100 text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box-large"><i class="bi bi-disc"></i></div>
+                </div>
+                <h5 class="fw-bold">Lốp - Phanh - Gầm</h5>
+                <p class="small" style="color:var(--lux-slate);">Thay lốp, cân mâm, cân chỉnh thước lái, thay má phanh an toàn.</p>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="/login" class="btn btn-copper"><i class="bi bi-calendar-plus me-1"></i>Đặt lịch cho xe của bạn</a>
+    </div>
+</div>
+
+<!-- 3. Vì sao chọn THREEH WORKSHOP -->
+<div class="mb-5 p-5 why-panel">
+    <h3 class="fw-bold text-center mb-4" style="color:#fff;">Tại sao chọn chúng tôi?</h3>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <ul class="list-unstyled lh-lg" style="font-size: 1.1rem;">
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-3"></i> <strong>Kỹ thuật viên chuyên nghiệp</strong>, giàu kinh nghiệm.</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-3"></i> <strong>Kiểm tra xe minh bạch</strong>, có báo cáo rõ ràng.</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-3"></i> <strong>Báo giá chi tiết</strong> trước khi tiến hành sửa chữa.</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-3"></i> <strong>Theo dõi lịch sử bảo dưỡng</strong> trực tuyến dễ dàng.</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-3"></i> <strong>AI hỗ trợ tư vấn</strong> và nhắc nhở 24/7.</li>
+            </ul>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <span class="why-ico"><i class="bi bi-tools"></i></span>
+                <span class="why-ico"><i class="bi bi-robot"></i></span>
+                <span class="why-ico"><i class="bi bi-car-front-fill"></i></span>
+            </div>
+            <p class="mt-3 mb-0" style="color:rgba(255,255,255,.7);font-size:.88rem;">Xưởng thật · Thợ thật · Báo giá trước khi sửa</p>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Chương trình hiện tại -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="mkt-h mb-0" style="text-align:left;">Chương trình ưu đãi</h3>
+    </div>
+    <p class="mkt-sub" style="text-align:left;">Ưu đãi do garage đăng tải — đăng nhập để đặt lịch và áp dụng.</p>
+    <div class="row g-4">
+        {% if promotions %}
+            {% for promo in promotions %}
+            <div class="col-md-4">
+                <div class="card promo-card text-center h-100">
+                    <h5 class="fw-bold mb-3" style="color:var(--lux-bronze-deep);"><i class="bi bi-gift me-1"></i>{{ promo.title }}</h5>
+                    {% if promo.discount_percent > 0 %}
+                    <h2 class="fw-bold my-2" style="color:#A93226;">Giảm {{ promo.discount_percent|round|int }}%</h2>
+                    {% endif %}
+                    <p class="mb-3" style="color:var(--lux-slate);">{{ promo.description }}</p>
+                    <a href="/login" class="btn btn-copper btn-sm mt-auto">Đăng nhập để nhận</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Chưa có ưu đãi trong DB: không bịa khuyến mãi, chỉ mời đăng nhập -->
+            <div class="col-12">
+                <div class="card promo-card text-center">
+                    <h5 class="fw-bold mb-2" style="color:var(--lux-graphite);"><i class="bi bi-gift me-1" style="color:var(--copper-orange);"></i>Ưu đãi dành cho thành viên</h5>
+                    <p class="mb-3" style="color:var(--lux-slate);">Đăng nhập để xem ưu đãi hiện có và đặt lịch áp dụng cho xe của bạn.</p>
+                    <a href="/login" class="btn btn-copper btn-sm">Đăng nhập xem ưu đãi</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 5. Kiến thức chăm sóc xe -->
+<div class="mb-5">
+    <h3 class="mkt-h">Kiến thức & kinh nghiệm</h3>
+    <p class="mkt-sub">Mẹo ngắn từ xưởng — xe có dấu hiệu lạ thì đặt lịch kiểm tra, đừng đoán.</p>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card blog-card h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="icon-box-large me-3" style="width:52px;height:52px;font-size:1.3rem;margin-bottom:0;"><i class="bi bi-droplet-half"></i></span>
+                    <h6 class="fw-bold mb-0 lh-base">5 dấu hiệu xe cần thay dầu ngay lập tức</h6>
+                </div>
+                <p class="small" style="color:var(--lux-slate);">Động cơ ồn hơn, khói xả đen, hoặc đèn cảnh báo sáng là những dấu hiệu nhắc nhở bạn...</p>
+                <a href="/login" class="fw-bold text-decoration-none" style="font-size: 0.9rem; color: var(--lux-bronze-deep);">Đặt lịch kiểm tra <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card blog-card h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="icon-box-large me-3" style="width:52px;height:52px;font-size:1.3rem;margin-bottom:0;"><i class="bi bi-exclamation-triangle"></i></span>
+                    <h6 class="fw-bold mb-0 lh-base">Khi nào cần thay má phanh ô tô?</h6>
+                </div>
+                <p class="small" style="color:var(--lux-slate);">Phanh kêu rít, hành trình phanh dài hơn bình thường là lúc bạn cần đem xe đi kiểm tra...</p>
+                <a href="/login" class="fw-bold text-decoration-none" style="font-size: 0.9rem; color: var(--lux-bronze-deep);">Đặt lịch kiểm tra <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card blog-card h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="icon-box-large me-3" style="width:52px;height:52px;font-size:1.3rem;margin-bottom:0;"><i class="bi bi-lightning-charge"></i></span>
+                    <h6 class="fw-bold mb-0 lh-base">Cách nhận biết bình ắc quy sắp hỏng</h6>
+                </div>
+                <p class="small" style="color:var(--lux-slate);">Khởi động khó khăn vào buổi sáng, đèn xe yếu mờ đi là dấu hiệu ắc quy của bạn sắp hết hạn...</p>
+                <a href="/login" class="fw-bold text-decoration-none" style="font-size: 0.9rem; color: var(--lux-bronze-deep);">Đặt lịch kiểm tra <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %} <!-- End of marketing section -->
+
+{# ============ FOOTER (mọi vai trò) ============ #}
+<div class="footer-section">
+    <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0">
+            <h4 class="fw-bold mb-3 fh-sub">ThreeH Workshop</h4>
+            <p style="color:rgba(255,255,255,.78);">Chăm sóc xe thông minh, tận tâm trên từng cây số.</p>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+            <h5 class="fw-bold mb-3">Thông tin liên hệ</h5>
+            <ul class="list-unstyled" style="color:rgba(255,255,255,.78);">
+                <li class="mb-2"><i class="bi bi-geo-alt-fill me-2" style="color:#E0A375;"></i>Tháp đôi Prime Thái Nguyên tại số 1 Hoàng Văn Thụ, Phan Đình Phùng, Thái Nguyên</li>
+                <li class="mb-2"><i class="bi bi-telephone-fill me-2" style="color:#E0A375;"></i><a href="tel:0981888888" class="text-decoration-none">0981.888.888</a></li>
+                <li class="mb-2"><i class="bi bi-clock-fill me-2" style="color:#E0A375;"></i>Thứ 2 - Thứ 7 (8:00 - 17:30)</li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h5 class="fw-bold mb-3">Đặt lịch nhanh</h5>
+            <p style="color:rgba(255,255,255,.78);font-size:.9rem;">Gọi trực tiếp hoặc đăng nhập để đặt lịch online.</p>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="tel:0981888888" class="btn btn-sm btn-hero"><i class="bi bi-telephone me-1"></i>0981.888.888</a>
+                <a href="/login" class="btn btn-sm btn-hero-ghost">Đặt lịch online</a>
+            </div>
+        </div>
+    </div>
+    <hr class="my-4 border-light" style="opacity: 0.2;">
+    <div class="text-center text-light" style="opacity: 0.6; font-size: 0.9rem;">
+        &copy; 2026 ThreeH Workshop. All rights reserved.
+    </div>
+</div>
+
+<script>
+    // Ngày hôm nay cho tiêu đề dashboard
+    (function() {
+        const el = document.getElementById('todayLabel');
+        if (el) {
+            const days = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+            const now = new Date();
+            el.textContent = `${days[now.getDay()]}, ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} · Chăm sóc xe của bạn đúng hẹn, minh bạch từng km.`;
+        }
+    })();
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const greetingEl = document.getElementById("weather-greeting");
+        const bannerEl = document.getElementById("weather-banner");
+        if (!greetingEl || !bannerEl) return;
+        const tempMainEl = document.getElementById("weather-temp-main");
+        const descMainEl = document.getElementById("weather-desc-main");
+        const iconMainEl = document.getElementById("weather-icon-main");
+        const adviceMainEl = document.getElementById("weather-advice-main");
+        const warningMainEl = document.getElementById("weather-warning-main");
+        const warningLabel = document.getElementById("warning-label");
+        const panelEl = document.getElementById("weather-left-panel");
+        const hourlyContainer = document.getElementById("hourly-forecast-container");
+
+        // Lời chào theo giờ
+        const currentHour = new Date().getHours();
+        if (currentHour < 12) {
+            greetingEl.textContent = "Chào buổi sáng!";
+        } else if (currentHour < 18) {
+            greetingEl.textContent = "Chào buổi chiều!";
+        } else {
+            greetingEl.textContent = "Chào buổi tối!";
+        }
+
+        const wmoCodes = {
+            0: { desc: "Quang đãng", icon: "bi-sun", iconColor: "#f39c12", advice: "Thời tiết rất đẹp. Rửa xe và hút bụi nội thất là lựa chọn tuyệt vời!", warning: "Nhiệt độ cao có thể làm tăng áp suất lốp, dễ gây nổ lốp nếu đi đường dài.", bg: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)", text: "#333" },
+            1: { desc: "Có nắng", icon: "bi-sun", iconColor: "#f39c12", advice: "Nắng to, hãy đỗ xe trong bóng râm và kiểm tra nước làm mát.", warning: "Xe dễ bị quá nhiệt nếu hệ thống làm mát hoạt động kém.", bg: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)", text: "#333" },
+            2: { desc: "Có mây", icon: "bi-cloud-sun", iconColor: "#7f8c8d", advice: "Trời mát mẻ, lý tưởng để đưa xe đi bảo dưỡng định kỳ.", warning: "", bg: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)", text: "#333" },
+            3: { desc: "Nhiều mây", icon: "bi-clouds", iconColor: "#95a5a6", advice: "Nên kiểm tra hệ thống đèn xe để đảm bảo tầm nhìn tốt.", warning: "Trời âm u, tầm nhìn có thể giảm lúc chạng vạng.", bg: "linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)", text: "#333" },
+            45: { desc: "Sương mù", icon: "bi-cloud-haze", iconColor: "#bdc3c7", advice: "Tầm nhìn hạn chế. Hãy kiểm tra đèn sương mù và đi chậm.", warning: "Cẩn thận khoảng cách an toàn, mặt đường có thể trơn trượt.", bg: "linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)", text: "#333" },
+            51: { desc: "Mưa phùn", icon: "bi-cloud-drizzle", iconColor: "#3498db", advice: "Mưa làm kính lái dễ mờ. Nhớ kiểm tra gạt mưa và nước rửa kính.", warning: "Đường ẩm ướt làm giảm độ ma sát của lốp.", bg: "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)", text: "#fff" },
+            61: { desc: "Mưa nhỏ", icon: "bi-cloud-rain", iconColor: "#2980b9", advice: "Đường ẩm ướt trơn trượt. Kiểm tra áp suất và độ mòn lốp xe.", warning: "Phanh có thể kém hiệu quả hơn bình thường.", bg: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", text: "#fff" },
+            63: { desc: "Mưa vừa", icon: "bi-cloud-rain", iconColor: "#2980b9", advice: "Cẩn thận phanh gấp trên đường trơn. Nên kiểm tra má phanh.", warning: "Dễ bị lóa sáng khi đi đêm do mặt đường phản chiếu.", bg: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", text: "#fff" },
+            65: { desc: "Mưa to", icon: "bi-cloud-rain-heavy", iconColor: "#2471a3", advice: "Hạn chế đi qua vũng nước sâu.", warning: "Nguy cơ thủy kích phá hỏng động cơ và trượt nước (aquaplaning) cao!", bg: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", text: "#fff" },
+            80: { desc: "Mưa rào", icon: "bi-cloud-rain-heavy", iconColor: "#2471a3", advice: "Hãy bật đèn cos và giữ khoảng cách.", warning: "Tầm nhìn giảm đột ngột và đường trơn trượt bất ngờ.", bg: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", text: "#fff" },
+            95: { desc: "Có dông", icon: "bi-cloud-lightning-rain", iconColor: "#8e44ad", advice: "Tránh đậu xe dưới gốc cây to hoặc biển báo lớn để tránh rủi ro.", warning: "Rủi ro cây đổ, cành rơi trúng xe gây móp méo, vỡ kính.", bg: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", text: "#fff" }
+        };
+
+        function getWmoInfo(code) {
+            if (wmoCodes[code]) return wmoCodes[code];
+            if (code >= 51 && code <= 55) return wmoCodes[51];
+            if (code >= 61 && code <= 65) return wmoCodes[65];
+            if (code >= 71 && code <= 77) return { desc: "Tuyết", icon: "bi-snow", iconColor: "#ecf0f1", advice: "Đường trơn trượt băng tuyết. Cần dùng lốp chuyên dụng.", warning: "Nhiệt độ thấp ảnh hưởng lớn đến ắc quy và dầu nhớt.", bg: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)", text: "#333" };
+            if (code >= 80 && code <= 82) return wmoCodes[80];
+            if (code >= 95) return wmoCodes[95];
+            return wmoCodes[2]; // fallback
+        }
+
+        function renderWeather(lat, lon) {
+            // Lấy dự báo 1 ngày (hôm nay)
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,weathercode&timezone=auto&forecast_days=1`;
+             
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const cw = data.current_weather;
+                    if (cw) {
+                        const info = getWmoInfo(cw.weathercode);
+                        tempMainEl.textContent = `${Math.round(cw.temperature)}°C`;
+                        descMainEl.textContent = info.desc;
+                        iconMainEl.className = `bi ${info.icon} fs-1 me-3`;
+                        iconMainEl.style.color = info.iconColor;
+                        adviceMainEl.textContent = info.advice;
+                         
+                        if (info.warning) {
+                            warningLabel.style.display = "inline-block";
+                            warningMainEl.textContent = info.warning;
+                        } else {
+                            warningLabel.style.display = "none";
+                            warningMainEl.textContent = "";
+                        }
+                         
+                        bannerEl.style.display = "block";
+
+                        // Render Hourly
+                        if (data.hourly && data.hourly.time) {
+                            hourlyContainer.innerHTML = "";
+                            const times = data.hourly.time;
+                            const temps = data.hourly.temperature_2m;
+                            const codes = data.hourly.weathercode;
+                             
+                            // Lọc các mốc giờ từ hiện tại tới cuối ngày (hoặc lấy 12 múi giờ kế tiếp)
+                            let currentIdx = 0;
+                            for (let i=0; i<times.length; i++) {
+                                const d = new Date(times[i]);
+                                if (d.getHours() >= currentHour || d.getDate() > new Date().getDate()) {
+                                    currentIdx = i;
+                                    break;
+                                }
+                            }
+                             
+                            // Lấy 8-10 múi giờ
+                            const count = Math.min(10, times.length - currentIdx);
+                            for (let i = currentIdx; i < currentIdx + count; i++) {
+                                const hTime = new Date(times[i]);
+                                const hTemp = Math.round(temps[i]);
+                                const hInfo = getWmoInfo(codes[i]);
+                                 
+                                const formatHour = hTime.getHours().toString().padStart(2, '0') + ":00";
+                                 
+                                const itemHtml = `
+                                    <div class="text-center" style="min-width: 60px; padding: 12px 10px; border-radius: 10px; background: var(--lux-ivory); border: 1px solid var(--lux-hairline);">
+                                        <div class="small fw-bold mb-2" style="color:var(--lux-slate);">${formatHour}</div>
+                                        <i class="bi ${hInfo.icon} fs-4" style="color: ${hInfo.iconColor};"></i>
+                                        <div class="fw-bold mt-2" style="color:var(--lux-graphite);">${hTemp}°C</div>
+                                    </div>
+                                `;
+                                hourlyContainer.insertAdjacentHTML('beforeend', itemHtml);
+                            }
+                        }
+                    }
+                })
+                .catch(err => console.error("Lỗi lấy thời tiết:", err));
+        }
+
+        // Lấy vị trí
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    renderWeather(position.coords.latitude, position.coords.longitude);
+                },
+                function(error) {
+                    renderWeather(21.5928, 105.8442); // Fallback Thái Nguyên
+                }
+            );
+        } else {
+            renderWeather(21.5928, 105.8442);
+        }
+    });
+</script>
+
+{% endblock %}

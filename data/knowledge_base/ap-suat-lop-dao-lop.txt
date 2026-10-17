@@ -1,0 +1,22 @@
+[GUIDELINE] Áp suất lốp, đảo lốp, cân bằng động
+Áp dụng cho: Mọi xe con, xe tải nhẹ dùng lốp hơi (tubeless và có săm)
+Ngày hiệu lực: 01/01/2026
+
+1. ÁP SUẤT LỐP CHUẨN
+Xem tem dán ở khung cửa lái hoặc nắp bình xăng (đơn vị kPa/PSI). Quy tắc nhớ: đo khi lốp NGUỘI, bơm đúng chỉ số hãng, lốp trước/sau có thể khác nhau, chở full tải bơm tăng 10-20 kPa so với chuẩn.
+- Non hơi: mòn 2 vai lốp, tốn xăng, ôm cua chòng chành, dễ nổ lốp khi chạy nhanh trời nắng.
+- Căng quá: mòn giữa lốp, xóc nảy, giảm bám đường khi phanh gấp.
+
+2. ĐẢO LỐP
+Đảo mỗi 10.000 km theo sơ đồ chéo (trước-trái ra sau-phải và ngược lại) để 4 lốp mòn đều, kéo dài tuổi thọ 15-20%. Lốp dự phòng cùng cỡ nên đưa vào vòng đảo.
+
+3. CÂN BẰNG ĐỘNG VÀ CHÌ
+Rung vô-lăng ở 80-100 km/h hoặc rung sàn xe là dấu hiệu mất cân bằng. Bấm chì lại mỗi khi vá/thay/đảo lốp. Lốp vá dùi (nấm) từ bên trong mới bền; miếng vá ngoài chỉ là giải pháp tạm.
+
+4. KHI NÀO THAY LỐP MỚI
+- Gai còn dưới 1,6 mm (tới vạch TWI trên rãnh), hoặc lốp quá 5-6 năm kể từ tuần/năm sản xuất in trên hông (ví dụ 2524 = tuần 25 năm 2024) dù gai còn dày (cao su lão hóa).
+- Hông lốp phồng (chửa), rách, nứt chân chim sâu.
+- Thay cùng cặp trên một trục, ưu tiên lốp mới ra trục sau để giữ ổn định đuôi xe.
+
+5. LƯU Ý MÙA MƯA
+Rãnh thoát nước mòn gây trượt nước (aquaplaning) ở tốc độ cao. Trước mùa mưa nên kiểm tra độ sâu gai và áp suất; giữ khoảng cách lớn hơn bình thường 50%.

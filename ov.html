@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý chung - ThreeH Workshop</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --warm-white: #FAF9F7;
+            --concrete-gray: #E9ECEF;
+            --charcoal-black: #1E1E1E;
+            --dark-graphite: #2D2D2D;
+            --copper-orange: #C87941;
+            --text-muted: #8C8C8C;
+            /* Light luxury — Than chì & Đồng */
+            --lux-ivory: #FCFBF9;
+            --lux-sand: #F4F1EC;
+            --lux-hairline: #E4DFD8;
+            --lux-slate: #6B6560;
+            --lux-bronze-deep: #A65E2F;
+            --lux-graphite: #1E1E1E;
+        }
+
+        body { 
+            background-color: var(--warm-white);
+            font-family: 'Inter', sans-serif;
+            color: var(--charcoal-black);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection { background: rgba(200, 121, 65, 0.22); }
+
+        /* Thanh cuộn tinh giản */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D8D1C8; border-radius: 999px; border: 2px solid var(--warm-white); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--copper-orange); }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 260px;
+            z-index: 100;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #FFFFFF;
+            color: var(--charcoal-black);
+            box-shadow: 4px 0 24px rgba(30,30,30,0.03);
+            border-right: 1px solid var(--lux-hairline);
+            padding-top: 1rem;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-width: 0;
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+        
+        .sidebar h5 { 
+            color: var(--charcoal-black); 
+            font-weight: 700; 
+            margin-bottom: 30px; 
+            letter-spacing: 0.18em;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+        
+        .sidebar .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .sidebar a.nav-link { 
+            color: var(--lux-slate); 
+            text-decoration: none; 
+            display: block; 
+            padding: 10px 16px; 
+            border-radius: 8px; 
+            margin: 2px 12px; 
+            font-size: 0.9rem;
+            font-weight: 500; 
+            position: relative;
+            transition: color 0.25s ease, background-color 0.25s ease; 
+        }
+        .sidebar a.nav-link i { color: #B9B1A7; transition: color 0.25s ease; }
+
+        .sidebar a.nav-link:hover { 
+            color: var(--lux-graphite); 
+            background-color: var(--lux-ivory);
+        }
+        .sidebar a.nav-link:hover i { color: var(--copper-orange); }
+
+        .sidebar a.nav-link.active { 
+            color: var(--lux-graphite);
+            font-weight: 600;
+            background: linear-gradient(90deg, rgba(200,121,65,0.12), rgba(200,121,65,0.02));
+        }
+        .sidebar a.nav-link.active i { color: var(--copper-orange); }
+        .sidebar a.nav-link.active::before {
+            content: "";
+            position: absolute;
+            left: -12px;
+            top: 7px;
+            bottom: 7px;
+            width: 3px;
+            border-radius: 0 3px 3px 0;
+            background: var(--copper-orange);
+        }
+
+        /* Global Elements */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--lux-graphite);
+        }
+        a { color: var(--copper-orange); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: var(--lux-bronze-deep); }
+
+        .card {
+            border: 1px solid var(--lux-hairline);
+            border-radius: 14px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(30,30,30,0.04);
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.35s ease, border-color 0.35s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 14px 34px -20px rgba(30,30,30,0.18);
+            border-color: #D8D1C8;
+        }
+
+        .card-header {
+            background-color: var(--lux-ivory);
+            border-bottom: 1px solid var(--lux-hairline);
+            padding: 1.1rem 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Nút — pill than chì, hover đồng */
+        .btn {
+            border-radius: 999px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .btn-primary {
+            background-color: var(--charcoal-black);
+            border-color: var(--charcoal-black);
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 999px;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--copper-orange);
+            border-color: var(--copper-orange);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -8px rgba(200,121,65,0.55);
+        }
+        
+        .btn-outline-primary {
+            color: var(--charcoal-black);
+            border-color: #CFC9C1;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--charcoal-black);
+            border-color: var(--charcoal-black);
+            color: #fff;
+        }
+        .btn-outline-dark {
+            border-color: #CFC9C1;
+            color: var(--charcoal-black);
+        }
+        .btn-outline-dark:hover {
+            background-color: var(--charcoal-black);
+            border-color: var(--charcoal-black);
+        }
+
+        /* Form — input ivory, focus glow đồng */
+        .form-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--lux-slate);
+            margin-bottom: 0.4rem;
+        }
+        .form-control, .form-select {
+            background-color: #fff;
+            border: 1px solid var(--lux-hairline);
+            border-radius: 10px;
+            font-size: 0.92rem;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--copper-orange);
+            box-shadow: 0 0 0 3px rgba(200,121,65,0.12);
+            background-color: #fff;
+        }
+        .form-control::placeholder { color: #B5AFA8; }
+        .form-text { color: var(--lux-slate); font-size: 0.78rem; }
+        .input-group-text {
+            background-color: #fff;
+            border-color: var(--lux-hairline);
+            color: var(--copper-orange);
+        }
+        input[type="checkbox"], input[type="radio"] { accent-color: var(--copper-orange); }
+        ::placeholder { color: #B5AFA8; }
+
+        /* Bảng — header micro-label, hairline */
+        .table { color: var(--charcoal-black); }
+        .table > thead > tr > th {
+            background-color: var(--lux-ivory);
+            color: var(--lux-slate);
+            font-size: 0.67rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-bottom: 1px solid var(--lux-hairline);
+            padding: 0.8rem 1rem;
+        }
+        .table > tbody > tr > td {
+            border-color: var(--lux-hairline);
+            padding: 0.85rem 1rem;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        .table-hover > tbody > tr:hover > * {
+            background-color: rgba(200,121,65,0.04);
+            color: var(--charcoal-black);
+        }
+        .table-light { --bs-table-bg: var(--lux-ivory); }
+
+        /* Badge */
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 0.4em 0.85em;
+        }
+
+        /* Modal — head than chỉ viền đồng */
+        .modal-content {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px -30px rgba(30,30,30,0.45);
+        }
+        .modal-header {
+            background-color: var(--lux-graphite);
+            color: #fff;
+            border-bottom: 2px solid var(--copper-orange);
+        }
+        .modal-title { font-weight: 600; font-size: 1.02rem; }
+        .modal-header .btn-close { filter: invert(1) grayscale(1); }
+        .modal-footer {
+            border-top: 1px solid var(--lux-hairline);
+            background-color: var(--lux-ivory);
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--lux-hairline);
+            opacity: 1;
+        }
+        .badge.bg-info {
+            background-color: rgba(200, 121, 65, 0.14) !important;
+            color: var(--lux-bronze-deep) !important;
+            font-weight: 600;
+            border: 1px solid rgba(200, 121, 65, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile top bar -->
+    <nav class="navbar navbar-light bg-white border-bottom d-md-none sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/"><i class="bi bi-gear-wide-connected me-1" style="color: var(--copper-orange);"></i> THREEH</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse w-100" id="mobileMenu">
+            <div class="list-group list-group-flush">
+                <a class="list-group-item list-group-item-action" href="/">Trang chủ</a>
+                <a class="list-group-item list-group-item-action" href="/ai-assistant">AI Assistant</a>
+                <a class="list-group-item list-group-item-action" href="/our-team">Kỹ thuật viên</a>
+                <a class="list-group-item list-group-item-action" href="/my-vehicles">Xe của tôi</a>
+                <a class="list-group-item list-group-item-action" href="/my-appointments">Đặt lịch hẹn</a>
+                <a class="list-group-item list-group-item-action" href="/my-invoices">Hóa đơn</a>
+                
+                <a class="list-group-item list-group-item-action" href="/profile">Thông tin cá nhân</a>
+                <a class="list-group-item list-group-item-action text-danger" href="/logout">Đăng xuất (Lê Sếp Quản Lý)</a>
+                
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="d-none d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <h5 class="text-center mt-3"><i class="bi bi-gear-wide-connected" style="color: var(--copper-orange);"></i> THREEH WORKSHOP</h5>
+                    
+                    
+                    <div class="text-center mt-3 mb-3 border-bottom pb-3">
+                        <small class="text-muted">Xin chào,</small><br>
+                        <strong>Lê Sếp Quản Lý</strong><br>
+                        <span class="badge bg-info text-dark">
+                            Quản lý
+                            
+                        </span>
+                    </div>
+                    
+
+                    <ul class="nav flex-column mt-2">
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/"><i class="bi bi-house-door me-2"></i> Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ai-assistant"><i class="bi bi-robot me-2"></i> AI Assistant</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/our-team"><i class="bi bi-people me-2"></i> Kỹ thuật viên</a>
+                        </li>
+                         
+                        
+
+                        
+                         
+                        
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/manager/overview"><i class="bi bi-bar-chart me-2"></i> Tổng quan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/users"><i class="bi bi-person-lines-fill me-2"></i> Quản lý Tài khoản</a>
+                        </li>
+                        <!-- Không lặp lại Kho phụ tùng/Dịch vụ nếu admin đã thấy ở trên -->
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tech/parts"><i class="bi bi-box-seam me-2"></i> Kho Phụ tùng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tech/services"><i class="bi bi-droplet-fill me-2"></i> Dịch vụ</a>
+                        </li>
+                        
+                        
+                        
+                        
+                        <hr>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile"><i class="bi bi-person-circle me-2"></i> Thông tin cá nhân</a>
+                        </li>
+                        
+                    </ul>
+                    
+                    <div class="mt-4 px-3 pb-4">
+                        
+                        <a href="/logout" class="btn btn-sm btn-outline-dark w-100 opacity-75">Đăng xuất</a>
+                        
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-12 main-content px-3 px-md-4 mt-4">
+                <div class="container-fluid px-0" style="max-width: 1280px;">
+                    
+<style>
+    .mgr-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding: 22px 0 16px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 8px; }
+    .mgr-head h1 { font-size: 1.5rem; margin: 0; font-weight: 700; letter-spacing: -.02em; }
+    .mgr-sub { color: var(--lux-slate); font-size: .86rem; margin: 6px 0 0; }
+    .mgr-kpi { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; padding: 1rem 1.1rem; height: 100%; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .mgr-kpi .kl { font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); display: flex; align-items: center; gap: 6px; }
+    .mgr-kpi .kv { font-size: 1.45rem; font-weight: 700; letter-spacing: -.02em; color: var(--lux-graphite); margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .mgr-kpi .kv small { font-size: .8rem; font-weight: 600; color: var(--lux-slate); }
+    .mgr-sec { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--lux-slate); margin: 1.6rem 0 .8rem; display: flex; align-items: center; gap: 8px; }
+    .mgr-sec i { color: var(--copper-orange); }
+    .st-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 12px; padding: .9rem 1rem; height: 100%; }
+    .st-card .sl { font-size: .76rem; font-weight: 700; color: var(--lux-graphite); display: flex; align-items: center; gap: 7px; }
+    .st-card .sv { font-size: 1.2rem; font-weight: 700; color: var(--lux-graphite); margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: 0 0 9px; }
+    .mgr-panel { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; height: 100%; overflow: hidden; }
+    .mgr-panel .ph { padding: .9rem 1.2rem; border-bottom: 1px solid var(--lux-hairline); font-weight: 700; font-size: .9rem; color: var(--lux-graphite); display: flex; align-items: center; gap: 8px; background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); }
+    .mgr-panel .ph i { color: var(--copper-orange); }
+    .mgr-row { display: flex; justify-content: space-between; gap: .8rem; padding: .55rem 0; font-size: .88rem; border-bottom: 1px dashed var(--lux-hairline); }
+    .mgr-row:last-child { border-bottom: none; }
+    .mgr-row .k { color: var(--lux-slate); }
+    .mgr-row .v { font-weight: 700; color: var(--lux-graphite); text-align: right; font-variant-numeric: tabular-nums; }
+    .insight { background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%); border: 1px solid rgba(200,121,65,.25); border-radius: 16px; color: #fff; }
+    .insight h5 { color: #fff; }
+    .insight .ii { width: 30px; height: 30px; border-radius: 9px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); display: inline-flex; align-items: center; justify-content: center; color: #E0A375; flex: 0 0 30px; }
+    .insight small { color: rgba(255,255,255,.72); }
+    /* Bảng quản lý chi tiết (nửa dưới): cùng hệ lux */
+    .tbl-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .tbl-card .card-header { background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); border-bottom: 1px solid var(--lux-hairline); padding: .9rem 1.2rem; }
+    .tbl-card .card-header h5 { color: var(--lux-graphite); font-size: 1rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .tbl-card .card-header h5 i { color: var(--copper-orange); }
+    .tbl-card table { font-size: .88rem; }
+    .tbl-card thead th { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--lux-slate); font-weight: 700; border-bottom: 1px solid var(--lux-hairline); background: var(--lux-ivory); padding: .65rem .75rem; white-space: nowrap; }
+    .tbl-card tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--lux-hairline); color: var(--lux-graphite); vertical-align: middle; }
+    .tbl-card tbody tr:last-child td { border-bottom: none; }
+    .tbl-card .muted, .tbl-card small.muted { color: var(--lux-slate); }
+    .pill { display: inline-block; font-size: .72rem; font-weight: 700; border-radius: 999px; padding: .28em .8em; white-space: nowrap; border: 1px solid; }
+    .pill-unpaid { background: rgba(192,57,43,.08); color: #A93226; border-color: rgba(192,57,43,.3); }
+    .pill-paid { background: rgba(46,125,79,.1); color: #2E7D4F; border-color: rgba(46,125,79,.3); }
+    .pill-wait { background: #F1EFEA; color: #5F5A54; border-color: #E4DFD8; }
+    .pill-prog { background: rgba(200,121,65,.1); color: var(--lux-bronze-deep); border-color: rgba(200,121,65,.4); }
+    .pill-info { background: rgba(13,117,165,.08); color: #0d75a5; border-color: rgba(13,117,165,.3); }
+    .btn-bronze { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; }
+    .btn-bronze:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+    .modal-lux .modal-header { background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%); color: #fff; border-bottom: 1px solid rgba(200,121,65,.25); padding: 16px 20px; }
+    .modal-lux .modal-header .modal-title { color: #fff; font-size: 1.02rem; }
+    .modal-lux .modal-header .btn-close { filter: invert(1); }
+    /* ===== Phiếu tiếp nhận (dùng chung với trang thợ): than chì & đồng ===== */
+    .rc-modal .modal-content { border-radius: 16px; overflow: hidden; }
+    .rc-modal .modal-header { background: #fff; color: var(--lux-graphite); border-bottom: 1px solid var(--lux-hairline); padding: 16px 20px; }
+    .rc-modal .modal-title { color: var(--lux-graphite); }
+    .rc-modal .modal-header .btn-close { filter: none; opacity: .55; }
+    .rc-modal .modal-header .btn-close:hover { opacity: 1; }
+    .rc-modal .modal-footer { background: #fff; border-top: 1px solid var(--lux-hairline); padding: 14px 20px; }
+    .rc-modal .modal-body { background: var(--lux-ivory); }
+    .rc-kicker { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: #8A5A32; margin-bottom: 3px; }
+    .rc-plate-t { letter-spacing: .08em; }
+    .rc-title-sub { font-size: .78rem; font-weight: 400; letter-spacing: .03em; color: var(--lux-slate); margin-left: 10px; }
+    .rc-hint { font-size: .76rem; color: var(--lux-slate); }
+    .rc-hint i { color: var(--copper-orange); }
+    .rc-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 13px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .rc-card-h { display: flex; align-items: center; gap: 9px; padding: 11px 15px; border-bottom: 1px solid var(--lux-hairline); background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); font-size: .73rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--lux-graphite); }
+    .rc-card-h i { margin-left: auto; color: var(--copper-orange); font-size: .92rem; opacity: .8; }
+    .rc-num { flex: 0 0 21px; width: 21px; height: 21px; border-radius: 50%; background: var(--copper-orange); color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: 0; display: inline-flex; align-items: center; justify-content: center; }
+    .rc-card-b { padding: 14px 16px; }
+    .rc-lbl { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 6px; }
+    .rc-req { color: var(--copper-orange); }
+    .rc-cust { display: flex; align-items: center; gap: 11px; padding-bottom: 11px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 9px; }
+    .rc-avatar { flex: 0 0 42px; width: 42px; height: 42px; border-radius: 50%; background: var(--lux-graphite); color: #E0A375; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .92rem; letter-spacing: .03em; }
+    .rc-cust .nm { font-weight: 700; font-size: .97rem; color: var(--lux-graphite); line-height: 1.4; }
+    .rc-cust .rl { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--copper-orange); font-weight: 700; margin-top: 2px; }
+    .rc-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--lux-hairline); font-size: .86rem; }
+    .rc-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rc-row .k { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); flex-shrink: 0; }
+    .rc-row .v { font-weight: 600; color: var(--lux-graphite); text-align: right; word-break: break-word; }
+    .rc-plate { display: inline-flex; align-items: center; gap: 9px; background: var(--lux-graphite); color: #fff; font-weight: 700; font-size: 1.02rem; letter-spacing: .08em; padding: .38em 1em; border-radius: 9px; border-bottom: 3px solid var(--copper-orange); box-shadow: 0 6px 14px -8px rgba(30,30,30,.6); }
+    .rc-plate i { color: #E0A375; font-size: .95rem; letter-spacing: 0; }
+    .rc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 14px; margin-top: 13px; }
+    .rc-grid .cell { background: var(--lux-ivory); border: 1px solid var(--lux-hairline); border-radius: 9px; padding: 7px 10px; }
+    .rc-grid .cell .k { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 2px; }
+    .rc-grid .cell .v { font-size: .87rem; font-weight: 700; color: var(--lux-graphite); }
+    .rc-grid .cell-full { grid-column: 1 / -1; }
+    .rc-mono { font-family: Consolas, 'SF Mono', monospace; letter-spacing: .05em; font-size: .8rem !important; }
+    .rc-modal .form-control, .rc-modal .form-select { border-radius: 9px; border-color: #D8D1C8; font-size: .87rem; background: #fff; }
+    .rc-modal .form-control:focus, .rc-modal .form-select:focus { border-color: var(--copper-orange); box-shadow: 0 0 0 3px rgba(200,121,65,.13); background: #fff; }
+    .rc-modal .form-control:disabled { background: var(--lux-sand); color: var(--lux-slate); opacity: 1; }
+    .rc-sym { border-left: 3px solid var(--copper-orange) !important; font-size: .87rem !important; line-height: 1.55; }
+    .rc-suffix { background: var(--lux-sand); border-color: #D8D1C8; color: var(--lux-slate); font-size: .75rem; font-weight: 700; letter-spacing: .05em; }
+    .rc-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .rc-chips input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .rc-chips label { display: inline-flex; align-items: center; gap: 7px; margin: 0; cursor: pointer; user-select: none; font-size: .77rem; font-weight: 600; padding: .36em .85em; border-radius: 999px; border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-slate); transition: border-color .18s, background .18s, color .18s; }
+    .rc-chips label::before { content: ""; flex: 0 0 12px; width: 12px; height: 12px; border: 1.5px solid #C4BDB4; border-radius: 3px; background: #fff; transition: background .15s, border-color .15s; }
+    .rc-chips label:hover { border-color: var(--copper-orange); color: var(--lux-bronze-deep); }
+    .rc-chips input:checked + label { background: rgba(200,121,65,.09); border-color: rgba(200,121,65,.6); color: #A65E2F; }
+    .rc-chips input:checked + label::before { background: var(--copper-orange); border-color: var(--copper-orange); box-shadow: inset 0 0 0 2px #fff; }
+    .rc-chips input:focus-visible + label { box-shadow: 0 0 0 3px rgba(200,121,65,.22); }
+    .rc-chips.warn label { color: #B03A2E; border-color: rgba(192,57,43,.32); background: rgba(192,57,43,.035); font-weight: 700; }
+    .rc-chips.warn label::before { border-radius: 50%; }
+    .rc-chips.warn label:hover { border-color: #C0392B; }
+    .rc-chips.warn input:checked + label { background: rgba(192,57,43,.1); border-color: rgba(192,57,43,.65); color: #A93226; }
+    .rc-chips.warn input:checked + label::before { background: #C0392B; border-color: #C0392B; }
+    .rc-seg { position: relative; display: inline-flex; gap: 3px; background: var(--lux-sand); border: 1px solid var(--lux-hairline); border-radius: 999px; padding: 3px; }
+    .rc-seg input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .rc-seg label { margin: 0; cursor: pointer; font-size: .78rem; font-weight: 700; padding: .33em 1.05em; border-radius: 999px; color: var(--lux-slate); transition: background .18s, color .18s; }
+    .rc-seg label:hover { color: var(--lux-graphite); }
+    .rc-seg input:checked + label { color: #fff; box-shadow: 0 5px 12px -5px rgba(0,0,0,.45); }
+    .rc-seg input.s-nhe:checked + label { background: #2E7D4F; }
+    .rc-seg input.s-vua:checked + label { background: #8A6D00; }
+    .rc-seg input.s-nang:checked + label { background: #C0392B; }
+    .rc-seg input:focus-visible + label { outline: 2px solid var(--copper-orange); }
+    .rc-file { position: relative; display: flex; align-items: center; gap: 12px; padding: 13px 15px; border: 1.5px dashed rgba(200,121,65,.5); background: rgba(200,121,65,.045); border-radius: 11px; cursor: pointer; transition: background .2s, border-color .2s; overflow: hidden; }
+    .rc-file:hover { background: rgba(200,121,65,.09); border-color: var(--copper-orange); }
+    .rc-file input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .rc-file i { font-size: 1.45rem; color: var(--copper-orange); }
+    .rc-file .ft { font-size: .82rem; font-weight: 700; color: var(--lux-graphite); }
+    .rc-file .fn { font-size: .75rem; color: var(--lux-slate); margin-top: 1px; }
+    .rc-modal .modal-body::-webkit-scrollbar { width: 9px; }
+    .rc-modal .modal-body::-webkit-scrollbar-track { background: var(--lux-ivory); }
+    .rc-modal .modal-body::-webkit-scrollbar-thumb { background: #D8D1C8; border-radius: 9px; border: 2px solid var(--lux-ivory); }
+    .q-ai { background: var(--lux-ivory); border: 1px solid var(--lux-hairline); border-radius: 10px; padding: 10px 13px; font-size: .84rem; line-height: 1.55; max-height: 110px; overflow-y: auto; color: var(--lux-graphite); }
+    .q-preview { font-size: .8rem; font-weight: 700; color: var(--lux-bronze-deep); margin-top: 6px; font-variant-numeric: tabular-nums; }
+    /* === Period selector pills === */
+    .period-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .period-pills a { display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; font-weight: 700; padding: .32em .9em; border-radius: 999px; text-decoration: none; border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-slate); transition: all .18s; }
+    .period-pills a:hover { border-color: var(--copper-orange); color: var(--lux-bronze-deep); }
+    .period-pills a.active { background: var(--lux-graphite); border-color: var(--lux-graphite); color: #fff; }
+    /* === Tech Perf Table === */
+    .tp-table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    .tp-table th { font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--lux-slate); padding: .6rem .8rem; border-bottom: 1px solid var(--lux-hairline); background: var(--lux-ivory); white-space: nowrap; }
+    .tp-table td { padding: .7rem .8rem; border-bottom: 1px solid var(--lux-hairline); vertical-align: middle; }
+    .tp-table tr:last-child td { border-bottom: none; }
+    .tp-table tr:hover td { background: rgba(200,121,65,.03); }
+    .tp-rank { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .74rem; font-weight: 800; flex-shrink: 0; }
+    .tp-rank-1 { background: #FFD700; color: #7A5900; }
+    .tp-rank-2 { background: #C0C0C0; color: #444; }
+    .tp-rank-3 { background: #CD7F32; color: #2e2000; }
+    .tp-rank-n { background: var(--lux-sand); color: var(--lux-slate); }
+    .tp-bar-wrap { height: 5px; background: var(--lux-sand); border-radius: 99px; min-width: 60px; overflow: hidden; }
+    .tp-bar { height: 100%; border-radius: 99px; background: var(--copper-orange); }
+    .tp-star { color: #E0A375; font-size: .8rem; }
+    .tp-stars-empty { color: #D8D1C8; font-size: .8rem; }
+    .tp-zero { color: var(--lux-slate); font-style: italic; font-size: .8rem; }
+    .tp-badge { display: inline-flex; align-items: center; gap: 4px; font-size: .75rem; font-weight: 700; border-radius: 999px; padding: .22em .65em; border: 1px solid; }
+    .tp-badge-prog { background: rgba(200,121,65,.1); color: var(--lux-bronze-deep); border-color: rgba(200,121,65,.4); }
+    .tp-badge-done { background: rgba(46,125,79,.1); color: #2E7D4F; border-color: rgba(46,125,79,.3); }
+    .tp-badge-pend { background: #F1EFEA; color: #5F5A54; border-color: #E4DFD8; }
+    .tp-section-label { display: block; font-size: .7rem; color: var(--lux-slate); font-weight: 600; }
+</style>
+
+<div class="mgr-head">
+    <div>
+        <h1>Tổng quan garage</h1>
+        <p class="mgr-sub">
+            Kỳ báo cáo: <strong style="color:var(--lux-graphite);">Hôm nay</strong>
+            · <span style="font-variant-numeric:tabular-nums;">08/10/2026 – 08/10/2026</span>
+            · Số liệu lấy trực tiếp từ dữ liệu xưởng.
+        </p>
+    </div>
+    <div class="d-flex flex-column align-items-end gap-2">
+        <div class="period-pills">
+            <a href="?period=day" class="active"><i class="bi bi-sun"></i>Hôm nay</a>
+            <a href="?period=week" class=""><i class="bi bi-calendar-week"></i>7 ngày</a>
+            <a href="?period=month" class=""><i class="bi bi-calendar-month"></i>Tháng này</a>
+            <a href="?period=custom" class=""><i class="bi bi-sliders"></i>Tuỳ chọn</a>
+        </div>
+        
+    </div>
+</div>
+
+<!-- 1. KPI kỳ này -->
+<div class="row g-3">
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-car-front" style="color:var(--copper-orange);"></i>Xe tiếp nhận</div><div class="kv">0</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-tools" style="color:var(--copper-orange);"></i>Đang sửa</div><div class="kv">0</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-check-circle-fill" style="color:#2E7D4F;"></i>Hoàn thành</div><div class="kv">0</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-calendar-event" style="color:var(--copper-orange);"></i>Lịch hẹn kỳ này</div><div class="kv">0</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-cash-stack" style="color:#2E7D4F;"></i>Doanh thu kỳ này</div><div class="kv" style="font-size:1.15rem;">82,208,500 <small>đ</small></div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-hourglass-split" style="color:#A93226;"></i>Lịch chờ xử lý</div><div class="kv" >0</div></div>
+    </div>
+</div>
+
+<!-- 2. Trạng thái xưởng -->
+<div class="mgr-sec"><i class="bi bi-diagram-3"></i>Tình trạng xưởng</div>
+<div class="row g-3">
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#B07D00;"></span>Chờ tiếp nhận</div><div class="sv">3 xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#0d75a5;"></span>Đang kiểm tra</div><div class="sv">0 xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#C87941;"></span>Đang sửa chữa</div><div class="sv">0 xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#8E44AD;"></span>Chờ phụ tùng</div><div class="sv">0 xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#2E7D4F;"></span>Hoàn thành</div><div class="sv">182 xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#1E1E1E;"></span>Đã bàn giao</div><div class="sv">182 xe</div></div></div>
+</div>
+
+<!-- Lịch hẹn & Hiệu suất KTV -->
+<div class="row g-3 mt-1">
+    <!-- 3. Lịch hẹn hôm nay -->
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-calendar-event"></i>Lịch hẹn hôm nay</div>
+            <div class="p-3">
+                <ul class="list-group list-group-flush">
+                    
+                    <li class="list-group-item text-center py-3" style="color:var(--lux-slate);">Hôm nay không có lịch hẹn mới.</li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tóm tắt KTV nhanh bên phải -->
+    <div class="col-md-6">
+        <div class="mgr-panel h-100">
+            <div class="ph d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-gear"></i>KTV nổi bật · Hôm nay</span>
+                <a href="#tech-perf-full" class="text-decoration-none" style="font-size:.76rem;color:var(--lux-slate);font-weight:600;">Xem đầy đủ ↓</a>
+            </div>
+            <div class="p-0">
+                
+                <table class="tp-table" style="margin:0;">
+                    <thead>
+                        <tr>
+                            <th style="width:28px;">#</th>
+                            <th>Kỹ thuật viên</th>
+                            <th class="text-center">Hoàn thành</th>
+                            <th class="text-center">Đang xử lý</th>
+                            <th>Tỉ lệ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>
+                                <span class="tp-rank tp-rank-1">1</span>
+                                
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:var(--lux-graphite);font-size:.88rem;">Bùi Đức Tài</div>
+                                <div style="font-size:.72rem;color:var(--lux-slate);">0 phiếu trong kỳ</div>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-done"><i class="bi bi-check2"></i>0</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-prog"><i class="bi bi-tools"></i>0</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="tp-bar-wrap" style="flex:1;">
+                                        <div class="tp-bar" style="width:0%;"></div>
+                                    </div>
+                                    <span style="font-size:.75rem;font-weight:700;color:var(--lux-graphite);min-width:30px;">0%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                <span class="tp-rank tp-rank-2">2</span>
+                                
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:var(--lux-graphite);font-size:.88rem;">Cao Thanh Trọng</div>
+                                <div style="font-size:.72rem;color:var(--lux-slate);">0 phiếu trong kỳ</div>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-done"><i class="bi bi-check2"></i>0</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-prog"><i class="bi bi-tools"></i>0</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="tp-bar-wrap" style="flex:1;">
+                                        <div class="tp-bar" style="width:0%;"></div>
+                                    </div>
+                                    <span style="font-size:.75rem;font-weight:700;color:var(--lux-graphite);min-width:30px;">0%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                <span class="tp-rank tp-rank-3">3</span>
+                                
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:var(--lux-graphite);font-size:.88rem;">Hồ Nhật Nam</div>
+                                <div style="font-size:.72rem;color:var(--lux-slate);">0 phiếu trong kỳ</div>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-done"><i class="bi bi-check2"></i>0</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-prog"><i class="bi bi-tools"></i>0</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="tp-bar-wrap" style="flex:1;">
+                                        <div class="tp-bar" style="width:0%;"></div>
+                                    </div>
+                                    <span style="font-size:.75rem;font-weight:700;color:var(--lux-graphite);min-width:30px;">0%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                <span class="tp-rank tp-rank-n">4</span>
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:var(--lux-graphite);font-size:.88rem;">Lê Trọng Tấn</div>
+                                <div style="font-size:.72rem;color:var(--lux-slate);">0 phiếu trong kỳ</div>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-done"><i class="bi bi-check2"></i>0</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-prog"><i class="bi bi-tools"></i>0</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="tp-bar-wrap" style="flex:1;">
+                                        <div class="tp-bar" style="width:0%;"></div>
+                                    </div>
+                                    <span style="font-size:.75rem;font-weight:700;color:var(--lux-graphite);min-width:30px;">0%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                                <span class="tp-rank tp-rank-n">5</span>
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:var(--lux-graphite);font-size:.88rem;">Lê Viết Sơn</div>
+                                <div style="font-size:.72rem;color:var(--lux-slate);">0 phiếu trong kỳ</div>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-done"><i class="bi bi-check2"></i>0</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-prog"><i class="bi bi-tools"></i>0</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="tp-bar-wrap" style="flex:1;">
+                                        <div class="tp-bar" style="width:0%;"></div>
+                                    </div>
+                                    <span style="font-size:.75rem;font-weight:700;color:var(--lux-graphite);min-width:30px;">0%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- === Hiệu suất KTV đầy đủ === -->
+<div class="tbl-card mt-3 mb-2" id="tech-perf-full">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5><i class="bi bi-person-gear me-2"></i>Hiệu suất kỹ thuật viên<span class="ms-2" style="font-size:.78rem;font-weight:400;color:var(--lux-slate);">Kỳ: Hôm nay (08/10/2026 – 08/10/2026)</span></h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="tp-table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;padding-left:1rem;">#</th>
+                        <th>Kỹ thuật viên</th>
+                        <th class="text-center">Tổng phiếu</th>
+                        <th class="text-center">Hoàn thành</th>
+                        <th class="text-center">Đang xử lý</th>
+                        <th class="text-center">Chờ nhận</th>
+                        <th>Tỉ lệ HT</th>
+                        <th class="text-end">Doanh thu đóng góp</th>
+                        <th class="text-center">Thời gian TB</th>
+                        <th class="text-center">Đánh giá TB</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-1">1</span>
+                            
+                        </td>
+                        <td>
+                            <a href="/manager/technician/26/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Bùi Đức Tài</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-2">2</span>
+                            
+                        </td>
+                        <td>
+                            <a href="/manager/technician/28/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Cao Thanh Trọng</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-3">3</span>
+                            
+                        </td>
+                        <td>
+                            <a href="/manager/technician/27/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Hồ Nhật Nam</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">4</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/19/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Lê Trọng Tấn</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">5</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/7/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Lê Viết Sơn</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">6</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/25/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Lý Quang Thái</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">7</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/21/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Nguyễn Hoàng Minh</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">8</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/22/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Phạm Quốc Toản</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">9</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/5/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Phạm Văn Điện</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">10</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/2/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Trần Thợ Máy</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">11</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/6/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Trần Trọng Máy</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">12</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/20/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Trần Văn Sáng</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">13</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/24/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Vũ Anh Khoa</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            <span class="tp-rank tp-rank-n">14</span>
+                        </td>
+                        <td>
+                            <a href="/manager/technician/23/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">Đinh Văn Dũng</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">0</td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td style="min-width:110px;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                        <td class="text-center">
+                            
+                            <span class="tp-zero">—</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- === BIỂU ĐỒ PHÂN TÍCH === -->
+<div class="mgr-sec mt-4"><i class="bi bi-bar-chart-line"></i>Phân tích trực quan · Hôm nay</div>
+
+<div class="row g-3 mb-2">
+    <!-- Biểu đồ 1: Doanh thu & Đơn sửa theo thời gian -->
+    <div class="col-lg-8">
+        <div class="tbl-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="bi bi-graph-up-arrow me-2"></i>Doanh thu &amp; Đơn sửa chữa theo thời gian</h5>
+                <small style="color:var(--lux-slate);font-weight:600;">Triệu đồng / Đơn</small>
+            </div>
+            <div class="card-body" style="padding:1rem 1.2rem 1.2rem;">
+                <canvas id="chartRevenue" style="max-height:240px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ 2: Tình trạng xe (Doughnut) -->
+    <div class="col-lg-4">
+        <div class="tbl-card h-100">
+            <div class="card-header">
+                <h5><i class="bi bi-pie-chart me-2"></i>Tình trạng xe (hiện tại)</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center" style="padding:1.2rem;">
+                <canvas id="chartStatus" style="max-height:220px;max-width:220px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Biểu đồ 3: Hiệu suất KTV -->
+<div class="tbl-card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5><i class="bi bi-people me-2"></i>So sánh hiệu suất kỹ thuật viên · Hôm nay</h5>
+        <div class="d-flex gap-3" style="font-size:.75rem;font-weight:700;">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#2E7D4F;margin-right:5px;"></span>Hoàn thành</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#C87941;margin-right:5px;"></span>Đang xử lý</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(13,117,165,.7);margin-right:5px;"></span>Doanh thu (tr.đ)</span>
+        </div>
+    </div>
+    <div class="card-body" style="padding:1rem 1.2rem 1.2rem;">
+        <canvas id="chartTech" style="max-height:220px;"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script type="application/json" id="cd-rev-labels">["08/10"]</script>
+<script type="application/json" id="cd-rev-revenue">[82.21]</script>
+<script type="application/json" id="cd-rev-orders">[0]</script>
+<script type="application/json" id="cd-st-labels">["Ch\u1edd ti\u1ebfp nh\u1eadn", "\u0110ang s\u1eeda", "Ho\u00e0n th\u00e0nh", "\u0110\u00e3 b\u00e0n giao"]</script>
+<script type="application/json" id="cd-st-values"><built-in method values of dict object at 0x0000029DD3BE0CC0></script>
+<script type="application/json" id="cd-tp-labels">["T\u00e0i", "Tr\u1ecdng", "Nam", "T\u1ea5n", "S\u01a1n", "Th\u00e1i", "Minh", "To\u1ea3n", "\u0110i\u1ec7n", "M\u00e1y", "M\u00e1y", "S\u00e1ng", "Khoa", "D\u0169ng"]</script>
+<script type="application/json" id="cd-tp-completed">[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]</script>
+<script type="application/json" id="cd-tp-inprog">[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]</script>
+<script type="application/json" id="cd-tp-revenue">[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</script>
+<script>
+(function() {
+    function readJson(id, fallback) {
+        try {
+            const el = document.getElementById(id);
+            if (!el) return fallback;
+            const v = JSON.parse(el.textContent);
+            return Array.isArray(v) ? v : fallback;
+        } catch (e) { return fallback; }
+    }
+    if (typeof Chart === 'undefined') return; // CDN lỗi thì bỏ qua biểu đồ, trang vẫn dùng được
+    // ── Shared defaults ──────────────────────────────────────
+    Chart.defaults.font.family = "'Inter','Outfit',system-ui,sans-serif";
+    Chart.defaults.font.size = 11;
+    Chart.defaults.color = '#5F5A54';
+
+    const bronzeDeep = '#A65E2F';
+    const green      = '#2E7D4F';
+    const copper     = '#C87941';
+    const blue       = 'rgba(13,117,165,.75)';
+    const red        = '#A93226';
+    const sand       = '#F1EFEA';
+    const hairline   = '#E4DFD8';
+
+    // ── 1. Revenue + Orders line chart ───────────────────────
+    const revLabels  = readJson('cd-rev-labels', []);
+    const revValues  = readJson('cd-rev-revenue', []);
+    const ordValues  = readJson('cd-rev-orders', []);
+
+    new Chart(document.getElementById('chartRevenue'), {
+        data: {
+            labels: revLabels,
+            datasets: [
+                {
+                    type: 'line',
+                    label: 'Doanh thu (tr.đ)',
+                    data: revValues,
+                    borderColor: green,
+                    backgroundColor: 'rgba(46,125,79,.08)',
+                    borderWidth: 2.5,
+                    pointRadius: revLabels.length > 20 ? 0 : 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: green,
+                    fill: true,
+                    tension: 0.38,
+                    yAxisID: 'yRev',
+                    order: 1,
+                },
+                {
+                    type: 'bar',
+                    label: 'Đơn sửa chữa',
+                    data: ordValues,
+                    backgroundColor: 'rgba(200,121,65,.18)',
+                    borderColor: 'rgba(200,121,65,.55)',
+                    borderWidth: 1.5,
+                    borderRadius: 5,
+                    yAxisID: 'yOrd',
+                    order: 2,
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            interaction: { mode: 'index', intersect: false },
+            animation: { duration: 600, easing: 'easeOutQuart' },
+            plugins: {
+                legend: { position: 'top', align: 'end', labels: { boxWidth: 10, boxHeight: 10, borderRadius: 3, padding: 14 }},
+                tooltip: {
+                    backgroundColor: '#1E1E1E',
+                    titleColor: '#E0A375', bodyColor: '#fff',
+                    padding: 12, cornerRadius: 10,
+                    callbacks: {
+                        label: ctx => ctx.dataset.label + ': ' + (ctx.dataset.yAxisID === 'yRev'
+                            ? ctx.parsed.y.toFixed(2) + ' tr.đ'
+                            : ctx.parsed.y + ' đơn')
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { color: hairline }, ticks: { maxRotation: 45, minRotation: 0 } },
+                yRev: {
+                    position: 'left', beginAtZero: true,
+                    grid: { color: hairline },
+                    title: { display: true, text: 'Doanh thu (tr.đ)', color: green, font: { weight: '700', size: 10 } },
+                    ticks: { color: green }
+                },
+                yOrd: {
+                    position: 'right', beginAtZero: true,
+                    grid: { drawOnChartArea: false },
+                    title: { display: true, text: 'Số đơn', color: copper, font: { weight: '700', size: 10 } },
+                    ticks: { color: copper, stepSize: 1 }
+                }
+            }
+        }
+    });
+
+    // ── 2. Status doughnut ───────────────────────────────────
+    const stLabels = readJson('cd-st-labels', []);
+    const stValues = readJson('cd-st-values', []);
+
+    new Chart(document.getElementById('chartStatus'), {
+        type: 'doughnut',
+        data: {
+            labels: stLabels,
+            datasets: [{
+                data: stValues,
+                backgroundColor: ['#B07D00', copper, green, '#1E1E1E'],
+                borderColor: '#fff',
+                borderWidth: 3,
+                hoverOffset: 8,
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            cutout: '65%',
+            animation: { animateRotate: true, duration: 700 },
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 11, boxHeight: 11, borderRadius: 3, padding: 10 }},
+                tooltip: {
+                    backgroundColor: '#1E1E1E', titleColor: '#E0A375', bodyColor: '#fff',
+                    padding: 10, cornerRadius: 10,
+                    callbacks: {
+                        label: ctx => ' ' + ctx.label + ': ' + ctx.parsed + ' xe'
+                    }
+                }
+            }
+        }
+    });
+
+    // ── 3. Tech performance grouped bar ─────────────────────
+    const tpLabels   = readJson('cd-tp-labels', []);
+    const tpDone     = readJson('cd-tp-completed', []);
+    const tpProg     = readJson('cd-tp-inprog', []);
+    const tpRevM     = readJson('cd-tp-revenue', []);
+
+    new Chart(document.getElementById('chartTech'), {
+        data: {
+            labels: tpLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Hoàn thành',
+                    data: tpDone,
+                    backgroundColor: 'rgba(46,125,79,.75)',
+                    borderColor: green,
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    yAxisID: 'yJobs',
+                    order: 2,
+                },
+                {
+                    type: 'bar',
+                    label: 'Đang xử lý',
+                    data: tpProg,
+                    backgroundColor: 'rgba(200,121,65,.65)',
+                    borderColor: copper,
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    yAxisID: 'yJobs',
+                    order: 3,
+                },
+                {
+                    type: 'line',
+                    label: 'Doanh thu (tr.đ)',
+                    data: tpRevM,
+                    borderColor: blue,
+                    backgroundColor: 'rgba(13,117,165,.08)',
+                    borderWidth: 2.5,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: blue,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: 'yRev',
+                    order: 1,
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            interaction: { mode: 'index', intersect: false },
+            animation: { duration: 600, easing: 'easeOutQuart' },
+            plugins: {
+                legend: { position: 'top', align: 'end', labels: { boxWidth: 10, boxHeight: 10, borderRadius: 3, padding: 12 }},
+                tooltip: {
+                    backgroundColor: '#1E1E1E', titleColor: '#E0A375', bodyColor: '#fff',
+                    padding: 12, cornerRadius: 10,
+                    callbacks: {
+                        label: ctx => {
+                            if (ctx.dataset.yAxisID === 'yRev') return ' Doanh thu: ' + ctx.parsed.y.toFixed(2) + ' tr.đ';
+                            return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y + ' đơn';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { color: hairline }, stacked: false },
+                yJobs: {
+                    position: 'left', beginAtZero: true, grid: { color: hairline },
+                    title: { display: true, text: 'Số đơn', color: copper, font: { weight: '700', size: 10 } },
+                    ticks: { color: copper, stepSize: 1 }
+                },
+                yRev: {
+                    position: 'right', beginAtZero: true, grid: { drawOnChartArea: false },
+                    title: { display: true, text: 'Doanh thu (tr.đ)', color: '#0d75a5', font: { weight: '700', size: 10 } },
+                    ticks: { color: '#0d75a5' }
+                }
+            }
+        }
+    });
+})();
+</script>
+
+<div class="row g-3 mt-1">
+    <!-- 5. Tài chính kỳ này (số liệu thật từ hóa đơn trong kỳ) -->
+    
+    
+        
+        
+        
+    
+        
+        
+        
+    
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-cash-coin"></i>Tài chính · Hôm nay</div>
+            <div class="p-3">
+                <div class="mgr-row"><span class="k">Doanh thu đã xuất HĐ</span><span class="v" style="color:#2E7D4F;">82,208,500 đ</span></div>
+                <div class="mgr-row"><span class="k">Công nợ chưa thu</span><span class="v" style="color:#A93226;">82,208,500 đ</span></div>
+                <div class="mgr-row"><span class="k">Số hóa đơn trong kỳ</span><span class="v">2</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7 & 8. Kho phụ tùng + Khách hàng (số liệu thật) -->
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-box-seam"></i>Kho phụ tùng · 19 mã hàng</div>
+            <div class="p-3">
+                
+                <div class="mgr-row">
+                    <span class="k">Cản trước Mazda 3 2022</span>
+                    <span class="v" >Tồn 2</span>
+                </div>
+                
+                <div class="mgr-row">
+                    <span class="k">Bộ côn Hyundai Accent</span>
+                    <span class="v" >Tồn 4</span>
+                </div>
+                
+                <div class="mgr-row">
+                    <span class="k">Lốc điều hòa Denso Innova</span>
+                    <span class="v" >Tồn 5</span>
+                </div>
+                
+                <div class="mgr-row">
+                    <span class="k">Camera hành trình Vietmap M1</span>
+                    <span class="v" >Tồn 8</span>
+                </div>
+                
+                <div class="mgr-row"><span class="k">Mã sắp hết / hết hàng</span><span class="v">0 / 0</span></div>
+                <div class="mt-2"><a href="/tech/parts" class="btn btn-sm btn-outline-dark rounded-pill px-3">Mở kho</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mt-1">
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-people"></i>Khách hàng & xe</div>
+            <div class="p-3">
+                <div class="mgr-row"><span class="k">Tổng khách hàng</span><span class="v">13</span></div>
+                <div class="mgr-row"><span class="k">Tổng xe trong hồ sơ</span><span class="v">14</span></div>
+                <div class="mgr-row"><span class="k">Lịch hẹn chờ xử lý</span><span class="v">0</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6. Cảnh báo vận hành (tính từ dữ liệu thật, không hardcode) -->
+
+
+
+
+
+
+
+<div class="insight p-4 mt-3 mb-4">
+    <h5 class="fw-bold mb-3"><i class="bi bi-robot me-2" style="color:#E0A375;"></i>Điểm cần chú ý</h5>
+    
+    <p class="mb-0" style="color:rgba(255,255,255,.85);"><i class="bi bi-check-circle me-2" style="color:#7BC79A;"></i>Xưởng đang ổn định — không có tồn đọng nào cần xử lý gấp.</p>
+    
+</div>
+
+<hr class="mb-5">
+
+<!-- CÁC BẢNG QUẢN LÝ CHI TIẾT (CŨ) DƯỚI ĐÂY -->
+
+<div class="row">
+    <!-- Cột Hóa đơn -->
+    <div class="col-md-6">
+        <div class="tbl-card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-cash-stack me-2"></i>Quản lý Hóa Đơn</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã HĐ</th>
+                            <th>Mã Đơn Sửa</th>
+                            <th>Số tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td class="fw-bold text-nowrap">#INV-185</td>
+                            <td class="text-nowrap">#RO-184</td>
+                            <td class="text-end fw-bold text-nowrap">31,834,000 đ</td>
+                            <td>
+                                
+                                <span class="pill pill-unpaid">Chưa thanh toán</span>
+                                
+                            </td>
+                            <td>
+                                
+                                <form action="/manager/pay-invoice" method="POST" class="d-flex align-items-center gap-2">
+                                    <input type="hidden" name="invoice_id" value="185">
+                                    <select name="payment_method" class="form-select form-select-sm" style="width: auto;">
+                                        <option value="Tiền mặt">Tiền mặt</option>
+                                        <option value="Chuyển khoản">Chuyển khoản</option>
+                                        <option value="Ví điện tử">Ví điện tử</option>
+                                        <option value="Thẻ ngân hàng">Thẻ ngân hàng</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-bronze text-nowrap">Thu tiền</button>
+                                </form>
+                                
+                                <a href="/tech/invoice/185/print" class="btn btn-sm btn-outline-dark rounded-pill mt-1"><i class="bi bi-printer me-1"></i>In hóa đơn</a>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="fw-bold text-nowrap">#INV-184</td>
+                            <td class="text-nowrap">#RO-5</td>
+                            <td class="text-end fw-bold text-nowrap">50,374,500 đ</td>
+                            <td>
+                                
+                                <span class="pill pill-unpaid">Chưa thanh toán</span>
+                                
+                            </td>
+                            <td>
+                                
+                                <form action="/manager/pay-invoice" method="POST" class="d-flex align-items-center gap-2">
+                                    <input type="hidden" name="invoice_id" value="184">
+                                    <select name="payment_method" class="form-select form-select-sm" style="width: auto;">
+                                        <option value="Tiền mặt">Tiền mặt</option>
+                                        <option value="Chuyển khoản">Chuyển khoản</option>
+                                        <option value="Ví điện tử">Ví điện tử</option>
+                                        <option value="Thẻ ngân hàng">Thẻ ngân hàng</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-bronze text-nowrap">Thu tiền</button>
+                                </form>
+                                
+                                <a href="/tech/invoice/184/print" class="btn btn-sm btn-outline-dark rounded-pill mt-1"><i class="bi bi-printer me-1"></i>In hóa đơn</a>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột Phiếu sửa chữa đã xong chờ chốt hóa đơn -->
+    <div class="col-md-6">
+        <div class="tbl-card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-clipboard-check me-2"></i>Phiếu sửa chữa chờ chốt HĐ</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    
+                    <li class="list-group-item text-center muted">Không có phiếu nào cần chốt.</li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="tbl-card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-calendar-event me-2"></i>Quản lý Lịch hẹn</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Khách hàng</th>
+                                <th>Biển số xe</th>
+                                <th>Ngày hẹn</th>
+                                <th>Mô tả / Triệu chứng</th>
+                                <th>AI Chẩn đoán</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                <td colspan="5" class="text-center py-3 muted">Chưa có lịch đặt nào.</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="tbl-card mt-5 mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5><i class="bi bi-car-front me-2"></i>Xe chờ tiếp nhận / đang sửa</h5>
+        <button class="btn btn-sm btn-bronze" data-bs-toggle="modal" data-bs-target="#directOrderModal"><i class="bi bi-plus-lg me-1"></i>Lập đơn sửa chữa</button>
+    </div>
+    <div class="card-body p-0">
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th>Mã đơn</th>
+                <th>Biển số xe</th>
+                <th>Thông tin khách báo</th>
+                <th>Khách duyệt</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr>
+                <td colspan="6" class="text-center py-4 muted">Chưa có công việc nào.</td>
+            </tr>
+            
+        </tbody>
+    </table>
+</div>
+</div>
+
+<!-- Modals đặt NGOÀI bảng (div trong tbody là HTML sai chuẩn, trình duyệt tự bẻ DOM gây vỡ modal) -->
+
+
+<!-- Modal Lập Đơn Trực Tiếp -->
+<div class="modal fade rc-modal" id="directOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <form action="/tech/create-direct-order" method="POST" class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="rc-kicker">Đơn mới tại quầy</div>
+                    <h5 class="modal-title">Lập đơn sửa chữa</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-3 mb-3 rounded" style="background:rgba(200,121,65,.07);border:1px dashed rgba(200,121,65,.45);color:#8A5A32;font-size:.84rem;">Hệ thống nhận diện cả <strong>khách cũ</strong> và <strong>khách mới</strong> — chỉ cần <strong>số điện thoại</strong> và <strong>biển số xe</strong>, thiếu đâu tạo mới đó.</div>
+
+                <section class="rc-card">
+                    <div class="rc-card-h"><span class="rc-num">1</span> Thông tin Khách hàng <i class="bi bi-person-lines-fill"></i></div>
+                    <div class="rc-card-b">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="rc-lbl" for="do_phone">Số điện thoại <span class="rc-req">*</span></label>
+                                <input type="text" id="do_phone" name="customer_phone" class="form-control" required placeholder="Nhập SĐT để hệ thống nhận diện">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="rc-lbl" for="do_name">Họ và tên</label>
+                                <input type="text" id="do_name" name="customer_name" class="form-control" placeholder="Để trống nếu là khách cũ">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="rc-card">
+                    <div class="rc-card-h"><span class="rc-num">2</span> Thông tin Xe & Lỗi <i class="bi bi-car-front-fill"></i></div>
+                    <div class="rc-card-b">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="rc-lbl" for="do_plate">Biển số xe <span class="rc-req">*</span></label>
+                                <input type="text" id="do_plate" name="license_plate" class="form-control rc-mono" required placeholder="VD: 30A-123.45">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="rc-lbl" for="do_make">Hãng xe</label>
+                                <input type="text" id="do_make" name="make" class="form-control" placeholder="VD: Toyota">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="rc-lbl" for="do_model">Dòng xe</label>
+                                <input type="text" id="do_model" name="model" class="form-control" placeholder="VD: Vios">
+                            </div>
+                            <div class="col-12">
+                                <label class="rc-lbl" for="do_sym">Triệu chứng / yêu cầu sửa chữa <span class="rc-req">*</span></label>
+                                <textarea id="do_sym" name="symptoms" class="form-control" rows="3" required placeholder="Ghi nhận lỗi khách báo..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <span class="rc-hint"><i class="bi bi-asterisk me-1"></i>Đơn mới tạo ở trạng thái <strong>chờ tiếp nhận</strong></span>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-dark rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-bronze fw-bold"><i class="bi bi-plus-lg me-1"></i>Lập đơn</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</div>
+
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chatbot Widget -->
+    <style>
+        .chat-widget-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--copper-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(200, 121, 65, 0.4);
+            cursor: grab;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+        .chat-widget-btn.dragging {
+            cursor: grabbing;
+            transform: scale(1.08);
+            transition: none;
+        }
+        .chat-widget-btn:hover {
+            transform: scale(1.1);
+        }
+        .chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border: 1px solid var(--lux-hairline);
+            border-radius: 16px;
+            box-shadow: 0 24px 60px -20px rgba(30,30,30,0.35);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+        .chat-window.open {
+            transform: scale(1);
+        }
+        .chat-window.expanded {
+            width: 700px;
+            height: 75vh;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .chat-header {
+            background-color: var(--lux-graphite);
+            color: white;
+            border-bottom: 2px solid var(--copper-orange);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-header .bi-robot { color: var(--copper-orange); }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #F8F9FA;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+        }
+        .msg-bot {
+            background-color: white;
+            color: var(--charcoal-black);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #E9ECEF;
+        }
+        .msg-user {
+            background-color: rgba(200, 121, 65, 0.1);
+            color: var(--charcoal-black);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(200, 121, 65, 0.2);
+        }
+        .chat-input-area {
+            padding: 10px;
+            border-top: 1px solid #E9ECEF;
+            display: flex;
+            gap: 8px;
+            background: white;
+        }
+        .chat-input {
+            flex-grow: 1;
+            border: 1px solid #E9ECEF;
+            border-radius: 20px;
+            padding: 8px 15px;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .chat-input:focus {
+            border-color: var(--copper-orange);
+        }
+        .chat-send-btn {
+            background: var(--copper-orange);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="chat-widget-btn" id="chatWidgetBtn">
+        <i class="bi bi-robot"></i>
+    </div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-robot fs-4 me-2"></i>
+                <div>
+                    <h6 class="mb-0 fw-bold">Trợ lý Garage AI</h6>
+                    <small style="opacity: 0.8; font-size: 0.75rem;">Trực tuyến</small>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn text-white p-0 me-3" id="expandChatBtn" aria-label="Expand" style="background: none; border: none;" title="Mở rộng/Thu nhỏ">
+                    <i class="bi bi-arrows-angle-expand fs-5"></i>
+                </button>
+                <button type="button" class="btn-close btn-close-white" id="closeChatBtn" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message msg-bot">
+                Xin chào! Tôi là trợ lý AI của ThreeH Workshop. Tôi có thể giúp gì cho bạn và xế yêu hôm nay?
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Nhập tin nhắn..." autocomplete="off">
+            <button class="chat-send-btn" id="chatSendBtn">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatWidgetBtn = document.getElementById('chatWidgetBtn');
+        const chatWindow = document.getElementById('chatWindow');
+        const closeChatBtn = document.getElementById('closeChatBtn');
+        const expandChatBtn = document.getElementById('expandChatBtn');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+
+        let isFirstMessage = sessionStorage.getItem('global_chatbot_is_first') !== 'false';
+        let chatHistory = JSON.parse(sessionStorage.getItem('global_chatbot_history')) || [];
+
+        // Khôi phục chat từ sessionStorage (nếu có)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (chatHistory.length > 0) {
+                chatMessages.innerHTML = ''; // Xóa lời chào mặc định
+                chatHistory.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.classList.add('chat-message', msg.sender === 'user' ? 'msg-user' : 'msg-bot');
+                    msgDiv.innerText = msg.text;
+                    chatMessages.appendChild(msgDiv);
+                });
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+
+        chatWidgetBtn.addEventListener('click', () => {
+            if (chatWidgetBtn.dataset.dragged) return;
+            chatWindow.classList.toggle('open');
+        });
+
+        closeChatBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+        });
+
+        if(expandChatBtn) {
+            expandChatBtn.addEventListener('click', () => {
+                chatWindow.classList.toggle('expanded');
+                const icon = expandChatBtn.querySelector('i');
+                if(chatWindow.classList.contains('expanded')) {
+                    icon.classList.remove('bi-arrows-angle-expand');
+                    icon.classList.add('bi-arrows-angle-contract');
+                } else {
+                    icon.classList.remove('bi-arrows-angle-contract');
+                    icon.classList.add('bi-arrows-angle-expand');
+                }
+            });
+        }
+
+        function addMessage(text, sender, skipSave = false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('chat-message', sender === 'user' ? 'msg-user' : 'msg-bot');
+            msgDiv.innerText = text;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            if (!skipSave) {
+                chatHistory.push({ sender: sender, text: text });
+                sessionStorage.setItem('global_chatbot_history', JSON.stringify(chatHistory));
+            }
+        }
+
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            // Loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('chat-message', 'msg-bot');
+            loadingDiv.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Lấy history (trừ câu hỏi vừa push vào ở trên)
+            const historyToSend = chatHistory.slice(0, -1);
+
+            try {
+                const response = await fetch('/api/chatbot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: text, 
+                        is_first_message: isFirstMessage,
+                        history: historyToSend
+                    })
+                });
+                
+                chatMessages.removeChild(loadingDiv);
+                
+                if (!response.ok) throw new Error("Lỗi kết nối");
+                
+                const msgDiv = document.createElement('div');
+                msgDiv.classList.add('chat-message', 'msg-bot');
+                chatMessages.appendChild(msgDiv);
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+                let fullText = "";
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value, { stream: true });
+                    fullText += chunk;
+                    msgDiv.innerText = fullText;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+                
+                isFirstMessage = false;
+                sessionStorage.setItem('global_chatbot_is_first', 'false');
+                
+                chatHistory.push({ sender: 'bot', text: fullText });
+                sessionStorage.setItem('global_chatbot_history', JSON.stringify(chatHistory));
+                
+            } catch (error) {
+                chatMessages.removeChild(loadingDiv);
+                addMessage('Đã có lỗi xảy ra kết nối server.', 'bot');
+            }
+        }
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+
+    <script>
+        // CSRF: tự đọc cookie csrf_token, chèn vào mọi form POST và fetch JSON.
+        (function () {
+            function getCookie(name) {
+                const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+                return m ? decodeURIComponent(m[1]) : '';
+            }
+            function ensureFormToken() {
+                const token = getCookie('csrf_token');
+                if (!token) return;
+                document.querySelectorAll('form[method="POST"], form[method="post"]').forEach((form) => {
+                    if (!form.querySelector('input[name="csrf_token"]')) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'csrf_token';
+                        input.value = token;
+                        form.appendChild(input);
+                    }
+                });
+            }
+            document.addEventListener('DOMContentLoaded', ensureFormToken);
+            new MutationObserver(ensureFormToken).observe(document.body, { childList: true, subtree: true });
+
+            const rawFetch = window.fetch.bind(window);
+            window.fetch = function (url, options) {
+                options = options || {};
+                const method = (options.method || 'GET').toUpperCase();
+                if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
+                    const token = getCookie('csrf_token');
+                    if (token) {
+                        options.headers = options.headers || {};
+                        if (options.headers instanceof Headers) {
+                            if (!options.headers.has('x-csrf-token')) options.headers.set('x-csrf-token', token);
+                        } else if (!options.headers['x-csrf-token'] && !options.headers['X-CSRF-Token']) {
+                            options.headers['x-csrf-token'] = token;
+                        }
+                    }
+                }
+                return rawFetch(url, options);
+            };
+        })();
+    </script>
+
+    <script>
+        // Icon chatbot keo-tha: nhan-giu de di chuyen, bam nhe de mo/tat cua so chat.
+        (function () {
+            const btn = document.getElementById('chatWidgetBtn');
+            if (!btn) return;
+            const KEY = 'chat_widget_pos';
+            try {
+                const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+                if (saved && typeof saved.x === 'number' && typeof saved.y === 'number') {
+                    btn.style.left = saved.x + 'px';
+                    btn.style.top = saved.y + 'px';
+                    btn.style.right = 'auto';
+                    btn.style.bottom = 'auto';
+                }
+            } catch (err) {}
+
+            let dragging = false, startX = 0, startY = 0, origX = 0, origY = 0;
+
+            btn.addEventListener('pointerdown', (e) => {
+                dragging = true;
+                delete btn.dataset.dragged;
+                startX = e.clientX;
+                startY = e.clientY;
+                const r = btn.getBoundingClientRect();
+                origX = r.left;
+                origY = r.top;
+                btn.classList.add('dragging');
+                try { btn.setPointerCapture(e.pointerId); } catch (err) {}
+            });
+
+            btn.addEventListener('pointermove', (e) => {
+                if (!dragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                if (Math.abs(dx) + Math.abs(dy) <= 6 && !btn.dataset.dragged) return;
+                btn.dataset.dragged = '1';
+                const size = btn.offsetWidth;
+                const x = Math.min(Math.max(0, origX + dx), window.innerWidth - size);
+                const y = Math.min(Math.max(0, origY + dy), window.innerHeight - size);
+                btn.style.left = x + 'px';
+                btn.style.top = y + 'px';
+                btn.style.right = 'auto';
+                btn.style.bottom = 'auto';
+            });
+
+            function endDrag() {
+                if (!dragging) return;
+                dragging = false;
+                btn.classList.remove('dragging');
+                if (btn.dataset.dragged) {
+                    try {
+                        localStorage.setItem(KEY, JSON.stringify({
+                            x: parseFloat(btn.style.left),
+                            y: parseFloat(btn.style.top)
+                        }));
+                    } catch (err) {}
+                    setTimeout(() => { delete btn.dataset.dragged; }, 100);
+                }
+            }
+            btn.addEventListener('pointerup', endDrag);
+            btn.addEventListener('pointercancel', () => {
+                dragging = false;
+                btn.classList.remove('dragging');
+                delete btn.dataset.dragged;
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Đội ngũ Kỹ thuật viên - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    .team-head {
+        padding: 26px 0 18px; border-bottom: 1px solid var(--lux-hairline);
+        margin-bottom: 22px;
+    }
+    .team-head h1 { font-size: 1.6rem; margin: 0; font-weight: 700; letter-spacing: -.02em; }
+    .team-sub { color: var(--lux-slate); font-size: .9rem; margin: 8px 0 0; max-width: 62ch; line-height: 1.6; }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .tech {
+        background: #fff; border: 1px solid var(--lux-hairline); border-radius: 16px;
+        padding: 20px; display: flex; flex-direction: column; gap: 12px;
+        transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s;
+    }
+    .tech:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -26px rgba(30,30,30,.35); border-color: #D8D1C8; }
+    .tech-top { display: flex; gap: 14px; align-items: center; }
+    .tech-avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex: 0 0 64px; border: 2px solid var(--lux-hairline); }
+    .tech-avatar-fallback {
+        width: 64px; height: 64px; border-radius: 50%; flex: 0 0 64px;
+        background: var(--lux-graphite); color: #E0A375;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem; font-weight: 700;
+    }
+    .tech-name { font-size: 1.02rem; font-weight: 700; color: var(--lux-graphite); margin: 0; line-height: 1.3; }
+    .tech-role { font-size: .78rem; color: var(--lux-slate); margin-top: 2px; }
+    .tech-rating { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 700; color: var(--lux-bronze-deep); margin-top: 6px; }
+    .tech-rating i { color: var(--copper-orange); font-size: .85rem; }
+    .tech-rating small { color: var(--lux-slate); font-weight: 600; }
+    .tech-meta { display: flex; flex-direction: column; gap: 8px; font-size: .84rem; border-top: 1px solid var(--lux-hairline); padding-top: 12px; }
+    .tech-meta .row-line { display: flex; gap: 8px; }
+    .tech-meta .k { flex: 0 0 86px; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); padding-top: 2px; }
+    .tech-meta .v { flex: 1; color: var(--lux-graphite); font-weight: 600; line-height: 1.5; }
+    .pill {
+        display: inline-block; font-size: .75rem; font-weight: 600;
+        border-radius: 999px; padding: .18em .7em; margin: 0 5px 5px 0;
+        border: 1px solid var(--lux-hairline); background: var(--lux-ivory); color: var(--lux-graphite);
+    }
+    .pill.dark { background: var(--lux-graphite); border-color: var(--lux-graphite); color: #fff; }
+    .tech-acts { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+    .tech-acts .btn { flex: 1; font-size: .8rem; padding: .5rem .8rem; border-radius: 999px; }
+    .btn-detail { background: #fff; border: 1px solid #D8D1C8; color: var(--lux-graphite); font-weight: 600; }
+    .btn-detail:hover { border-color: var(--lux-graphite); color: var(--lux-graphite); }
+    .btn-book { background: var(--lux-bronze-deep); border: 1px solid var(--lux-bronze-deep); color: #fff; font-weight: 700; }
+    .btn-book:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+    .team-empty {
+        text-align: center; padding: 56px 20px; background: #fff;
+        border: 1px dashed var(--lux-hairline); border-radius: 16px; color: var(--lux-slate);
+    }
+    .team-empty i { font-size: 2rem; color: #D8D1C8; display: block; margin-bottom: 10px; }
+    @media (max-width: 575.98px) { .team-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="team-head">
+    <h1>Đội ngũ kỹ thuật viên</h1>
+    <p class="team-sub">Chọn người bạn tin tưởng — xem chuyên môn, kinh nghiệm và đánh giá thật từ khách trước, rồi đặt lịch đúng người đó. Garage vẫn sắp xếp thay bạn nếu bạn không chọn.</p>
+</div>
+
+<div class="team-grid">
+    {% for tech in technicians %}
+    {% set ep = tech.employee_profile %}
+    <article class="tech">
+        <div class="tech-top">
+            {% if ep and ep.avatar_url %}
+            <img src="{{ ep.avatar_url }}" alt="Ảnh {{ tech.full_name }}" class="tech-avatar" loading="lazy">
+            {% else %}
+            <div class="tech-avatar-fallback" aria-hidden="true">{{ tech.full_name[0] | upper }}</div>
+            {% endif %}
+            <div style="min-width:0;">
+                <h2 class="tech-name">{{ tech.full_name }}</h2>
+                <div class="tech-role">{{ ep.job_title if ep and ep.job_title else "Kỹ thuật viên" }}{% if ep and ep.years_of_experience %} · {{ ep.years_of_experience }} năm kinh nghiệm{% endif %}</div>
+                <div class="tech-rating">
+                    <i class="bi bi-star-fill" aria-hidden="true"></i>
+                    {% set st = tech_stats.get(tech.id, {}) %}
+                    {% set rating = st.get('avg') or (ep.customer_rating_score if ep and ep.customer_rating_score else 5.0) %}
+                    {{ rating }} <small>/ 5{% if st.get('nrate') %} · {{ st.nrate }} lượt{% endif %} · {{ st.get('done', 0) }} xe đã xong</small>
+                </div>
+                {% if st.get('open', 0) == 0 %}
+                <div class="mt-1" style="font-size:.76rem;font-weight:700;color:#2E7D4F;"><i class="bi bi-check-circle me-1"></i>Đang nhận việc mới</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="tech-meta">
+            <div class="row-line">
+                <span class="k">Chuyên môn</span>
+                <span class="v">
+                    {% if ep and ep.technical_skills %}
+                        {% for skill in ep.technical_skills.split(',') %}<span class="pill">{{ skill.strip() }}</span>{% endfor %}
+                    {% else %}
+                        <span style="color:var(--lux-slate);font-weight:500;">Đang cập nhật — garage sẽ tư vấn khi bạn đặt lịch.</span>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="row-line">
+                <span class="k">Dòng xe</span>
+                <span class="v">
+                    {% if ep and ep.vehicle_types %}
+                        {% for vt in ep.vehicle_types.split(',') %}<span class="pill dark">{{ vt.strip() }}</span>{% endfor %}
+                    {% else %}
+                        <span style="color:var(--lux-slate);font-weight:500;">Mọi dòng xe phổ thông</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        <div class="tech-acts">
+            <a href="/our-team/{{ tech.id }}" class="btn btn-detail"><i class="bi bi-person-vcard me-1"></i>Hồ sơ chi tiết</a>
+            {% if user and user.role == 'customer' %}
+            <a href="/my-appointments?tech_id={{ tech.id }}#bookNow" class="btn btn-book"><i class="bi bi-calendar-check me-1"></i>Đặt với thợ này</a>
+            {% elif not user %}
+            <a href="/login?next=/our-team/{{ tech.id }}" class="btn btn-book"><i class="bi bi-calendar-check me-1"></i>Đăng nhập để đặt</a>
+            {% endif %}
+        </div>
+        {% if user and user.role in ['manager', 'admin'] %}
+        <div class="tech-acts" style="padding-top:0;">
+            <a href="/manager/technician/{{ tech.id }}/view" class="btn btn-detail">Chi tiết nội bộ</a>
+            <a href="/manager/technician/{{ tech.id }}/edit" class="btn btn-detail">Sửa hồ sơ</a>
+        </div>
+        {% endif %}
+    </article>
+    {% else %}
+    <div class="team-empty" style="grid-column:1/-1;">
+        <i class="bi bi-people"></i>
+        <strong style="display:block;color:var(--lux-graphite);margin-bottom:4px;">Chưa có kỹ thuật viên nào</strong>
+        Danh sách đang được cập nhật. Bạn vẫn đặt lịch bình thường, garage sẽ phân công thợ phù hợp.
+        <div style="margin-top:12px;"><a href="/my-appointments#bookNow" class="btn btn-book" style="flex:none;padding:.55rem 1.4rem;">Đặt lịch ngay</a></div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

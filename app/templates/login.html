@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Đăng nhập - ThreeH Workshop</title>
+    <meta name="description" content="Đăng nhập vào hệ thống quản lý ThreeH Workshop">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #7E441E;
+            --primary-hover: #6B3A18;
+            --bg-color: #FAF9F7;
+            --text-main: #1E1E1E;
+            --text-muted: #57534A;
+            --copper: #7E441E;
+            --hairline: #E4DFD8;
+        }
+        * { box-sizing: border-box; }
+        ::selection { background: rgba(126, 68, 30, 0.25); }
+        body {
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(30, 30, 30, 0.07) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(126, 68, 30, 0.14) 0%, transparent 45%);
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            padding-top: max(24px, env(safe-area-inset-top));
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
+            overflow-x: hidden;
+            overflow-y: auto;
+            caret-color: var(--primary);
+        }
+        :focus-visible {
+            outline: 3px solid #1E1E1E;
+            outline-offset: 2px;
+            border-radius: 8px;
+        }
+        .login-brand :focus-visible {
+            outline-color: #fff;
+        }
+        .login-wrap { width: 100%; max-width: 920px; margin: auto; }
+        .login-card {
+            background: #fff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+        .login-brand {
+            background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 55%, #7E441E 130%);
+            color: #fff;
+            padding: 40px 36px;
+            position: relative;
+            overflow: hidden;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-brand::after {
+            content: "";
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            right: -110px;
+            bottom: -110px;
+            background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+        .login-brand h1 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            font-size: 2rem;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            text-wrap: balance;
+        }
+        .login-brand p { opacity: 0.9; }
+        .brand-list {
+            list-style: none;
+            padding: 0;
+            margin: 24px 0 0;
+            display: grid;
+            gap: 12px;
+        }
+        .brand-list li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-size: 0.93rem;
+            min-width: 0;
+        }
+        .brand-list i {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.18);
+            font-size: 1.05rem;
+        }
+        .brand-list span { min-width: 0; overflow-wrap: break-word; }
+        .hotline-link { color: #fff; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+        .hotline-link:hover { color: #F5D9BC; }
+        .login-form-col { padding: 32px 32px 28px; background: #fff; }
+        .form-heading { font-size: 1.5rem; line-height: 1.25; margin-bottom: 4px; letter-spacing: -0.02em; }
+        .mobile-brand { display: none; text-align: center; margin-bottom: 16px; }
+        .mobile-brand .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; }
+        .mobile-brand .logo span { color: var(--primary); }
+        .mobile-trust {
+            display: none;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .mobile-trust div {
+            flex: 1;
+            background: #FCFBF9;
+            border: 1px solid var(--hairline);
+            border-radius: 12px;
+            padding: 8px 6px;
+            text-align: center;
+        }
+        .form-floating { margin-bottom: 1rem; }
+        .form-control {
+            border-radius: 14px;
+            min-height: 3.6rem;
+            padding: 1rem 1.1rem;
+            border: 1px solid #D8D1C8;
+            background: #fff;
+            font-size: 16px;
+            color: var(--text-main);
+        }
+        .form-control::placeholder { color: #5F5A52; }
+        .form-control:focus {
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(126, 68, 30, 0.18);
+        }
+        .form-floating > label { color: var(--text-muted); }
+        .password-wrap { position: relative; }
+        .password-wrap .form-control { padding-right: 3rem; }
+        .pw-toggle {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .pw-toggle:hover { background: rgba(126,68,30,.08); color: var(--text-main); }
+        .field-error { color: #8F1D1D; font-size: 0.85rem; margin-top: 6px; display: flex; gap: 6px; align-items: flex-start; }
+        .login-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            margin: 4px 0 16px;
+            font-size: 0.9rem;
+        }
+        .remember-check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+        .remember-check input { width: 20px; height: 20px; accent-color: var(--primary); }
+        .btn-login {
+            background: #7E441E;
+            border: 1px solid #7E441E;
+            border-radius: 14px;
+            padding: 0.85rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 10px 22px rgba(126, 68, 30, 0.35);
+            color: #fff;
+            width: 100%;
+            min-height: 48px;
+        }
+        .btn-login:hover, .btn-login:focus-visible { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+        .btn-login:disabled { opacity: .65; cursor: not-allowed; }
+        .demo-box {
+            background: #FCFBF9;
+            border: 1px dashed var(--hairline);
+            border-radius: 14px;
+            padding: 12px 14px;
+        }
+        .demo-box summary { cursor: pointer; font-weight: 700; color: var(--text-main); min-height: 44px; display: flex; align-items: center; gap: 8px; }
+        .demo-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; }
+        .demo-row code { background: rgba(126,68,30,.1); color: #6B3A18; border-radius: 6px; padding: 1px 7px; overflow-wrap: anywhere; }
+        .demo-fill {
+            border: 1px solid #CFC9C1;
+            background: #fff;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px 14px;
+            min-height: 36px;
+            white-space: nowrap;
+        }
+        .demo-fill:hover { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+        .demo-box code { font-size: 0.85rem; }
+        .auth-link { color: var(--primary); font-weight: 700; text-decoration: none; text-underline-offset: 3px; }
+        .auth-link:hover { text-decoration: underline; color: var(--primary-hover); }
+        .login-options .auth-link {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+        }
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 6px 12px;
+        }
+        .alert { border-radius: 14px; overflow-wrap: break-word; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-thumb { background: #D8D1C8; border-radius: 999px; }
+
+        @media (max-width: 767.98px) {
+            body { padding: 16px 12px; align-items: flex-start; }
+            .login-brand-col { display: none; }
+            .mobile-brand { display: block; }
+            .mobile-trust { display: flex; }
+            .login-form-col { padding: 24px 20px 22px; }
+            .login-card { border-radius: 20px; }
+            .login-brand h1 { font-size: 1.6rem; }
+            .login-options { align-items: flex-start; }
+        }
+        @media (pointer: coarse) {
+            .auth-link, .demo-fill, .pw-toggle { min-height: 44px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body>
+    <main class="login-wrap" aria-labelledby="loginHeading">
+        <div class="login-card">
+            <div class="row g-0">
+                <div class="col-md-6 login-brand-col">
+                    <div class="login-brand h-100">
+                        <div class="brand-badge"><i class="bi bi-gear-wide-connected" aria-hidden="true"></i> THREEH WORKSHOP</div>
+                        <h1>Chăm sóc xe thông minh, an tâm mọi hành trình.</h1>
+                        <p class="mb-0">Đăng nhập để đặt lịch, theo dõi xe, hóa đơn và nhận tư vấn AI 24/7.</p>
+                        <ul class="brand-list">
+                            <li><i class="bi bi-calendar-check" aria-hidden="true"></i><span><strong>Đặt lịch online</strong><br><small style="opacity:.85">Chọn kỹ thuật viên và giờ phù hợp.</small></span></li>
+                            <li><i class="bi bi-car-front" aria-hidden="true"></i><span><strong>Theo dõi xe &amp; lịch sử</strong><br><small style="opacity:.85">ODO, bảo dưỡng và sửa chữa minh bạch.</small></span></li>
+                            <li><i class="bi bi-robot" aria-hidden="true"></i><span><strong>Trợ lý AI</strong><br><small style="opacity:.85">Chẩn đoán sơ bộ và nhắc bảo dưỡng.</small></span></li>
+                        </ul>
+                        <div class="mt-4 small">
+                            <i class="bi bi-telephone-fill me-2" aria-hidden="true"></i>Hotline: <a class="hotline-link" href="tel:0981888888">0981.888.888</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="login-form-col">
+                        <div class="mobile-brand">
+                            <div class="logo"><i class="bi bi-car-front-fill me-1" aria-hidden="true"></i>ThreeH Workshop</div>
+                            <div class="small" style="color: var(--text-muted);">Hệ thống quản lý Garage</div>
+                        </div>
+
+                        <div class="mobile-trust" aria-label="Tiện ích chính">
+                            <div><i class="bi bi-calendar-check d-block mb-1" aria-hidden="true"></i>Đặt lịch</div>
+                            <div><i class="bi bi-car-front d-block mb-1" aria-hidden="true"></i>Theo dõi xe</div>
+                            <div><i class="bi bi-robot d-block mb-1" aria-hidden="true"></i>AI 24/7</div>
+                        </div>
+                        <div class="text-center mb-3 d-md-none">
+                            <a href="tel:0981888888" class="auth-link small"><i class="bi bi-telephone-fill me-1" aria-hidden="true"></i>Gọi hotline 0981.888.888</a>
+                        </div>
+
+                        <h2 class="fw-bold form-heading" id="loginHeading">Đăng nhập</h2>
+                        <p class="mb-4" style="color: var(--text-muted);">Chào mừng bạn quay trở lại ThreeH Workshop!</p>
+
+                        {% if request.query_params.get('registered') %}
+                        <div class="alert alert-success d-flex align-items-center mb-3" role="status">
+                            <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
+                            <div>Đăng ký thành công! Hãy đăng nhập để tiếp tục.</div>
+                        </div>
+                        {% endif %}
+
+                        {% if error %}
+                        <div class="alert alert-danger d-flex align-items-start mb-3" role="alert" aria-live="assertive">
+                            <i class="bi bi-exclamation-triangle-fill me-2 mt-1" aria-hidden="true"></i>
+                            <div>{{ error }}</div>
+                        </div>
+                        {% endif %}
+
+                        <form action="/login" method="POST" autocomplete="on">
+                            <div class="form-floating">
+                                <input type="text" name="username" class="form-control" id="usernameInput"
+                                    placeholder="Tên đăng nhập" required autocomplete="username" maxlength="150"
+                                    value="{{ username | default('', true) | e }}"
+                                    {% if error %}aria-invalid="true" aria-describedby="loginError"{% endif %}>
+                                <label for="usernameInput"><i class="bi bi-person me-2" aria-hidden="true"></i>Tên đăng nhập</label>
+                            </div>
+                            <div class="mb-1 password-wrap">
+                                <div class="form-floating mb-0">
+                                    <input type="password" name="password" class="form-control" id="passwordInput"
+                                        placeholder="Mật khẩu" required autocomplete="current-password" minlength="6" maxlength="128"
+                                        {% if error %}aria-invalid="true" aria-describedby="loginError"{% endif %}>
+                                    <label for="passwordInput"><i class="bi bi-shield-lock me-2" aria-hidden="true"></i>Mật khẩu</label>
+                                </div>
+                                <button type="button" class="pw-toggle" id="pwToggle" aria-label="Hiện mật khẩu" aria-pressed="false">
+                                    <i class="bi bi-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            {% if error %}<div id="loginError" class="field-error"><i class="bi bi-info-circle" aria-hidden="true"></i><span>Kiểm tra tên đăng nhập và mật khẩu, mật khẩu phân biệt chữ hoa/thường.</span></div>{% endif %}
+
+                            <div class="login-options">
+                                <label class="remember-check"><input type="checkbox" name="remember_me" value="1"> Ghi nhớ tôi (30 ngày)</label>
+                                <a href="/forgot-password" class="auth-link">Quên mật khẩu?</a>
+                            </div>
+
+                            <button type="submit" class="btn btn-login mb-3" id="loginBtn">
+                                Đăng nhập <i class="bi bi-arrow-right-short ms-1" aria-hidden="true"></i>
+                            </button>
+                        </form>
+
+                        {% if demo_enabled %}
+                        <details class="demo-box small mb-3" style="color: var(--text-muted);">
+                            <summary><i class="bi bi-info-circle me-1" aria-hidden="true"></i>Tài khoản dùng thử (môi trường demo)</summary>
+                            <div class="mt-2">
+                                <div class="demo-row"><span>Khách hàng: <code>khachhang / 123456</code></span><button type="button" class="demo-fill" data-user="khachhang" data-pass="123456">Điền</button></div>
+                                <div class="demo-row"><span>Kỹ thuật viên: <code>kythuat / 123456</code></span><button type="button" class="demo-fill" data-user="kythuat" data-pass="123456">Điền</button></div>
+                                <div class="demo-row"><span>Quản lý: <code>quanly / 123456</code></span><button type="button" class="demo-fill" data-user="quanly" data-pass="123456">Điền</button></div>
+                            </div>
+                        </details>
+                        {% endif %}
+
+                        <div class="text-center" style="color: var(--text-muted);">
+                            Chưa có tài khoản? <a href="/register" class="auth-link">Tạo tài khoản mới</a>
+                        </div>
+                        <div class="text-center mt-2">
+                            <a href="/" class="text-decoration-none small back-home" style="color: var(--text-muted);"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Về trang chủ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+<script>
+(function () {
+    var pw = document.getElementById('passwordInput');
+    var tg = document.getElementById('pwToggle');
+    if (pw && tg) {
+        tg.addEventListener('click', function () {
+            var show = pw.type === 'password';
+            pw.type = show ? 'text' : 'password';
+            tg.setAttribute('aria-label', show ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+            tg.setAttribute('aria-pressed', show ? 'true' : 'false');
+            tg.innerHTML = '<i class="bi ' + (show ? 'bi-eye-slash' : 'bi-eye') + '" aria-hidden="true"></i>';
+            pw.focus();
+        });
+    }
+    var user = document.getElementById('usernameInput');
+    var btn = document.getElementById('loginBtn');
+    document.querySelectorAll('.demo-fill').forEach(function (b) {
+        b.addEventListener('click', function () {
+            if (user) user.value = b.getAttribute('data-user') || '';
+            if (pw) pw.value = b.getAttribute('data-pass') || '';
+            if (user) user.focus();
+        });
+    });
+    var form = document.querySelector('form[action="/login"]');
+    if (form && btn) {
+        form.addEventListener('submit', function () {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Đang đăng nhập...';
+        });
+    }
+})();
+</script>
+</body>
+</html>

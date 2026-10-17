@@ -1,0 +1,21 @@
+[POLICY] Cách tính giá dịch vụ, VAT và chi phí phát sinh
+Áp dụng cho: Mọi khách hàng sử dụng dịch vụ tại ThreeH Workshop
+Ngày hiệu lực: 01/01/2026
+
+1. NGUYÊN TẮC BÁO GIÁ
+Mọi hạng mục đều có báo giá TRƯỚC khi làm, khách duyệt mới triển khai. Giá AI tư vấn trên web/chatbot chỉ là giá THAM KHẢO từ danh mục, giá chốt là báo giá của kỹ thuật viên sau khi kiểm tra xe trực tiếp.
+
+2. CẤU THÀNH HÓA ĐƠN
+- Vật tư/phụ tùng: theo giá danh mục tại thời điểm sửa (hàng chính hãng có hóa đơn nguồn gốc).
+- Công thợ: tính theo giờ công chuẩn từng hạng mục, niêm yết tại quầy tiếp nhận.
+- VAT: xuất hóa đơn VAT theo quy định hiện hành khi khách yêu cầu (cung cấp thông tin xuất hóa đơn trước khi thanh toán).
+- Giảm giá/khuyến mãi: chỉ áp dụng khi còn hiệu lực, không cộng dồn trừ khi chương trình ghi rõ.
+
+3. CHI PHÍ PHÁT SINH
+Trong quá trình sửa, nếu phát hiện thêm hạng mục (ví dụ tháo ra mới thấy rotuyn hỏng kèm), cố vấn dịch vụ gọi điện/zalo báo giá bổ sung và CHỜ khách đồng ý. Khách có quyền từ chối hạng mục phát sinh; xưởng lắp hoàn lại trạng thái cũ và chỉ tính phần đã duyệt.
+
+4. THANH TOÁN
+Tiền mặt, chuyển khoản, quẹt thẻ. Xe chỉ được bàn giao sau khi hoàn tất thanh toán (trừ xe công ty có hợp đồng công nợ). Khách kiểm tra xe và ký biên bản nghiệm thu trước khi rời xưởng; khiếu nại trong 24 giờ được ưu tiên xử lý.
+
+5. MINH BẠCH PHỤ TÙNG
+Phụ tùng cũ thay ra được trả lại cho khách hoặc khách ký xác nhận bỏ lại. Tem, mã vạch phụ tùng mới được giữ lại trong hồ sơ sửa chữa để đối chiếu bảo hành.

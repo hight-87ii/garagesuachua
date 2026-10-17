@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Garage Management{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --warm-white: #FAF9F7;
+            --concrete-gray: #E9ECEF;
+            --charcoal-black: #1E1E1E;
+            --dark-graphite: #2D2D2D;
+            --copper-orange: #C87941;
+            --text-muted: #8C8C8C;
+            /* Light luxury — Than chì & Đồng */
+            --lux-ivory: #FCFBF9;
+            --lux-sand: #F4F1EC;
+            --lux-hairline: #E4DFD8;
+            --lux-slate: #6B6560;
+            --lux-bronze-deep: #A65E2F;
+            --lux-graphite: #1E1E1E;
+        }
+
+        body { 
+            background-color: var(--warm-white);
+            font-family: 'Inter', sans-serif;
+            color: var(--charcoal-black);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection { background: rgba(200, 121, 65, 0.22); }
+
+        /* Thanh cuộn tinh giản */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D8D1C8; border-radius: 999px; border: 2px solid var(--warm-white); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--copper-orange); }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 260px;
+            z-index: 100;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #FFFFFF;
+            color: var(--charcoal-black);
+            box-shadow: 4px 0 24px rgba(30,30,30,0.03);
+            border-right: 1px solid var(--lux-hairline);
+            padding-top: 1rem;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-width: 0;
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+        
+        .sidebar h5 { 
+            color: var(--charcoal-black); 
+            font-weight: 700; 
+            margin-bottom: 30px; 
+            letter-spacing: 0.18em;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+        
+        .sidebar .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .sidebar a.nav-link { 
+            color: var(--lux-slate); 
+            text-decoration: none; 
+            display: block; 
+            padding: 10px 16px; 
+            border-radius: 8px; 
+            margin: 2px 12px; 
+            font-size: 0.9rem;
+            font-weight: 500; 
+            position: relative;
+            transition: color 0.25s ease, background-color 0.25s ease; 
+        }
+        .sidebar a.nav-link i { color: #B9B1A7; transition: color 0.25s ease; }
+
+        .sidebar a.nav-link:hover { 
+            color: var(--lux-graphite); 
+            background-color: var(--lux-ivory);
+        }
+        .sidebar a.nav-link:hover i { color: var(--copper-orange); }
+
+        .sidebar a.nav-link.active { 
+            color: var(--lux-graphite);
+            font-weight: 600;
+            background: linear-gradient(90deg, rgba(200,121,65,0.12), rgba(200,121,65,0.02));
+        }
+        .sidebar a.nav-link.active i { color: var(--copper-orange); }
+        .sidebar a.nav-link.active::before {
+            content: "";
+            position: absolute;
+            left: -12px;
+            top: 7px;
+            bottom: 7px;
+            width: 3px;
+            border-radius: 0 3px 3px 0;
+            background: var(--copper-orange);
+        }
+
+        /* Global Elements */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--lux-graphite);
+        }
+        a { color: var(--copper-orange); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: var(--lux-bronze-deep); }
+
+        .card {
+            border: 1px solid var(--lux-hairline);
+            border-radius: 14px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(30,30,30,0.04);
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.35s ease, border-color 0.35s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 14px 34px -20px rgba(30,30,30,0.18);
+            border-color: #D8D1C8;
+        }
+
+        .card-header {
+            background-color: var(--lux-ivory);
+            border-bottom: 1px solid var(--lux-hairline);
+            padding: 1.1rem 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Nút — pill than chì, hover đồng */
+        .btn {
+            border-radius: 999px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .btn-primary {
+            background-color: var(--charcoal-black);
+            border-color: var(--charcoal-black);
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 999px;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--copper-orange);
+            border-color: var(--copper-orange);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -8px rgba(200,121,65,0.55);
+        }
+        
+        .btn-outline-primary {
+            color: var(--charcoal-black);
+            border-color: #CFC9C1;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--charcoal-black);
+            border-color: var(--charcoal-black);
+            color: #fff;
+        }
+        .btn-outline-dark {
+            border-color: #CFC9C1;
+            color: var(--charcoal-black);
+        }
+        .btn-outline-dark:hover {
+            background-color: var(--charcoal-black);
+            border-color: var(--charcoal-black);
+        }
+
+        /* Form — input ivory, focus glow đồng */
+        .form-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--lux-slate);
+            margin-bottom: 0.4rem;
+        }
+        .form-control, .form-select {
+            background-color: #fff;
+            border: 1px solid var(--lux-hairline);
+            border-radius: 10px;
+            font-size: 0.92rem;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--copper-orange);
+            box-shadow: 0 0 0 3px rgba(200,121,65,0.12);
+            background-color: #fff;
+        }
+        .form-control::placeholder { color: #B5AFA8; }
+        .form-text { color: var(--lux-slate); font-size: 0.78rem; }
+        .input-group-text {
+            background-color: #fff;
+            border-color: var(--lux-hairline);
+            color: var(--copper-orange);
+        }
+        input[type="checkbox"], input[type="radio"] { accent-color: var(--copper-orange); }
+        ::placeholder { color: #B5AFA8; }
+
+        /* Bảng — header micro-label, hairline */
+        .table { color: var(--charcoal-black); }
+        .table > thead > tr > th {
+            background-color: var(--lux-ivory);
+            color: var(--lux-slate);
+            font-size: 0.67rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-bottom: 1px solid var(--lux-hairline);
+            padding: 0.8rem 1rem;
+        }
+        .table > tbody > tr > td {
+            border-color: var(--lux-hairline);
+            padding: 0.85rem 1rem;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        .table-hover > tbody > tr:hover > * {
+            background-color: rgba(200,121,65,0.04);
+            color: var(--charcoal-black);
+        }
+        .table-light { --bs-table-bg: var(--lux-ivory); }
+
+        /* Badge */
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 0.4em 0.85em;
+        }
+
+        /* Modal — head than chỉ viền đồng */
+        .modal-content {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px -30px rgba(30,30,30,0.45);
+        }
+        .modal-header {
+            background-color: var(--lux-graphite);
+            color: #fff;
+            border-bottom: 2px solid var(--copper-orange);
+        }
+        .modal-title { font-weight: 600; font-size: 1.02rem; }
+        .modal-header .btn-close { filter: invert(1) grayscale(1); }
+        .modal-footer {
+            border-top: 1px solid var(--lux-hairline);
+            background-color: var(--lux-ivory);
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--lux-hairline);
+            opacity: 1;
+        }
+        .badge.bg-info {
+            background-color: rgba(200, 121, 65, 0.14) !important;
+            color: var(--lux-bronze-deep) !important;
+            font-weight: 600;
+            border: 1px solid rgba(200, 121, 65, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile top bar -->
+    <nav class="navbar navbar-light bg-white border-bottom d-md-none sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/"><i class="bi bi-gear-wide-connected me-1" style="color: var(--copper-orange);"></i> THREEH</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse w-100" id="mobileMenu">
+            <div class="list-group list-group-flush">
+                <a class="list-group-item list-group-item-action" href="/">Trang chủ</a>
+                <a class="list-group-item list-group-item-action" href="/ai-assistant">AI Assistant</a>
+                <a class="list-group-item list-group-item-action" href="/our-team">Kỹ thuật viên</a>
+                <a class="list-group-item list-group-item-action" href="/my-vehicles">Xe của tôi</a>
+                <a class="list-group-item list-group-item-action" href="/my-appointments">Đặt lịch hẹn</a>
+                <a class="list-group-item list-group-item-action" href="/my-invoices">Hóa đơn</a>
+                {% if user %}
+                <a class="list-group-item list-group-item-action" href="/profile">Thông tin cá nhân</a>
+                <a class="list-group-item list-group-item-action text-danger" href="/logout">Đăng xuất ({{ user.name }})</a>
+                {% else %}
+                <a class="list-group-item list-group-item-action" href="/login">Đăng nhập</a>
+                <a class="list-group-item list-group-item-action" href="/register">Đăng ký</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="d-none d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <h5 class="text-center mt-3"><i class="bi bi-gear-wide-connected" style="color: var(--copper-orange);"></i> THREEH WORKSHOP</h5>
+                    
+                    {% if user %}
+                    <div class="text-center mt-3 mb-3 border-bottom pb-3">
+                        <small class="text-muted">Xin chào,</small><br>
+                        <strong>{{ user.name }}</strong><br>
+                        <span class="badge bg-info text-dark">
+                            {% if user.role == 'manager' %}Quản lý
+                            {% elif user.role == 'technician' %}Kỹ thuật viên
+                            {% else %}Khách hàng{% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+
+                    <ul class="nav flex-column mt-2">
+                        {% set path = request.url.path %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if path == '/' %} active{% endif %}" href="/"><i class="bi bi-house-door me-2"></i> Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/ai-assistant') %} active{% endif %}" href="/ai-assistant"><i class="bi bi-robot me-2"></i> AI Assistant</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/our-team') %} active{% endif %}" href="/our-team"><i class="bi bi-people me-2"></i> Kỹ thuật viên</a>
+                        </li>
+                         
+                        {% if not user or user.role == 'customer' %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/my-vehicles') %} active{% endif %}" href="/my-vehicles"><i class="bi bi-car-front me-2"></i> Xe của tôi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/my-appointments') %} active{% endif %}" href="/my-appointments"><i class="bi bi-calendar-check me-2"></i> Đặt lịch hẹn</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/my-invoices') %} active{% endif %}" href="/my-invoices"><i class="bi bi-receipt me-2"></i> Hóa đơn</a>
+                        </li>
+                        {% endif %}
+
+                        {% if user and user.role in ['technician', 'admin'] %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/tech/dashboard') %} active{% endif %}" href="/tech/dashboard"><i class="bi bi-wrench me-2"></i> Công việc sửa chữa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/tech/parts') %} active{% endif %}" href="/tech/parts"><i class="bi bi-box-seam me-2"></i> Kho Phụ tùng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/tech/services') %} active{% endif %}" href="/tech/services"><i class="bi bi-droplet-fill me-2"></i> Dịch vụ</a>
+                        </li>
+                        {% endif %}
+                         
+                        {% if user and user.role in ['manager', 'admin'] %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/manager/overview') %} active{% endif %}" href="/manager/overview"><i class="bi bi-bar-chart me-2"></i> Tổng quan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/manager/users') %} active{% endif %}" href="/manager/users"><i class="bi bi-person-lines-fill me-2"></i> Quản lý Tài khoản</a>
+                        </li>
+                        <!-- Không lặp lại Kho phụ tùng/Dịch vụ nếu admin đã thấy ở trên -->
+                        {% if user.role != 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/tech/parts') %} active{% endif %}" href="/tech/parts"><i class="bi bi-box-seam me-2"></i> Kho Phụ tùng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/tech/services') %} active{% endif %}" href="/tech/services"><i class="bi bi-droplet-fill me-2"></i> Dịch vụ</a>
+                        </li>
+                        {% endif %}
+                        {% endif %}
+                        
+                        {% if user %}
+                        <hr>
+                        <li class="nav-item">
+                            <a class="nav-link{% if path.startswith('/profile') %} active{% endif %}" href="/profile"><i class="bi bi-person-circle me-2"></i> Thông tin cá nhân</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    
+                    <div class="mt-4 px-3 pb-4">
+                        {% if user %}
+                        <a href="/logout" class="btn btn-sm btn-outline-dark w-100 opacity-75">Đăng xuất</a>
+                        {% else %}
+                        <a href="/login" class="btn btn-sm btn-primary w-100 mb-2" style="background-color: var(--copper-orange); border: none;">Đăng nhập</a>
+                        <a href="/register" class="btn btn-sm btn-outline-dark w-100 opacity-75">Đăng ký</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-12 main-content px-3 px-md-4 mt-4">
+                <div class="container-fluid px-0" style="max-width: 1280px;">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chatbot Widget -->
+    <style>
+        .chat-widget-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--copper-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(200, 121, 65, 0.4);
+            cursor: grab;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+        .chat-widget-btn.dragging {
+            cursor: grabbing;
+            transform: scale(1.08);
+            transition: none;
+        }
+        .chat-widget-btn:hover {
+            transform: scale(1.1);
+        }
+        .chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border: 1px solid var(--lux-hairline);
+            border-radius: 16px;
+            box-shadow: 0 24px 60px -20px rgba(30,30,30,0.35);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+        .chat-window.open {
+            transform: scale(1);
+        }
+        .chat-window.expanded {
+            width: 700px;
+            height: 75vh;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .chat-header {
+            background-color: var(--lux-graphite);
+            color: white;
+            border-bottom: 2px solid var(--copper-orange);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-header .bi-robot { color: var(--copper-orange); }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #F8F9FA;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+        }
+        .msg-bot {
+            background-color: white;
+            color: var(--charcoal-black);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #E9ECEF;
+        }
+        .msg-user {
+            background-color: rgba(200, 121, 65, 0.1);
+            color: var(--charcoal-black);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(200, 121, 65, 0.2);
+        }
+        .chat-input-area {
+            padding: 10px;
+            border-top: 1px solid #E9ECEF;
+            display: flex;
+            gap: 8px;
+            background: white;
+        }
+        .chat-input {
+            flex-grow: 1;
+            border: 1px solid #E9ECEF;
+            border-radius: 20px;
+            padding: 8px 15px;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .chat-input:focus {
+            border-color: var(--copper-orange);
+        }
+        .chat-send-btn {
+            background: var(--copper-orange);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="chat-widget-btn" id="chatWidgetBtn">
+        <i class="bi bi-robot"></i>
+    </div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-robot fs-4 me-2"></i>
+                <div>
+                    <h6 class="mb-0 fw-bold">Trợ lý Garage AI</h6>
+                    <small style="opacity: 0.8; font-size: 0.75rem;">Trực tuyến</small>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn text-white p-0 me-3" id="expandChatBtn" aria-label="Expand" style="background: none; border: none;" title="Mở rộng/Thu nhỏ">
+                    <i class="bi bi-arrows-angle-expand fs-5"></i>
+                </button>
+                <button type="button" class="btn-close btn-close-white" id="closeChatBtn" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message msg-bot">
+                Xin chào! Tôi là trợ lý AI của ThreeH Workshop. Tôi có thể giúp gì cho bạn và xế yêu hôm nay?
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Nhập tin nhắn..." autocomplete="off">
+            <button class="chat-send-btn" id="chatSendBtn">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatWidgetBtn = document.getElementById('chatWidgetBtn');
+        const chatWindow = document.getElementById('chatWindow');
+        const closeChatBtn = document.getElementById('closeChatBtn');
+        const expandChatBtn = document.getElementById('expandChatBtn');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+
+        // Guard sessionStorage/JSON: bat cu loi nao o day cung khong duoc
+        // giet ca script (mat nut chat). Gia tri hong -> reset ve rong.
+        let isFirstMessage = true;
+        let chatHistory = [];
+        try {
+            isFirstMessage = sessionStorage.getItem('global_chatbot_is_first') !== 'false';
+            const parsed = JSON.parse(sessionStorage.getItem('global_chatbot_history')) || [];
+            chatHistory = Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            isFirstMessage = true;
+            chatHistory = [];
+        }
+
+        // Khôi phục chat từ sessionStorage (nếu có)
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                if (chatHistory.length > 0) {
+                    chatMessages.innerHTML = ''; // Xóa lời chào mặc định
+                    chatHistory.forEach(msg => {
+                        if (!msg || typeof msg.text === 'undefined') return;
+                        const msgDiv = document.createElement('div');
+                        msgDiv.classList.add('chat-message', msg.sender === 'user' ? 'msg-user' : 'msg-bot');
+                        msgDiv.innerText = msg.text;
+                        chatMessages.appendChild(msgDiv);
+                    });
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            } catch (e) {}
+        });
+
+        chatWidgetBtn.addEventListener('click', () => {
+            if (chatWidgetBtn.dataset.dragged) return;
+            chatWindow.classList.toggle('open');
+        });
+
+        closeChatBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+        });
+
+        if(expandChatBtn) {
+            expandChatBtn.addEventListener('click', () => {
+                chatWindow.classList.toggle('expanded');
+                const icon = expandChatBtn.querySelector('i');
+                if(chatWindow.classList.contains('expanded')) {
+                    icon.classList.remove('bi-arrows-angle-expand');
+                    icon.classList.add('bi-arrows-angle-contract');
+                } else {
+                    icon.classList.remove('bi-arrows-angle-contract');
+                    icon.classList.add('bi-arrows-angle-expand');
+                }
+            });
+        }
+
+        function addMessage(text, sender, skipSave = false) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('chat-message', sender === 'user' ? 'msg-user' : 'msg-bot');
+            msgDiv.innerText = text;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            if (!skipSave) {
+                chatHistory.push({ sender: sender, text: text });
+                sessionStorage.setItem('global_chatbot_history', JSON.stringify(chatHistory));
+            }
+        }
+
+        const currentUserRole = "{{ user.role if user else '' }}";
+        const useCustomerAgent = currentUserRole === 'customer' || currentUserRole === 'manager';
+
+        function renderCustomerAgentText(data) {
+            let text = data.message || '';
+            if (data.suggestions && data.suggestions.length) {
+                text += '\n\nDịch vụ gợi ý:';
+                data.suggestions.forEach((s) => {
+                    const price = Number(s.price || 0).toLocaleString('vi-VN') + 'đ';
+                    text += `\n- ${s.name}: ${price}${s.promo ? ' (khuyến mãi)' : ''}`;
+                });
+            }
+            if (data.estimate) {
+                const min = Number(data.estimate.min || 0).toLocaleString('vi-VN') + 'đ';
+                const max = Number(data.estimate.max || 0).toLocaleString('vi-VN') + 'đ';
+                text += `\n\nƯớc tính sơ bộ: ${min} – ${max} (tham khảo chưa VAT/phát sinh).`;
+            }
+            if (data.draft) {
+                text += `\n\nĐã tạo lịch nháp #${data.draft.id}: xe ${data.draft.plate} ngày ${data.draft.date}` +
+                    (data.draft.time ? ` giờ ${data.draft.time}` : ' (chưa chốt giờ)') +
+                    ' — trạng thái Pending. Vào Đặt lịch hẹn để xem lại/xác nhận.';
+            }
+            if (data.needs && data.needs.length) {
+                text += '\n\nCòn thiếu: ' + data.needs.join('; ');
+            }
+            return text;
+        }
+
+        async function sendCustomerAgentMessage(text, historyToSend, loadingDiv) {
+            // Stream NDJSON (/agent/customer/chat/stream): meta truoc, delta chay dan.
+            const response = await fetch('/agent/customer/chat/stream', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text, history: historyToSend })
+            });
+            chatMessages.removeChild(loadingDiv);
+            if (!response.ok) {
+                let msg = 'Lỗi kết nối';
+                try {
+                    const err = await response.json();
+                    msg = err.detail || msg;
+                } catch (e) {}
+                throw new Error(msg);
+            }
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('chat-message', 'msg-bot');
+            chatMessages.appendChild(msgDiv);
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buf = '', meta = null, fullMessage = '', streamDone = false;
+            while (!streamDone) {
+                const { done, value } = await reader.read();
+                if (value) buf += decoder.decode(value, { stream: true });
+                let idx;
+                while ((idx = buf.indexOf('\n')) >= 0) {
+                    const line = buf.slice(0, idx).trim();
+                    buf = buf.slice(idx + 1);
+                    if (!line) continue;
+                    let evt = null;
+                    try { evt = JSON.parse(line); } catch (e) { continue; }
+                    if (evt.type === 'meta') { meta = evt.data || {}; }
+                    else if (evt.type === 'delta') {
+                        fullMessage += evt.text || '';
+                        msgDiv.innerText = fullMessage;
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                    else if (evt.type === 'done') { streamDone = true; break; }
+                }
+                if (done) break;
+            }
+            const fullText = renderCustomerAgentText(Object.assign({ message: fullMessage }, meta || {}));
+            msgDiv.innerText = fullText;
+            chatHistory.push({ sender: 'bot', text: fullText });
+            sessionStorage.setItem('global_chatbot_history', JSON.stringify(chatHistory));
+            return fullText;
+        }
+
+        async function sendQuickStreamMessage(text, historyToSend, loadingDiv) {
+            const response = await fetch('/api/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    message: text, 
+                    is_first_message: isFirstMessage,
+                    history: historyToSend
+                })
+            });
+            chatMessages.removeChild(loadingDiv);
+            if (!response.ok) throw new Error("Lỗi kết nối");
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('chat-message', 'msg-bot');
+            chatMessages.appendChild(msgDiv);
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let fullText = "";
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                fullText += chunk;
+                msgDiv.innerText = fullText;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            chatHistory.push({ sender: 'bot', text: fullText });
+            sessionStorage.setItem('global_chatbot_history', JSON.stringify(chatHistory));
+            return fullText;
+        }
+
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            // Loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('chat-message', 'msg-bot');
+            loadingDiv.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Lấy history (trừ câu hỏi vừa push vào ở trên)
+            const historyToSend = chatHistory.slice(0, -1);
+
+            try {
+                if (useCustomerAgent) {
+                    await sendCustomerAgentMessage(text, historyToSend, loadingDiv);
+                } else {
+                    await sendQuickStreamMessage(text, historyToSend, loadingDiv);
+                }
+                
+                isFirstMessage = false;
+                sessionStorage.setItem('global_chatbot_is_first', 'false');
+                
+            } catch (error) {
+                if (loadingDiv.parentNode) chatMessages.removeChild(loadingDiv);
+                addMessage(error.message || 'Đã có lỗi xảy ra kết nối server.', 'bot');
+            }
+        }
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+
+    <script>
+        // CSRF: tự đọc cookie csrf_token, chèn vào mọi form POST và fetch JSON.
+        (function () {
+            function getCookie(name) {
+                const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+                return m ? decodeURIComponent(m[1]) : '';
+            }
+            function ensureFormToken() {
+                const token = getCookie('csrf_token');
+                if (!token) return;
+                document.querySelectorAll('form[method="POST"], form[method="post"]').forEach((form) => {
+                    if (!form.querySelector('input[name="csrf_token"]')) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'csrf_token';
+                        input.value = token;
+                        form.appendChild(input);
+                    }
+                });
+            }
+            document.addEventListener('DOMContentLoaded', ensureFormToken);
+            new MutationObserver(ensureFormToken).observe(document.body, { childList: true, subtree: true });
+
+            const rawFetch = window.fetch.bind(window);
+            window.fetch = function (url, options) {
+                options = options || {};
+                const method = (options.method || 'GET').toUpperCase();
+                if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
+                    const token = getCookie('csrf_token');
+                    if (token) {
+                        options.headers = options.headers || {};
+                        if (options.headers instanceof Headers) {
+                            if (!options.headers.has('x-csrf-token')) options.headers.set('x-csrf-token', token);
+                        } else if (!options.headers['x-csrf-token'] && !options.headers['X-CSRF-Token']) {
+                            options.headers['x-csrf-token'] = token;
+                        }
+                    }
+                }
+                return rawFetch(url, options);
+            };
+        })();
+    </script>
+
+    <script>
+        // Icon chatbot keo-tha: nhan-giu de di chuyen, bam nhe de mo/tat cua so chat.
+        (function () {
+            const btn = document.getElementById('chatWidgetBtn');
+            if (!btn) return;
+            const KEY = 'chat_widget_pos';
+            try {
+                const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+                if (saved && typeof saved.x === 'number' && typeof saved.y === 'number') {
+                    btn.style.left = saved.x + 'px';
+                    btn.style.top = saved.y + 'px';
+                    btn.style.right = 'auto';
+                    btn.style.bottom = 'auto';
+                }
+            } catch (err) {}
+
+            let dragging = false, startX = 0, startY = 0, origX = 0, origY = 0;
+
+            btn.addEventListener('pointerdown', (e) => {
+                dragging = true;
+                delete btn.dataset.dragged;
+                startX = e.clientX;
+                startY = e.clientY;
+                const r = btn.getBoundingClientRect();
+                origX = r.left;
+                origY = r.top;
+                btn.classList.add('dragging');
+                try { btn.setPointerCapture(e.pointerId); } catch (err) {}
+            });
+
+            btn.addEventListener('pointermove', (e) => {
+                if (!dragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                if (Math.abs(dx) + Math.abs(dy) <= 6 && !btn.dataset.dragged) return;
+                btn.dataset.dragged = '1';
+                const size = btn.offsetWidth;
+                const x = Math.min(Math.max(0, origX + dx), window.innerWidth - size);
+                const y = Math.min(Math.max(0, origY + dy), window.innerHeight - size);
+                btn.style.left = x + 'px';
+                btn.style.top = y + 'px';
+                btn.style.right = 'auto';
+                btn.style.bottom = 'auto';
+            });
+
+            function endDrag() {
+                if (!dragging) return;
+                dragging = false;
+                btn.classList.remove('dragging');
+                if (btn.dataset.dragged) {
+                    try {
+                        localStorage.setItem(KEY, JSON.stringify({
+                            x: parseFloat(btn.style.left),
+                            y: parseFloat(btn.style.top)
+                        }));
+                    } catch (err) {}
+                    setTimeout(() => { delete btn.dataset.dragged; }, 100);
+                }
+            }
+            btn.addEventListener('pointerup', endDrag);
+            btn.addEventListener('pointercancel', () => {
+                dragging = false;
+                btn.classList.remove('dragging');
+                delete btn.dataset.dragged;
+            });
+        })();
+    </script>
+</body>
+</html>

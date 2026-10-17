@@ -1,0 +1,1528 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý chung - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    .mgr-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding: 22px 0 16px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 8px; }
+    .mgr-head h1 { font-size: 1.5rem; margin: 0; font-weight: 700; letter-spacing: -.02em; }
+    .mgr-sub { color: var(--lux-slate); font-size: .86rem; margin: 6px 0 0; }
+    .mgr-kpi { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; padding: 1rem 1.1rem; height: 100%; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .mgr-kpi .kl { font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); display: flex; align-items: center; gap: 6px; }
+    .mgr-kpi .kv { font-size: 1.45rem; font-weight: 700; letter-spacing: -.02em; color: var(--lux-graphite); margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .mgr-kpi .kv small { font-size: .8rem; font-weight: 600; color: var(--lux-slate); }
+    .mgr-sec { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--lux-slate); margin: 1.6rem 0 .8rem; display: flex; align-items: center; gap: 8px; }
+    .mgr-sec i { color: var(--copper-orange); }
+    .st-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 12px; padding: .9rem 1rem; height: 100%; }
+    .st-card .sl { font-size: .76rem; font-weight: 700; color: var(--lux-graphite); display: flex; align-items: center; gap: 7px; }
+    .st-card .sv { font-size: 1.2rem; font-weight: 700; color: var(--lux-graphite); margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: 0 0 9px; }
+    .mgr-panel { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; height: 100%; overflow: hidden; }
+    .mgr-panel .ph { padding: .9rem 1.2rem; border-bottom: 1px solid var(--lux-hairline); font-weight: 700; font-size: .9rem; color: var(--lux-graphite); display: flex; align-items: center; gap: 8px; background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); }
+    .mgr-panel .ph i { color: var(--copper-orange); }
+    .mgr-row { display: flex; justify-content: space-between; gap: .8rem; padding: .55rem 0; font-size: .88rem; border-bottom: 1px dashed var(--lux-hairline); }
+    .mgr-row:last-child { border-bottom: none; }
+    .mgr-row .k { color: var(--lux-slate); }
+    .mgr-row .v { font-weight: 700; color: var(--lux-graphite); text-align: right; font-variant-numeric: tabular-nums; }
+    .insight { background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%); border: 1px solid rgba(200,121,65,.25); border-radius: 16px; color: #fff; }
+    .insight h5 { color: #fff; }
+    .insight .ii { width: 30px; height: 30px; border-radius: 9px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); display: inline-flex; align-items: center; justify-content: center; color: #E0A375; flex: 0 0 30px; }
+    .insight small { color: rgba(255,255,255,.72); }
+    /* Bảng quản lý chi tiết (nửa dưới): cùng hệ lux */
+    .tbl-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .tbl-card .card-header { background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); border-bottom: 1px solid var(--lux-hairline); padding: .9rem 1.2rem; }
+    .tbl-card .card-header h5 { color: var(--lux-graphite); font-size: 1rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .tbl-card .card-header h5 i { color: var(--copper-orange); }
+    .tbl-card table { font-size: .88rem; }
+    .tbl-card thead th { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--lux-slate); font-weight: 700; border-bottom: 1px solid var(--lux-hairline); background: var(--lux-ivory); padding: .65rem .75rem; white-space: nowrap; }
+    .tbl-card tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--lux-hairline); color: var(--lux-graphite); vertical-align: middle; }
+    .tbl-card tbody tr:last-child td { border-bottom: none; }
+    .tbl-card .muted, .tbl-card small.muted { color: var(--lux-slate); }
+    .pill { display: inline-block; font-size: .72rem; font-weight: 700; border-radius: 999px; padding: .28em .8em; white-space: nowrap; border: 1px solid; }
+    .pill-unpaid { background: rgba(192,57,43,.08); color: #A93226; border-color: rgba(192,57,43,.3); }
+    .pill-paid { background: rgba(46,125,79,.1); color: #2E7D4F; border-color: rgba(46,125,79,.3); }
+    .pill-wait { background: #F1EFEA; color: #5F5A54; border-color: #E4DFD8; }
+    .pill-prog { background: rgba(200,121,65,.1); color: var(--lux-bronze-deep); border-color: rgba(200,121,65,.4); }
+    .pill-info { background: rgba(13,117,165,.08); color: #0d75a5; border-color: rgba(13,117,165,.3); }
+    .btn-bronze { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; }
+    .btn-bronze:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; }
+    .modal-lux .modal-header { background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #A65E2F 130%); color: #fff; border-bottom: 1px solid rgba(200,121,65,.25); padding: 16px 20px; }
+    .modal-lux .modal-header .modal-title { color: #fff; font-size: 1.02rem; }
+    .modal-lux .modal-header .btn-close { filter: invert(1); }
+    /* ===== Phiếu tiếp nhận (dùng chung với trang thợ): than chì & đồng ===== */
+    .rc-modal .modal-content { border-radius: 16px; overflow: hidden; }
+    .rc-modal .modal-header { background: #fff; color: var(--lux-graphite); border-bottom: 1px solid var(--lux-hairline); padding: 16px 20px; }
+    .rc-modal .modal-title { color: var(--lux-graphite); }
+    .rc-modal .modal-header .btn-close { filter: none; opacity: .55; }
+    .rc-modal .modal-header .btn-close:hover { opacity: 1; }
+    .rc-modal .modal-footer { background: #fff; border-top: 1px solid var(--lux-hairline); padding: 14px 20px; }
+    .rc-modal .modal-body { background: var(--lux-ivory); }
+    .rc-kicker { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: #8A5A32; margin-bottom: 3px; }
+    .rc-plate-t { letter-spacing: .08em; }
+    .rc-title-sub { font-size: .78rem; font-weight: 400; letter-spacing: .03em; color: var(--lux-slate); margin-left: 10px; }
+    .rc-hint { font-size: .76rem; color: var(--lux-slate); }
+    .rc-hint i { color: var(--copper-orange); }
+    .rc-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 13px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .rc-card-h { display: flex; align-items: center; gap: 9px; padding: 11px 15px; border-bottom: 1px solid var(--lux-hairline); background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); font-size: .73rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--lux-graphite); }
+    .rc-card-h i { margin-left: auto; color: var(--copper-orange); font-size: .92rem; opacity: .8; }
+    .rc-num { flex: 0 0 21px; width: 21px; height: 21px; border-radius: 50%; background: var(--copper-orange); color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: 0; display: inline-flex; align-items: center; justify-content: center; }
+    .rc-card-b { padding: 14px 16px; }
+    .rc-lbl { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 6px; }
+    .rc-req { color: var(--copper-orange); }
+    .rc-cust { display: flex; align-items: center; gap: 11px; padding-bottom: 11px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 9px; }
+    .rc-avatar { flex: 0 0 42px; width: 42px; height: 42px; border-radius: 50%; background: var(--lux-graphite); color: #E0A375; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .92rem; letter-spacing: .03em; }
+    .rc-cust .nm { font-weight: 700; font-size: .97rem; color: var(--lux-graphite); line-height: 1.4; }
+    .rc-cust .rl { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--copper-orange); font-weight: 700; margin-top: 2px; }
+    .rc-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--lux-hairline); font-size: .86rem; }
+    .rc-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rc-row .k { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); flex-shrink: 0; }
+    .rc-row .v { font-weight: 600; color: var(--lux-graphite); text-align: right; word-break: break-word; }
+    .rc-plate { display: inline-flex; align-items: center; gap: 9px; background: var(--lux-graphite); color: #fff; font-weight: 700; font-size: 1.02rem; letter-spacing: .08em; padding: .38em 1em; border-radius: 9px; border-bottom: 3px solid var(--copper-orange); box-shadow: 0 6px 14px -8px rgba(30,30,30,.6); }
+    .rc-plate i { color: #E0A375; font-size: .95rem; letter-spacing: 0; }
+    .rc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 14px; margin-top: 13px; }
+    .rc-grid .cell { background: var(--lux-ivory); border: 1px solid var(--lux-hairline); border-radius: 9px; padding: 7px 10px; }
+    .rc-grid .cell .k { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 2px; }
+    .rc-grid .cell .v { font-size: .87rem; font-weight: 700; color: var(--lux-graphite); }
+    .rc-grid .cell-full { grid-column: 1 / -1; }
+    .rc-mono { font-family: Consolas, 'SF Mono', monospace; letter-spacing: .05em; font-size: .8rem !important; }
+    .rc-modal .form-control, .rc-modal .form-select { border-radius: 9px; border-color: #D8D1C8; font-size: .87rem; background: #fff; }
+    .rc-modal .form-control:focus, .rc-modal .form-select:focus { border-color: var(--copper-orange); box-shadow: 0 0 0 3px rgba(200,121,65,.13); background: #fff; }
+    .rc-modal .form-control:disabled { background: var(--lux-sand); color: var(--lux-slate); opacity: 1; }
+    .rc-sym { border-left: 3px solid var(--copper-orange) !important; font-size: .87rem !important; line-height: 1.55; }
+    .rc-suffix { background: var(--lux-sand); border-color: #D8D1C8; color: var(--lux-slate); font-size: .75rem; font-weight: 700; letter-spacing: .05em; }
+    .rc-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .rc-chips input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .rc-chips label { display: inline-flex; align-items: center; gap: 7px; margin: 0; cursor: pointer; user-select: none; font-size: .77rem; font-weight: 600; padding: .36em .85em; border-radius: 999px; border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-slate); transition: border-color .18s, background .18s, color .18s; }
+    .rc-chips label::before { content: ""; flex: 0 0 12px; width: 12px; height: 12px; border: 1.5px solid #C4BDB4; border-radius: 3px; background: #fff; transition: background .15s, border-color .15s; }
+    .rc-chips label:hover { border-color: var(--copper-orange); color: var(--lux-bronze-deep); }
+    .rc-chips input:checked + label { background: rgba(200,121,65,.09); border-color: rgba(200,121,65,.6); color: #A65E2F; }
+    .rc-chips input:checked + label::before { background: var(--copper-orange); border-color: var(--copper-orange); box-shadow: inset 0 0 0 2px #fff; }
+    .rc-chips input:focus-visible + label { box-shadow: 0 0 0 3px rgba(200,121,65,.22); }
+    .rc-chips.warn label { color: #B03A2E; border-color: rgba(192,57,43,.32); background: rgba(192,57,43,.035); font-weight: 700; }
+    .rc-chips.warn label::before { border-radius: 50%; }
+    .rc-chips.warn label:hover { border-color: #C0392B; }
+    .rc-chips.warn input:checked + label { background: rgba(192,57,43,.1); border-color: rgba(192,57,43,.65); color: #A93226; }
+    .rc-chips.warn input:checked + label::before { background: #C0392B; border-color: #C0392B; }
+    .rc-seg { position: relative; display: inline-flex; gap: 3px; background: var(--lux-sand); border: 1px solid var(--lux-hairline); border-radius: 999px; padding: 3px; }
+    .rc-seg input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .rc-seg label { margin: 0; cursor: pointer; font-size: .78rem; font-weight: 700; padding: .33em 1.05em; border-radius: 999px; color: var(--lux-slate); transition: background .18s, color .18s; }
+    .rc-seg label:hover { color: var(--lux-graphite); }
+    .rc-seg input:checked + label { color: #fff; box-shadow: 0 5px 12px -5px rgba(0,0,0,.45); }
+    .rc-seg input.s-nhe:checked + label { background: #2E7D4F; }
+    .rc-seg input.s-vua:checked + label { background: #8A6D00; }
+    .rc-seg input.s-nang:checked + label { background: #C0392B; }
+    .rc-seg input:focus-visible + label { outline: 2px solid var(--copper-orange); }
+    .rc-file { position: relative; display: flex; align-items: center; gap: 12px; padding: 13px 15px; border: 1.5px dashed rgba(200,121,65,.5); background: rgba(200,121,65,.045); border-radius: 11px; cursor: pointer; transition: background .2s, border-color .2s; overflow: hidden; }
+    .rc-file:hover { background: rgba(200,121,65,.09); border-color: var(--copper-orange); }
+    .rc-file input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .rc-file i { font-size: 1.45rem; color: var(--copper-orange); }
+    .rc-file .ft { font-size: .82rem; font-weight: 700; color: var(--lux-graphite); }
+    .rc-file .fn { font-size: .75rem; color: var(--lux-slate); margin-top: 1px; }
+    .rc-modal .modal-body::-webkit-scrollbar { width: 9px; }
+    .rc-modal .modal-body::-webkit-scrollbar-track { background: var(--lux-ivory); }
+    .rc-modal .modal-body::-webkit-scrollbar-thumb { background: #D8D1C8; border-radius: 9px; border: 2px solid var(--lux-ivory); }
+    .q-ai { background: var(--lux-ivory); border: 1px solid var(--lux-hairline); border-radius: 10px; padding: 10px 13px; font-size: .84rem; line-height: 1.55; max-height: 110px; overflow-y: auto; color: var(--lux-graphite); }
+    .q-preview { font-size: .8rem; font-weight: 700; color: var(--lux-bronze-deep); margin-top: 6px; font-variant-numeric: tabular-nums; }
+    /* === Period selector pills === */
+    .period-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .period-pills a { display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; font-weight: 700; padding: .32em .9em; border-radius: 999px; text-decoration: none; border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-slate); transition: all .18s; }
+    .period-pills a:hover { border-color: var(--copper-orange); color: var(--lux-bronze-deep); }
+    .period-pills a.active { background: var(--lux-graphite); border-color: var(--lux-graphite); color: #fff; }
+    /* === Tech Perf Table === */
+    .tp-table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    .tp-table th { font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--lux-slate); padding: .6rem .8rem; border-bottom: 1px solid var(--lux-hairline); background: var(--lux-ivory); white-space: nowrap; }
+    .tp-table td { padding: .7rem .8rem; border-bottom: 1px solid var(--lux-hairline); vertical-align: middle; }
+    .tp-table tr:last-child td { border-bottom: none; }
+    .tp-table tr:hover td { background: rgba(200,121,65,.03); }
+    .tp-rank { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .74rem; font-weight: 800; flex-shrink: 0; }
+    .tp-rank-1 { background: #FFD700; color: #7A5900; }
+    .tp-rank-2 { background: #C0C0C0; color: #444; }
+    .tp-rank-3 { background: #CD7F32; color: #2e2000; }
+    .tp-rank-n { background: var(--lux-sand); color: var(--lux-slate); }
+    .tp-bar-wrap { height: 5px; background: var(--lux-sand); border-radius: 99px; min-width: 60px; overflow: hidden; }
+    .tp-bar { height: 100%; border-radius: 99px; background: var(--copper-orange); }
+    .tp-star { color: #E0A375; font-size: .8rem; }
+    .tp-stars-empty { color: #D8D1C8; font-size: .8rem; }
+    .tp-zero { color: var(--lux-slate); font-style: italic; font-size: .8rem; }
+    .tp-badge { display: inline-flex; align-items: center; gap: 4px; font-size: .75rem; font-weight: 700; border-radius: 999px; padding: .22em .65em; border: 1px solid; }
+    .tp-badge-prog { background: rgba(200,121,65,.1); color: var(--lux-bronze-deep); border-color: rgba(200,121,65,.4); }
+    .tp-badge-done { background: rgba(46,125,79,.1); color: #2E7D4F; border-color: rgba(46,125,79,.3); }
+    .tp-badge-pend { background: #F1EFEA; color: #5F5A54; border-color: #E4DFD8; }
+    .tp-section-label { display: block; font-size: .7rem; color: var(--lux-slate); font-weight: 600; }
+</style>
+
+<div class="mgr-head">
+    <div>
+        <h1>Tổng quan garage</h1>
+        <p class="mgr-sub">
+            Kỳ báo cáo: <strong style="color:var(--lux-graphite);">{{ period_label }}</strong>
+            · <span style="font-variant-numeric:tabular-nums;">{{ period_start_str }} – {{ today_str }}</span>
+            · Số liệu lấy trực tiếp từ dữ liệu xưởng.
+        </p>
+    </div>
+    <div class="d-flex flex-column align-items-end gap-2">
+        <div class="period-pills">
+            <a href="?period=day" class="{% if current_period == 'day' %}active{% endif %}"><i class="bi bi-sun"></i>Hôm nay</a>
+            <a href="?period=week" class="{% if current_period == 'week' %}active{% endif %}"><i class="bi bi-calendar-week"></i>7 ngày</a>
+            <a href="?period=month" class="{% if current_period == 'month' %}active{% endif %}"><i class="bi bi-calendar-month"></i>Tháng này</a>
+            <a href="?period=custom{% if current_period == 'custom' %}&months={{ custom_months }}{% endif %}" class="{% if current_period == 'custom' %}active{% endif %}"><i class="bi bi-sliders"></i>Tuỳ chọn</a>
+        </div>
+        {% if current_period == 'custom' %}
+        <form method="GET" class="d-flex align-items-center gap-2">
+            <input type="hidden" name="period" value="custom">
+            <label class="mb-0" style="font-size:.8rem;color:var(--lux-slate);font-weight:600;">Số tháng:</label>
+            <input type="number" class="form-control form-control-sm" name="months" value="{{ custom_months | default('3') }}" min="1" max="24" style="width: 70px">
+            <button type="submit" class="btn btn-sm btn-bronze">Áp dụng</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 1. KPI kỳ này -->
+<div class="row g-3">
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-car-front" style="color:var(--copper-orange);"></i>Xe tiếp nhận</div><div class="kv">{{ kpi.received }}</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-tools" style="color:var(--copper-orange);"></i>Đang sửa</div><div class="kv">{{ kpi.in_progress }}</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-check-circle-fill" style="color:#2E7D4F;"></i>Hoàn thành</div><div class="kv">{{ kpi.completed_today }}</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-calendar-event" style="color:var(--copper-orange);"></i>Lịch hẹn kỳ này</div><div class="kv">{{ kpi.appointments_today }}</div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-cash-stack" style="color:#2E7D4F;"></i>Doanh thu kỳ này</div><div class="kv" style="font-size:1.15rem;">{{ "{:,.0f}".format(kpi.revenue_today) }} <small>đ</small></div></div>
+    </div>
+    <div class="col-6 col-lg-2">
+        <div class="mgr-kpi"><div class="kl"><i class="bi bi-hourglass-split" style="color:#A93226;"></i>Lịch chờ xử lý</div><div class="kv" {% if kpi.pending_issues %}style="color:#A93226;"{% endif %}>{{ kpi.pending_issues }}</div></div>
+    </div>
+</div>
+
+<!-- AI Agent quota monitoring -->
+<div class="mgr-sec"><i class="bi bi-robot"></i>Giám sát AI Agent</div>
+<div class="row g-3">
+    <div class="col-6 col-lg-3"><div class="st-card"><div class="sl"><span class="dot" style="background:#1E1E1E;"></span>Call hôm nay</div><div class="sv">{{ agent_stats.today.total }}</div></div></div>
+    <div class="col-6 col-lg-3"><div class="st-card"><div class="sl"><span class="dot" style="background:#2E7D4F;"></span>OK hôm nay</div><div class="sv">{{ agent_stats.today.ok }}</div></div></div>
+    <div class="col-6 col-lg-3"><div class="st-card"><div class="sl"><span class="dot" style="background:#A93226;"></span>Fail hôm nay</div><div class="sv" {% if agent_stats.today.fail %}style="color:#A93226;"{% endif %}>{{ agent_stats.today.fail }}</div></div></div>
+    <div class="col-6 col-lg-3"><div class="st-card"><div class="sl"><span class="dot" style="background:#C87941;"></span>Quota / 503</div><div class="sv" {% if agent_stats.today.quota or agent_stats.today['503'] %}style="color:#A93226;"{% endif %}>{{ agent_stats.today.quota }} / {{ agent_stats.today['503'] }}</div></div></div>
+</div>
+<div class="tbl-card mt-3 mb-2">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5><i class="bi bi-activity"></i>Lịch sử call AI 14 ngày</h5>
+        <small class="muted">Đọc từ logs/agent.log · chỉ metadata, không lưu prompt/biển số/tên</small>
+    </div>
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead><tr><th>Ngày</th><th class="text-center">Tổng</th><th class="text-center">OK</th><th class="text-center">Fail</th><th class="text-center">Quota</th><th class="text-center">503</th></tr></thead>
+            <tbody>
+                {% for d in agent_stats.days|reverse %}
+                <tr>
+                    <td style="font-variant-numeric:tabular-nums;">{{ d.date }}</td>
+                    <td class="text-center">{{ d.total }}</td>
+                    <td class="text-center" style="color:#2E7D4F;font-weight:700;">{{ d.ok }}</td>
+                    <td class="text-center" {% if d.fail %}style="color:#A93226;font-weight:700;"{% endif %}>{{ d.fail }}</td>
+                    <td class="text-center" {% if d.quota %}style="color:#A93226;font-weight:700;"{% endif %}>{{ d.quota }}</td>
+                    <td class="text-center" {% if d['503'] %}style="color:#A93226;font-weight:700;"{% endif %}>{{ d['503'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if user and user.role in ["manager", "admin"] %}
+<!-- AI Tro ly van hanh (POST /agent/manager/chat, chi manager/admin) -->
+<div class="tbl-card mt-3 mb-2" id="mgr-ai-panel">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5><i class="bi bi-robot"></i>AI Trợ lý vận hành</h5>
+        <small class="muted">Hỏi số liệu xưởng bằng tiếng Việt</small>
+    </div>
+    <div class="card-body" style="padding:1rem 1.2rem 1.2rem;">
+        <div class="d-flex flex-wrap gap-2 mb-2">
+            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill mgr-ai-chip" data-q="Hôm nay xưởng thế nào?">Hôm nay thế nào?</button>
+            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill mgr-ai-chip" data-q="Doanh thu và công nợ hiện tại bao nhiêu?">Doanh thu & công nợ</button>
+            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill mgr-ai-chip" data-q="Kho có món nào sắp hết?">Kho sắp hết</button>
+            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill mgr-ai-chip" data-q="Báo giá nào đang chờ khách duyệt?">Báo giá chờ duyệt</button>
+        </div>
+        <div id="mgr-ai-result" class="q-ai mb-2" style="max-height:220px;">Hỏi tôi về tình hình xưởng, doanh thu, kho, lịch hẹn...</div>
+        <div class="input-group">
+            <input type="text" id="mgr-ai-input" class="form-control" placeholder="VD: Doanh thu tuần này bao nhiêu?" autocomplete="off">
+            <button type="button" id="mgr-ai-btn" class="btn btn-bronze">Hỏi</button>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    const inputEl = document.getElementById('mgr-ai-input');
+    const resultBox = document.getElementById('mgr-ai-result');
+    const btn = document.getElementById('mgr-ai-btn');
+    if (!inputEl || !resultBox || !btn) return;
+    let mgrHistory = [];
+    try { mgrHistory = JSON.parse(sessionStorage.getItem('ai_manager_history') || '[]'); } catch (e) { mgrHistory = []; }
+    function escHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+    async function askManagerAI(text) {
+        const q = (text || '').trim();
+        if (!q) return;
+        btn.disabled = true;
+        resultBox.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Đang tổng hợp...';
+        try {
+            const response = await fetch('/agent/manager/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: q, history: mgrHistory })
+            });
+            if (!response.ok) {
+                let detail = 'Không nhận được phản hồi.';
+                try { const err = await response.json(); detail = err.detail || detail; } catch (e) {}
+                resultBox.innerHTML = '<span style="color:#A93226;">Lỗi: ' + escHtml(detail) + '</span>';
+                return;
+            }
+            const data = await response.json();
+            resultBox.innerHTML = escHtml(data.message || '').replace(/\n/g, '<br>');
+            mgrHistory.push({ sender: 'user', text: q });
+            mgrHistory.push({ sender: 'model', text: data.message || '' });
+            if (mgrHistory.length > 10) mgrHistory = mgrHistory.slice(-10);
+            sessionStorage.setItem('ai_manager_history', JSON.stringify(mgrHistory));
+        } catch (e) {
+            resultBox.innerHTML = '<span style="color:#A93226;">Lỗi kết nối AI. Vui lòng thử lại.</span>';
+        } finally {
+            btn.disabled = false;
+        }
+    }
+    btn.addEventListener('click', function () {
+        askManagerAI(inputEl.value);
+        inputEl.value = '';
+        inputEl.focus();
+    });
+    inputEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') { askManagerAI(inputEl.value); inputEl.value = ''; }
+    });
+    document.querySelectorAll('.mgr-ai-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () { askManagerAI(chip.dataset.q); });
+    });
+})();
+</script>
+{% endif %}
+
+<!-- 2. Trạng thái xưởng -->
+<div class="mgr-sec"><i class="bi bi-diagram-3"></i>Tình trạng xưởng</div>
+<div class="row g-3">
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#B07D00;"></span>Chờ tiếp nhận</div><div class="sv">{{ status_counts.pending }} xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#0d75a5;"></span>Đang kiểm tra</div><div class="sv">{{ status_counts.checking }} xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#C87941;"></span>Đang sửa chữa</div><div class="sv">{{ status_counts.repairing }} xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#8E44AD;"></span>Chờ phụ tùng</div><div class="sv">{{ status_counts.waiting_parts }} xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#2E7D4F;"></span>Hoàn thành</div><div class="sv">{{ status_counts.completed }} xe</div></div></div>
+    <div class="col-6 col-lg-2"><div class="st-card"><div class="sl"><span class="dot" style="background:#1E1E1E;"></span>Đã bàn giao</div><div class="sv">{{ status_counts.handed_over }} xe</div></div></div>
+</div>
+
+<!-- Lịch hẹn & Hiệu suất KTV -->
+<div class="row g-3 mt-1">
+    <!-- 3. Lịch hẹn hôm nay -->
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-calendar-event"></i>Lịch hẹn hôm nay</div>
+            <div class="p-3">
+                <ul class="list-group list-group-flush">
+                    {% for appt in today_appointments %}
+                    <li class="list-group-item px-1">
+                        <div class="d-flex w-100 justify-content-between gap-2">
+                            <strong>{{ appt.appointment_date[-5:] if appt.appointment_date else '---' }} · {{ appt.vehicle.make if appt.vehicle else 'Xe' }} {{ appt.vehicle.model if appt.vehicle else '' }}</strong>
+                            <small class="fw-bold" style="color:var(--lux-bronze-deep);">{{ appt.status }}</small>
+                        </div>
+                        <p class="mb-1 small" style="color:var(--lux-graphite);">{{ appt.symptoms }}</p>
+                        <small style="color:var(--lux-slate);"><i class="bi bi-person me-1"></i>{{ appt.user.full_name if appt.user else 'Khách lạ' }}</small>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-center py-3" style="color:var(--lux-slate);">Hôm nay không có lịch hẹn mới.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tóm tắt KTV nhanh bên phải -->
+    <div class="col-md-6">
+        <div class="mgr-panel h-100">
+            <div class="ph d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-gear"></i>KTV nổi bật · {{ period_label }}</span>
+                <a href="#tech-perf-full" class="text-decoration-none" style="font-size:.76rem;color:var(--lux-slate);font-weight:600;">Xem đầy đủ ↓</a>
+            </div>
+            <div class="p-0">
+                {% if tech_perf %}
+                <table class="tp-table" style="margin:0;">
+                    <thead>
+                        <tr>
+                            <th style="width:28px;">#</th>
+                            <th>Kỹ thuật viên</th>
+                            <th class="text-center">Hoàn thành</th>
+                            <th class="text-center">Đang xử lý</th>
+                            <th>Tỉ lệ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in tech_perf[:5] %}
+                        <tr>
+                            <td>
+                                {% if loop.index == 1 %}<span class="tp-rank tp-rank-1">1</span>
+                                {% elif loop.index == 2 %}<span class="tp-rank tp-rank-2">2</span>
+                                {% elif loop.index == 3 %}<span class="tp-rank tp-rank-3">3</span>
+                                {% else %}<span class="tp-rank tp-rank-n">{{ loop.index }}</span>{% endif %}
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:var(--lux-graphite);font-size:.88rem;">{{ t.name }}</div>
+                                <div style="font-size:.72rem;color:var(--lux-slate);">{{ t.total }} phiếu trong kỳ</div>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-done"><i class="bi bi-check2"></i>{{ t.completed }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="tp-badge tp-badge-prog"><i class="bi bi-tools"></i>{{ t.in_progress }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="tp-bar-wrap" style="flex:1;">
+                                        <div class="tp-bar" style="width:{{ t.completion_rate }}%;"></div>
+                                    </div>
+                                    <span style="font-size:.75rem;font-weight:700;color:var(--lux-graphite);min-width:30px;">{{ t.completion_rate }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="p-4 text-center" style="color:var(--lux-slate);font-size:.88rem;">Chưa có dữ liệu KTV trong kỳ này.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- === Hiệu suất KTV đầy đủ === -->
+<div class="tbl-card mt-3 mb-2" id="tech-perf-full">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5><i class="bi bi-person-gear me-2"></i>Hiệu suất kỹ thuật viên<span class="ms-2" style="font-size:.78rem;font-weight:400;color:var(--lux-slate);">Kỳ: {{ period_label }} ({{ period_start_str }} – {{ today_str }})</span></h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="tp-table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;padding-left:1rem;">#</th>
+                        <th>Kỹ thuật viên</th>
+                        <th class="text-center">Tổng phiếu</th>
+                        <th class="text-center">Hoàn thành</th>
+                        <th class="text-center">Đang xử lý</th>
+                        <th class="text-center">Chờ nhận</th>
+                        <th>Tỉ lệ HT</th>
+                        <th class="text-end">Doanh thu đóng góp</th>
+                        <th class="text-center">Thời gian TB</th>
+                        <th class="text-center">Đánh giá TB</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if tech_perf %}
+                    {% for t in tech_perf %}
+                    <tr>
+                        <td style="padding-left:1rem;">
+                            {% if loop.index == 1 %}<span class="tp-rank tp-rank-1">1</span>
+                            {% elif loop.index == 2 %}<span class="tp-rank tp-rank-2">2</span>
+                            {% elif loop.index == 3 %}<span class="tp-rank tp-rank-3">3</span>
+                            {% else %}<span class="tp-rank tp-rank-n">{{ loop.index }}</span>{% endif %}
+                        </td>
+                        <td>
+                            <a href="/manager/technician/{{ t.id }}/view" class="text-decoration-none" style="font-weight:700;color:var(--lux-graphite);">{{ t.name }}</a>
+                        </td>
+                        <td class="text-center fw-bold" style="font-variant-numeric:tabular-nums;">{{ t.total }}</td>
+                        <td class="text-center">
+                            {% if t.completed > 0 %}
+                            <span class="tp-badge tp-badge-done"><i class="bi bi-check2"></i>{{ t.completed }}</span>
+                            {% else %}
+                            <span class="tp-zero">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if t.in_progress > 0 %}
+                            <span class="tp-badge tp-badge-prog"><i class="bi bi-tools"></i>{{ t.in_progress }}</span>
+                            {% else %}
+                            <span class="tp-zero">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if t.pending > 0 %}
+                            <span class="tp-badge tp-badge-pend">{{ t.pending }}</span>
+                            {% else %}
+                            <span class="tp-zero">—</span>
+                            {% endif %}
+                        </td>
+                        <td style="min-width:110px;">
+                            {% if t.total > 0 %}
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="tp-bar-wrap" style="flex:1;">
+                                    <div class="tp-bar" style="width:{{ t.completion_rate }}%;{% if t.completion_rate >= 80 %}background:#2E7D4F;{% elif t.completion_rate >= 50 %}background:var(--copper-orange);{% else %}background:#A93226;{% endif %}"></div>
+                                </div>
+                                <span style="font-size:.76rem;font-weight:700;min-width:32px;">{{ t.completion_rate }}%</span>
+                            </div>
+                            {% else %}
+                            <span class="tp-zero">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end fw-bold" style="font-variant-numeric:tabular-nums;">
+                            {% if t.revenue > 0 %}
+                            <span style="color:#2E7D4F;">{{ "{:,.0f}".format(t.revenue) }} đ</span>
+                            {% else %}
+                            <span class="tp-zero">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if t.avg_days is not none %}
+                            <span style="font-size:.82rem;font-variant-numeric:tabular-nums;">{{ t.avg_days }} ngày</span>
+                            {% else %}
+                            <span class="tp-zero">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if t.avg_rating is not none %}
+                            <span class="tp-star">★</span><span style="font-size:.82rem;font-weight:700;"> {{ t.avg_rating }}</span>
+                            {% else %}
+                            <span class="tp-zero">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr><td colspan="10" class="text-center py-4" style="color:var(--lux-slate);">Không có dữ liệu kỹ thuật viên trong kỳ này.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- === BIỂU ĐỒ PHÂN TÍCH === -->
+<div class="mgr-sec mt-4"><i class="bi bi-bar-chart-line"></i>Phân tích trực quan · {{ period_label }}</div>
+
+<div class="row g-3 mb-2">
+    <!-- Biểu đồ 1: Doanh thu & Đơn sửa theo thời gian -->
+    <div class="col-lg-8">
+        <div class="tbl-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="bi bi-graph-up-arrow me-2"></i>Doanh thu &amp; Đơn sửa chữa theo thời gian</h5>
+                <small style="color:var(--lux-slate);font-weight:600;">Triệu đồng / Đơn</small>
+            </div>
+            <div class="card-body" style="padding:1rem 1.2rem 1.2rem;">
+                <canvas id="chartRevenue" style="max-height:240px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ 2: Tình trạng xe (Doughnut) -->
+    <div class="col-lg-4">
+        <div class="tbl-card h-100">
+            <div class="card-header">
+                <h5><i class="bi bi-pie-chart me-2"></i>Tình trạng xe (hiện tại)</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center" style="padding:1.2rem;">
+                <canvas id="chartStatus" style="max-height:220px;max-width:220px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Biểu đồ 3: Hiệu suất KTV -->
+<div class="tbl-card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5><i class="bi bi-people me-2"></i>So sánh hiệu suất kỹ thuật viên · {{ period_label }}</h5>
+        <div class="d-flex gap-3" style="font-size:.75rem;font-weight:700;">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#2E7D4F;margin-right:5px;"></span>Hoàn thành</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#C87941;margin-right:5px;"></span>Đang xử lý</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:rgba(13,117,165,.7);margin-right:5px;"></span>Doanh thu (tr.đ)</span>
+        </div>
+    </div>
+    <div class="card-body" style="padding:1rem 1.2rem 1.2rem;">
+        <canvas id="chartTech" style="max-height:220px;"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script type="application/json" id="cd-rev-labels">{{ chart_revenue.labels | safe }}</script>
+<script type="application/json" id="cd-rev-revenue">{{ chart_revenue.revenue | safe }}</script>
+<script type="application/json" id="cd-rev-orders">{{ chart_revenue.orders | safe }}</script>
+<script type="application/json" id="cd-st-labels">{{ chart_status.labels | safe }}</script>
+<script type="application/json" id="cd-st-values">{{ chart_status['values'] | safe }}</script>
+<script type="application/json" id="cd-tp-labels">{{ chart_tech.labels | safe }}</script>
+<script type="application/json" id="cd-tp-completed">{{ chart_tech.completed | safe }}</script>
+<script type="application/json" id="cd-tp-inprog">{{ chart_tech.in_prog | safe }}</script>
+<script type="application/json" id="cd-tp-revenue">{{ chart_tech.revenue | safe }}</script>
+<script>
+(function() {
+    function readJson(id, fallback) {
+        try {
+            const el = document.getElementById(id);
+            if (!el) return fallback;
+            const v = JSON.parse(el.textContent);
+            return Array.isArray(v) ? v : fallback;
+        } catch (e) { return fallback; }
+    }
+    if (typeof Chart === 'undefined') return; // CDN lỗi thì bỏ qua biểu đồ, trang vẫn dùng được
+    // ── Shared defaults ──────────────────────────────────────
+    Chart.defaults.font.family = "'Inter','Outfit',system-ui,sans-serif";
+    Chart.defaults.font.size = 11;
+    Chart.defaults.color = '#5F5A54';
+
+    const bronzeDeep = '#A65E2F';
+    const green      = '#2E7D4F';
+    const copper     = '#C87941';
+    const blue       = 'rgba(13,117,165,.75)';
+    const red        = '#A93226';
+    const sand       = '#F1EFEA';
+    const hairline   = '#E4DFD8';
+
+    // ── 1. Revenue + Orders line chart ───────────────────────
+    const revLabels  = readJson('cd-rev-labels', []);
+    const revValues  = readJson('cd-rev-revenue', []);
+    const ordValues  = readJson('cd-rev-orders', []);
+
+    new Chart(document.getElementById('chartRevenue'), {
+        data: {
+            labels: revLabels,
+            datasets: [
+                {
+                    type: 'line',
+                    label: 'Doanh thu (tr.đ)',
+                    data: revValues,
+                    borderColor: green,
+                    backgroundColor: 'rgba(46,125,79,.08)',
+                    borderWidth: 2.5,
+                    pointRadius: revLabels.length > 20 ? 0 : 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: green,
+                    fill: true,
+                    tension: 0.38,
+                    yAxisID: 'yRev',
+                    order: 1,
+                },
+                {
+                    type: 'bar',
+                    label: 'Đơn sửa chữa',
+                    data: ordValues,
+                    backgroundColor: 'rgba(200,121,65,.18)',
+                    borderColor: 'rgba(200,121,65,.55)',
+                    borderWidth: 1.5,
+                    borderRadius: 5,
+                    yAxisID: 'yOrd',
+                    order: 2,
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            interaction: { mode: 'index', intersect: false },
+            animation: { duration: 600, easing: 'easeOutQuart' },
+            plugins: {
+                legend: { position: 'top', align: 'end', labels: { boxWidth: 10, boxHeight: 10, borderRadius: 3, padding: 14 }},
+                tooltip: {
+                    backgroundColor: '#1E1E1E',
+                    titleColor: '#E0A375', bodyColor: '#fff',
+                    padding: 12, cornerRadius: 10,
+                    callbacks: {
+                        label: ctx => ctx.dataset.label + ': ' + (ctx.dataset.yAxisID === 'yRev'
+                            ? ctx.parsed.y.toFixed(2) + ' tr.đ'
+                            : ctx.parsed.y + ' đơn')
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { color: hairline }, ticks: { maxRotation: 45, minRotation: 0 } },
+                yRev: {
+                    position: 'left', beginAtZero: true,
+                    grid: { color: hairline },
+                    title: { display: true, text: 'Doanh thu (tr.đ)', color: green, font: { weight: '700', size: 10 } },
+                    ticks: { color: green }
+                },
+                yOrd: {
+                    position: 'right', beginAtZero: true,
+                    grid: { drawOnChartArea: false },
+                    title: { display: true, text: 'Số đơn', color: copper, font: { weight: '700', size: 10 } },
+                    ticks: { color: copper, stepSize: 1 }
+                }
+            }
+        }
+    });
+
+    // ── 2. Status doughnut ───────────────────────────────────
+    const stLabels = readJson('cd-st-labels', []);
+    const stValues = readJson('cd-st-values', []);
+
+    new Chart(document.getElementById('chartStatus'), {
+        type: 'doughnut',
+        data: {
+            labels: stLabels,
+            datasets: [{
+                data: stValues,
+                backgroundColor: ['#B07D00', copper, green, '#1E1E1E'],
+                borderColor: '#fff',
+                borderWidth: 3,
+                hoverOffset: 8,
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            cutout: '65%',
+            animation: { animateRotate: true, duration: 700 },
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 11, boxHeight: 11, borderRadius: 3, padding: 10 }},
+                tooltip: {
+                    backgroundColor: '#1E1E1E', titleColor: '#E0A375', bodyColor: '#fff',
+                    padding: 10, cornerRadius: 10,
+                    callbacks: {
+                        label: ctx => ' ' + ctx.label + ': ' + ctx.parsed + ' xe'
+                    }
+                }
+            }
+        }
+    });
+
+    // ── 3. Tech performance grouped bar ─────────────────────
+    const tpLabels   = readJson('cd-tp-labels', []);
+    const tpDone     = readJson('cd-tp-completed', []);
+    const tpProg     = readJson('cd-tp-inprog', []);
+    const tpRevM     = readJson('cd-tp-revenue', []);
+
+    new Chart(document.getElementById('chartTech'), {
+        data: {
+            labels: tpLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Hoàn thành',
+                    data: tpDone,
+                    backgroundColor: 'rgba(46,125,79,.75)',
+                    borderColor: green,
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    yAxisID: 'yJobs',
+                    order: 2,
+                },
+                {
+                    type: 'bar',
+                    label: 'Đang xử lý',
+                    data: tpProg,
+                    backgroundColor: 'rgba(200,121,65,.65)',
+                    borderColor: copper,
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    yAxisID: 'yJobs',
+                    order: 3,
+                },
+                {
+                    type: 'line',
+                    label: 'Doanh thu (tr.đ)',
+                    data: tpRevM,
+                    borderColor: blue,
+                    backgroundColor: 'rgba(13,117,165,.08)',
+                    borderWidth: 2.5,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: blue,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: 'yRev',
+                    order: 1,
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: true,
+            interaction: { mode: 'index', intersect: false },
+            animation: { duration: 600, easing: 'easeOutQuart' },
+            plugins: {
+                legend: { position: 'top', align: 'end', labels: { boxWidth: 10, boxHeight: 10, borderRadius: 3, padding: 12 }},
+                tooltip: {
+                    backgroundColor: '#1E1E1E', titleColor: '#E0A375', bodyColor: '#fff',
+                    padding: 12, cornerRadius: 10,
+                    callbacks: {
+                        label: ctx => {
+                            if (ctx.dataset.yAxisID === 'yRev') return ' Doanh thu: ' + ctx.parsed.y.toFixed(2) + ' tr.đ';
+                            return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y + ' đơn';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { grid: { color: hairline }, stacked: false },
+                yJobs: {
+                    position: 'left', beginAtZero: true, grid: { color: hairline },
+                    title: { display: true, text: 'Số đơn', color: copper, font: { weight: '700', size: 10 } },
+                    ticks: { color: copper, stepSize: 1 }
+                },
+                yRev: {
+                    position: 'right', beginAtZero: true, grid: { drawOnChartArea: false },
+                    title: { display: true, text: 'Doanh thu (tr.đ)', color: '#0d75a5', font: { weight: '700', size: 10 } },
+                    ticks: { color: '#0d75a5' }
+                }
+            }
+        }
+    });
+})();
+</script>
+
+<div class="row g-3 mt-1">
+    <!-- 5. Tài chính kỳ này (số liệu thật từ hóa đơn trong kỳ) -->
+    {% set fin = namespace(revenue=0, unpaid=0, count=0) %}
+    {% for inv in invoices %}
+        {% set fin.count = fin.count + 1 %}
+        {% set fin.revenue = fin.revenue + (inv.total_amount or 0) %}
+        {% if inv.status == 'Unpaid' %}{% set fin.unpaid = fin.unpaid + (inv.total_amount or 0) %}{% endif %}
+    {% endfor %}
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-cash-coin"></i>Tài chính · {{ period_label }}</div>
+            <div class="p-3">
+                <div class="mgr-row"><span class="k">Doanh thu đã xuất HĐ</span><span class="v" style="color:#2E7D4F;">{{ "{:,.0f}".format(fin.revenue) }} đ</span></div>
+                <div class="mgr-row"><span class="k">Công nợ chưa thu</span><span class="v" {% if fin.unpaid %}style="color:#A93226;"{% endif %}>{{ "{:,.0f}".format(fin.unpaid) }} đ</span></div>
+                <div class="mgr-row"><span class="k">Số hóa đơn trong kỳ</span><span class="v">{{ fin.count }}</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7 & 8. Kho phụ tùng + Khách hàng (số liệu thật) -->
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-box-seam"></i>Kho phụ tùng · {{ parts_total }} mã hàng</div>
+            <div class="p-3">
+                {% for p in lowest_parts %}
+                <div class="mgr-row">
+                    <span class="k">{{ p.name }}</span>
+                    <span class="v" {% if (p.stock_quantity or 0) <= 0 %}style="color:#A93226;"{% elif (p.stock_quantity or 0) <= (p.min_stock or 5) %}style="color:#8A6D00;"{% endif %}>Tồn {{ p.stock_quantity or 0 }}</span>
+                </div>
+                {% else %}
+                <div class="py-2" style="color:var(--lux-slate);font-size:.88rem;">Chưa có dữ liệu kho.</div>
+                {% endfor %}
+                <div class="mgr-row"><span class="k">Mã sắp hết / hết hàng</span><span class="v">{{ low_stock_parts|length }} / {{ out_of_stock|length }}</span></div>
+                <div class="mt-2"><a href="/tech/parts" class="btn btn-sm btn-outline-dark rounded-pill px-3">Mở kho</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mt-1">
+    <div class="col-md-6">
+        <div class="mgr-panel">
+            <div class="ph"><i class="bi bi-people"></i>Khách hàng & xe</div>
+            <div class="p-3">
+                <div class="mgr-row"><span class="k">Tổng khách hàng</span><span class="v">{{ customer_count }}</span></div>
+                <div class="mgr-row"><span class="k">Tổng xe trong hồ sơ</span><span class="v">{{ vehicle_count }}</span></div>
+                <div class="mgr-row"><span class="k">Lịch hẹn chờ xử lý</span><span class="v">{{ kpi.pending_issues }}</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6. Cảnh báo vận hành (tính từ dữ liệu thật, không hardcode) -->
+{% set alerts = namespace(items=[]) %}
+{% set stale = orders|selectattr('status','equalto','In Progress')|list %}
+{% if stale|length %}{% set _ = alerts.items.append(('bi-hourglass-split', stale|length ~ ' xe đang sửa trong xưởng', 'Ưu tiên bàn giao xe tồn lâu nhất trước.')) %}{% endif %}
+{% if low_stock_parts|length %}{% set _ = alerts.items.append(('bi-box-seam', low_stock_parts|length ~ ' mã phụ tùng sắp hết (tồn dưới mức tối thiểu)', 'Mở kho để nhập bổ sung kịp thời.')) %}{% endif %}
+{% set wait_quotes = orders|selectattr('customer_approval','equalto','Pending')|list %}
+{% if wait_quotes|length %}{% set _ = alerts.items.append(('bi-cash-coin', wait_quotes|length ~ ' báo giá đang chờ khách duyệt', 'Nhắc khách xác nhận để xe được vào sửa sớm.')) %}{% endif %}
+{% if kpi.pending_issues %}{% set _ = alerts.items.append(('bi-calendar-event', kpi.pending_issues ~ ' lịch hẹn chờ xác nhận', 'Duyệt lịch để khách yên tâm giữ hẹn.')) %}{% endif %}
+<div class="insight p-4 mt-3 mb-4">
+    <h5 class="fw-bold mb-3"><i class="bi bi-robot me-2" style="color:#E0A375;"></i>Điểm cần chú ý</h5>
+    {% if alerts.items %}
+    <div class="row">
+        {% for icon, title, hint in alerts.items %}
+        <div class="col-md-6 mb-3 d-flex gap-2">
+            <span class="ii"><i class="bi {{ icon }}"></i></span>
+            <div><strong>{{ title }}</strong><br><small>{{ hint }}</small></div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="mb-0" style="color:rgba(255,255,255,.85);"><i class="bi bi-check-circle me-2" style="color:#7BC79A;"></i>Xưởng đang ổn định — không có tồn đọng nào cần xử lý gấp.</p>
+    {% endif %}
+</div>
+
+<hr class="mb-5">
+
+<!-- CÁC BẢNG QUẢN LÝ CHI TIẾT (CŨ) DƯỚI ĐÂY -->
+
+<div class="row">
+    <!-- Cột Hóa đơn -->
+    <div class="col-md-6">
+        <div class="tbl-card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-cash-stack me-2"></i>Quản lý Hóa Đơn</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã HĐ</th>
+                            <th>Mã Đơn Sửa</th>
+                            <th>Số tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inv in invoices %}
+                        <tr>
+                            <td class="fw-bold text-nowrap">#INV-{{ inv.id }}</td>
+                            <td class="text-nowrap">#RO-{{ inv.repair_order_id }}</td>
+                            <td class="text-end fw-bold text-nowrap">{{ "{:,.0f}".format(inv.total_amount) }} đ</td>
+                            <td>
+                                {% if inv.status == 'Unpaid' %}
+                                <span class="pill pill-unpaid">Chưa thanh toán</span>
+                                {% else %}
+                                <span class="pill pill-paid">Đã thu tiền</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if inv.status == 'Unpaid' %}
+                                <form action="/manager/pay-invoice" method="POST" class="d-flex align-items-center gap-2">
+                                    <input type="hidden" name="invoice_id" value="{{ inv.id }}">
+                                    <select name="payment_method" class="form-select form-select-sm" style="width: auto;">
+                                        <option value="Tiền mặt">Tiền mặt</option>
+                                        <option value="Chuyển khoản">Chuyển khoản</option>
+                                        <option value="Ví điện tử">Ví điện tử</option>
+                                        <option value="Thẻ ngân hàng">Thẻ ngân hàng</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-bronze text-nowrap">Thu tiền</button>
+                                </form>
+                                {% endif %}
+                                <a href="/tech/invoice/{{ inv.id }}/print" class="btn btn-sm btn-outline-dark rounded-pill mt-1"><i class="bi bi-printer me-1"></i>In hóa đơn</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-3 muted">Chưa có hóa đơn nào.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột Phiếu sửa chữa đã xong chờ chốt hóa đơn -->
+    <div class="col-md-6">
+        <div class="tbl-card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-clipboard-check me-2"></i>Phiếu sửa chữa chờ chốt HĐ</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for order in orders %}
+                        {% if order.status == 'Completed' and not order.invoice %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>#RO-{{ order.id }}</strong> ({{ order.vehicle.license_plate }})<br>
+                                <small class="muted">Đã xong. Chờ xuất hóa đơn.</small>
+                            </div>
+
+                            <form action="/manager/create-invoice" method="POST" class="d-flex align-items-center">
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="total_amount" class="form-control" placeholder="Nhập số tiền..." required>
+                                    <button type="submit" class="btn btn-bronze">Tạo HĐ</button>
+                                </div>
+                            </form>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="list-group-item text-center muted">Không có phiếu nào cần chốt.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="tbl-card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-calendar-event me-2"></i>Quản lý Lịch hẹn</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Khách hàng</th>
+                                <th>Biển số xe</th>
+                                <th>Ngày hẹn</th>
+                                <th>Mô tả / Triệu chứng</th>
+                                <th>AI Chẩn đoán</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in appointments %}
+                            <tr>
+                                <td><strong>{{ appt.user.full_name if appt.user else 'Khách lạ' }}</strong><br><small class="muted">{{ appt.user.phone if appt.user else '' }}</small></td>
+                                <td class="fw-bold text-nowrap">{{ appt.vehicle.license_plate if appt.vehicle else 'N/A' }}</td>
+                                <td class="text-nowrap">
+                                    {{ appt.appointment_date }}<br>
+                                    {% if appt.appointment_type == 'CarWash' %}
+                                    <span class="pill pill-info mt-1">Dịch vụ</span>
+                                    {% else %}
+                                    <span class="pill pill-wait mt-1">Sửa chữa</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ appt.symptoms }}</td>
+                                <td><small class="muted">{{ (appt.ai_diagnosis or '')[:100] }}...</small></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-3 muted">Chưa có lịch đặt nào.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="tbl-card mt-5 mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5><i class="bi bi-car-front me-2"></i>Xe chờ tiếp nhận / đang sửa</h5>
+        <button class="btn btn-sm btn-bronze" data-bs-toggle="modal" data-bs-target="#directOrderModal"><i class="bi bi-plus-lg me-1"></i>Lập đơn sửa chữa</button>
+    </div>
+    <div class="card-body p-0">
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th>Mã đơn</th>
+                <th>Biển số xe</th>
+                <th>Thông tin khách báo</th>
+                <th>Khách duyệt</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td class="text-nowrap">
+                    <strong>#RO-{{ order.id }}</strong><br><small class="muted">{{ order.created_at.strftime('%d/%m/%Y') }}</small><br>
+                    {% if order.order_type == 'CarWash' %}
+                    <span class="pill pill-info mt-1">Dịch vụ</span>
+                    {% else %}
+                    <span class="pill pill-wait mt-1">Sửa chữa</span>
+                    {% endif %}
+                </td>
+                <td class="fw-bold text-nowrap">{{ order.vehicle.license_plate if order.vehicle else 'Khách vãng lai' }}</td>
+                <td>
+                    {{ order.symptoms }}<br>
+                    {% if order.used_parts %}
+                    <small class="muted"><i class="bi bi-box-seam me-1"></i>{{ order.used_parts|length }} phụ tùng</small>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if order.customer_approval == 'Pending' %}
+                    <span class="pill pill-wait">Chờ duyệt</span>
+                    {% elif order.customer_approval == 'Approved' %}
+                    <span class="pill pill-paid">Đã duyệt</span>
+                    {% elif order.customer_approval == 'Rejected' %}
+                    <span class="pill pill-unpaid">Từ chối</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if order.status == 'Pending' %}
+                    <span class="pill pill-wait">Chờ tiếp nhận</span>
+                    {% elif order.status == 'In Progress' %}
+                    <span class="pill pill-prog">Đang sửa chữa</span>
+                    {% elif order.status == 'Cancelled' %}
+                    <span class="pill pill-wait">Đã hủy</span>
+                    {% else %}
+                    <span class="pill pill-paid">Hoàn thành</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if order.status == 'Pending' and not order.reception_datetime %}
+                    <!-- Bước 1: Lập Phiếu Tiếp Nhận -->
+                    <button class="btn btn-sm btn-bronze mb-1" data-bs-toggle="modal" data-bs-target="#receptionModal{{ order.id }}">
+                        1. Tiếp nhận xe
+                    </button>
+                    {% elif order.status == 'Pending' and order.reception_datetime and order.customer_approval == 'Pending' %}
+                    <!-- Bước 2: KTV Kiểm Tra và Báo Giá -->
+                    <button class="btn btn-sm btn-outline-dark rounded-pill mb-1" data-bs-toggle="modal" data-bs-target="#quoteModal{{ order.id }}">
+                        2. Lập báo giá
+                    </button>
+                    <button class="btn btn-sm btn-outline-dark rounded-pill mb-1" data-bs-toggle="modal" data-bs-target="#addPartOrderModal{{ order.id }}"><i class="bi bi-box-seam me-1"></i>Phụ tùng</button>
+                    {% elif order.status == 'Pending' and order.customer_approval == 'Approved' %}
+                    <!-- Bước 3: Khách đã duyệt, KTV bắt đầu sửa -->
+                    <form action="/tech/update-status" method="POST" class="d-inline">
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <input type="hidden" name="status" value="In Progress">
+                        <button type="submit" class="btn btn-sm btn-bronze mb-1">3. Nhận vào sửa</button>
+                    </form>
+                    {% elif order.status == 'In Progress' %}
+                    <!-- Bước 4: Sửa xong, bàn giao -->
+                    <a href="/tech/dashboard" class="btn btn-sm btn-outline-dark rounded-pill mb-1"><i class="bi bi-card-list me-1"></i>Chi tiết & phát sinh</a>
+                    <button class="btn btn-sm btn-outline-dark rounded-pill mb-1" data-bs-toggle="modal" data-bs-target="#addPartOrderModal{{ order.id }}"><i class="bi bi-plus-lg me-1"></i>Phụ tùng</button>
+                    <form action="/tech/update-status" method="POST" class="d-inline">
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <input type="hidden" name="status" value="Completed">
+                        <input type="hidden" name="handover_datetime" value="{{ order.created_at.strftime('%Y-%m-%dT%H:%M') }}">
+                        <button type="submit" class="btn btn-sm btn-bronze mb-1">4. Hoàn thành</button>
+                    </form>
+                    {% elif order.status == 'Completed' %}
+                        {% if not order.invoice %}
+                        <form action="/tech/order/generate-invoice" method="POST" class="d-inline">
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                            <button type="submit" class="btn btn-sm btn-bronze mb-1"><i class="bi bi-receipt me-1"></i>Xuất hóa đơn</button>
+                        </form>
+                        {% else %}
+                        <span class="pill pill-paid"><i class="bi bi-check-circle me-1"></i>Đã xuất HĐ</span>
+                        <a href="/tech/invoice/{{ order.invoice.id }}/print" class="btn btn-sm btn-outline-dark rounded-pill mt-1"><i class="bi bi-printer me-1"></i>In HĐ</a>
+                        {% endif %}
+                    {% elif order.status == 'Cancelled' %}
+                    <button class="btn btn-sm btn-outline-dark rounded-pill mb-1" disabled>Đã hủy</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center py-4 muted">Chưa có công việc nào.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+<!-- Modals đặt NGOÀI bảng (div trong tbody là HTML sai chuẩn, trình duyệt tự bẻ DOM gây vỡ modal) -->
+{% for order in orders %}
+            <!-- Modal Phiếu Tiếp Nhận -->
+<div class="modal fade rc-modal" id="receptionModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <form action="/tech/reception" method="POST" enctype="multipart/form-data" class="modal-content" target="_blank" onsubmit="setTimeout(function(){ window.location.reload(); }, 1000);">
+            <div class="modal-header">
+                <div>
+                    <div class="rc-kicker">Lập phiếu tiếp nhận · RO-{{ order.id }}</div>
+                    <h5 class="modal-title"><span class="rc-plate-t">{{ order.vehicle.license_plate }}</span><span class="rc-title-sub">{{ order.vehicle.make }} {{ order.vehicle.model }}{% if order.vehicle.manufacture_year %} · Đời {{ order.vehicle.manufacture_year }}{% endif %}</span></h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+
+                <div class="row g-3">
+                    <!-- Cột Trái: Thông tin chung & KH -->
+                    <div class="col-lg-5">
+                        <!-- 1 · Khách hàng -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">1</span> Thông tin Khách hàng <i class="bi bi-person-lines-fill"></i></div>
+                            <div class="rc-card-b">
+                                {% set rc_parts = (order.vehicle.owner.full_name or 'Khách vãng lai').split() %}
+                                <div class="rc-cust">
+                                    <div class="rc-avatar">{{ (rc_parts[0][:1] ~ (rc_parts[1][:1] if rc_parts|length > 1 else ''))|upper }}</div>
+                                    <div>
+                                        <div class="nm">{{ order.vehicle.owner.full_name or 'Khách vãng lai' }}</div>
+                                        <div class="rl">Chủ xe · {{ order.vehicle.license_plate }}</div>
+                                    </div>
+                                </div>
+                                <div class="rc-row"><span class="k">Số điện thoại</span><span class="v">{{ order.vehicle.owner.phone or '---' }}</span></div>
+                                <div class="rc-row"><span class="k">Email</span><span class="v">{{ order.vehicle.owner.email or '---' }}</span></div>
+                                <div class="rc-row"><span class="k">Địa chỉ</span><span class="v">{{ order.vehicle.owner.address or '---' }}</span></div>
+                                {% if not order.vehicle.owner.phone %}
+                                <div class="mt-2 p-2 rounded" style="background:rgba(200,121,65,.08);border:1px dashed rgba(200,121,65,.45);color:#8A5A32;font-size:.8rem;">Hồ sơ chưa có SĐT — nhập ở ô bên dưới, hệ thống sẽ lưu vào tài khoản khách.</div>
+                                {% endif %}
+                                <hr class="my-2">
+                                <div class="mb-2">
+                                    <label class="rc-lbl" for="rc_phone_{{ order.id }}">Cập nhật SĐT khách <span class="rc-req">*</span></label>
+                                    <input type="text" id="rc_phone_{{ order.id }}" name="customer_phone" class="form-control" required placeholder="Bắt buộc để liên hệ" value="{{ order.vehicle.owner.phone or '' }}">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="rc-lbl" for="rc_email_{{ order.id }}">Cập nhật Email</label>
+                                    <input type="email" id="rc_email_{{ order.id }}" name="customer_email" class="form-control" placeholder="VD: khach@email.com" value="{{ order.vehicle.owner.email or '' }}">
+                                </div>
+                                <div class="mb-0">
+                                    <label class="rc-lbl" for="rc_addr_{{ order.id }}">Cập nhật địa chỉ</label>
+                                    <input type="text" id="rc_addr_{{ order.id }}" name="customer_address" class="form-control" placeholder="Số nhà, đường, phường/xã..." value="{{ order.vehicle.owner.address or '' }}">
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2 · Xe -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">2</span> Thông tin Xe <i class="bi bi-car-front-fill"></i></div>
+                            <div class="rc-card-b">
+                                <span class="rc-plate"><i class="bi bi-car-front"></i>{{ order.vehicle.license_plate }}</span>
+                                <div class="rc-grid">
+                                    <div class="cell"><span class="k">Hãng xe</span><span class="v">{{ order.vehicle.make or '---' }}</span></div>
+                                    <div class="cell"><span class="k">Dòng xe</span><span class="v">{{ order.vehicle.model or '---' }}</span></div>
+                                    <div class="cell"><span class="k">Đời xe</span><span class="v">{{ order.vehicle.manufacture_year or '---' }}</span></div>
+                                    <div class="cell"><span class="k">Số máy</span><span class="v rc-mono">{{ order.vehicle.engine_number or '---' }}</span></div>
+                                    <div class="cell cell-full"><span class="k">Số VIN</span><span class="v rc-mono">{{ order.vehicle.VIN or '---' }}</span></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 3 · Thời gian & thông số -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">3</span> Thời gian & Thông số cơ bản <i class="bi bi-clipboard-data"></i></div>
+                            <div class="rc-card-b">
+                                <div class="mb-3">
+                                    <label class="rc-lbl" for="rc_dt_{{ order.id }}">Ngày giờ nhận xe <span class="rc-req">*</span></label>
+                                    <input type="datetime-local" id="rc_dt_{{ order.id }}" name="reception_datetime" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="rc-lbl" for="rc_del_{{ order.id }}">Người giao xe <span class="rc-req">*</span></label>
+                                    <input type="text" id="rc_del_{{ order.id }}" name="deliverer_name" class="form-control" required placeholder="Tên người mang xe tới">
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="rc-lbl" for="rc_fuel_{{ order.id }}">Mức nhiên liệu</label>
+                                        <select id="rc_fuel_{{ order.id }}" name="fuel_level" class="form-select">
+                                            <option value="Đầy">Đầy (Full)</option>
+                                            <option value="1/2">1/2 (Half)</option>
+                                            <option value="Gần hết">Gần hết (Low)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="rc-lbl" for="rc_odo_{{ order.id }}">Số ODO lúc nhận</label>
+                                        <div class="input-group">
+                                            <input type="number" id="rc_odo_{{ order.id }}" name="current_odo" class="form-control" placeholder="VD: 50000" value="{{ order.vehicle.current_odo or '' }}">
+                                            <span class="input-group-text rc-suffix">km</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Cột Phải: Kiểm tra chi tiết -->
+                    <div class="col-lg-7">
+                        <!-- 4 · Ngoại thất & Hình ảnh -->
+                        <section class="rc-card mb-3">
+                            <div class="rc-card-h"><span class="rc-num">4</span> Ngoại thất & Hình ảnh <i class="bi bi-camera-fill"></i></div>
+                            <div class="rc-card-b">
+                                <span class="rc-lbl">Checklist hư hỏng ngoại thất</span>
+                                <div class="rc-chips mb-3">
+                                    {% for item in ['Cản trước', 'Cản sau', 'Cửa trái', 'Cửa phải', 'Nắp capo', 'Kính xe', 'Đèn xe', 'Gương xe', 'Lốp xe'] %}
+                                    <input type="checkbox" name="exterior_scratches" value="{{ item }}" id="ext_{{ order.id }}_{{ loop.index }}">
+                                    <label for="ext_{{ order.id }}_{{ loop.index }}">{{ item }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="rc-lbl">Ảnh hiện trạng xe <span style="text-transform: none; letter-spacing: .02em; color: var(--lux-slate);">· tùy chọn</span></span>
+                                <label class="rc-file">
+                                    <i class="bi bi-image-fill"></i>
+                                    <div>
+                                        <div class="ft">Bấm để chọn ảnh hiện trạng xe</div>
+                                        <div class="fn">JPG / PNG · tối đa 1 ảnh</div>
+                                    </div>
+                                    <input type="file" name="vehicle_images" accept="image/*" onchange="var f=this.files[0]; this.parentNode.querySelector('.fn').textContent = f ? f.name : 'JPG / PNG · tối đa 1 ảnh';">
+                                </label>
+                            </div>
+                        </section>
+
+                        <!-- 5 · Tình trạng kỹ thuật -->
+                        <section class="rc-card mb-3">
+                            <div class="rc-card-h"><span class="rc-num">5</span> Tình trạng kỹ thuật ban đầu <i class="bi bi-wrench-adjustable"></i></div>
+                            <div class="rc-card-b">
+                                <div class="mb-3">
+                                    <span class="rc-lbl">Triệu chứng khách báo (yêu cầu)</span>
+                                    <textarea class="form-control rc-sym" disabled rows="2">{{ order.symptoms }}</textarea>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-5">
+                                        <span class="rc-lbl">Mức độ lỗi</span>
+                                        <div class="rc-seg mb-2">
+                                            <input type="radio" name="symptom_severity" value="Nhẹ" id="sev1_{{ order.id }}" class="s-nhe">
+                                            <label for="sev1_{{ order.id }}">Nhẹ</label>
+                                            <input type="radio" name="symptom_severity" value="Trung bình" id="sev2_{{ order.id }}" checked class="s-vua">
+                                            <label for="sev2_{{ order.id }}">Vừa</label>
+                                            <input type="radio" name="symptom_severity" value="Nặng" id="sev3_{{ order.id }}" class="s-nang">
+                                            <label for="sev3_{{ order.id }}">Nặng</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <label class="rc-lbl" for="rc_snd_{{ order.id }}">Âm thanh bất thường</label>
+                                        <input type="text" id="rc_snd_{{ order.id }}" name="abnormal_sounds" class="form-control" placeholder="Ví dụ: Lạch cạch gầm trước...">
+                                    </div>
+                                </div>
+                                <span class="rc-lbl">Đèn cảnh báo trên taplo</span>
+                                <div class="rc-chips warn">
+                                    {% for item in ['Check Engine', 'ABS', 'Túi khí', 'Dầu máy', 'Nhiệt độ nước', 'Khác'] %}
+                                    <input type="checkbox" name="warning_lights" value="{{ item }}" id="warn_{{ order.id }}_{{ loop.index }}">
+                                    <label for="warn_{{ order.id }}_{{ loop.index }}">{{ item }}</label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 6 · Phụ kiện bàn giao -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">6</span> Phụ kiện bàn giao <i class="bi bi-box-seam"></i></div>
+                            <div class="rc-card-b">
+                                <div class="row g-2 align-items-start">
+                                    <div class="col-4">
+                                        <label class="rc-lbl" for="rc_key_{{ order.id }}">Số chìa khóa</label>
+                                        <input type="number" id="rc_key_{{ order.id }}" name="key_count" class="form-control" value="1" min="1">
+                                    </div>
+                                    <div class="col-8">
+                                        <span class="rc-lbl">Checklist đồ cá nhân / phụ kiện</span>
+                                        <div class="rc-chips">
+                                            {% for item in ['Lốp dự phòng', 'Kích nâng xe', 'Bộ dụng cụ', 'Camera hành trình', 'Thẻ ETC', 'Giấy tờ xe'] %}
+                                            <input type="checkbox" name="personal_belongings" value="{{ item }}" id="acc_{{ order.id }}_{{ loop.index }}">
+                                            <label for="acc_{{ order.id }}_{{ loop.index }}">{{ item }}</label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="rc-hint"><i class="bi bi-asterisk me-1"></i>Các trường <strong>*</strong> là bắt buộc — phiếu được in bàn giao cho khách</span>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-dark rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-bronze fw-bold"><i class="bi bi-check2-circle me-1"></i>Lưu phiếu tiếp nhận</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Kiểm tra & Báo Giá -->
+{% if order.status == 'Pending' and order.reception_datetime and order.customer_approval == 'Pending' %}
+{% set qparts = namespace(total=0) %}
+{% for rop in order.used_parts %}{% set qparts.total = qparts.total + (rop.quantity * rop.unit_price) %}{% endfor %}
+<div class="modal fade rc-modal" id="quoteModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <form action="/tech/quote" method="POST" class="modal-content" target="_blank" onsubmit="setTimeout(function(){ window.location.reload(); }, 1000);">
+            <div class="modal-header">
+                <div>
+                    <div class="rc-kicker">Báo giá chi tiết · RO-{{ order.id }}</div>
+                    <h5 class="modal-title"><span class="rc-plate-t">{{ order.vehicle.license_plate }}</span><span class="rc-title-sub">{{ order.vehicle.make }} {{ order.vehicle.model }}</span></h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <!-- 1 · Căn cứ báo giá -->
+                <section class="rc-card">
+                    <div class="rc-card-h"><span class="rc-num">1</span> Căn cứ báo giá <i class="bi bi-clipboard-data"></i></div>
+                    <div class="rc-card-b">
+                        <div class="mb-3">
+                            <span class="rc-lbl">Triệu chứng khách báo</span>
+                            <textarea class="form-control rc-sym" disabled rows="2">{{ order.symptoms }}</textarea>
+                        </div>
+                        <div class="mb-0">
+                            <span class="rc-lbl">AI chẩn đoán tham khảo</span>
+                            {% if order.ai_diagnosis %}
+                            <div class="q-ai">{{ order.ai_diagnosis }}</div>
+                            {% else %}
+                            <div class="q-ai" style="color:var(--lux-slate);">Chưa có chẩn đoán AI cho phiếu này — báo giá theo kết quả kiểm tra trực tiếp.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+                <!-- 2 · Linh kiện dự kiến -->
+                <section class="rc-card">
+                    <div class="rc-card-h"><span class="rc-num">2</span> Linh kiện dự kiến thay ({{ order.used_parts|length }} mã) <i class="bi bi-box-seam"></i></div>
+                    <div class="rc-card-b">
+                        {% if order.used_parts %}
+                        <div class="repair-part-table mb-2" style="border:1px solid var(--lux-hairline);border-radius:11px;overflow:hidden;">
+                            <table class="table align-middle mb-0" style="font-size:.86rem;">
+                                <tbody>
+                                    {% for rop in order.used_parts %}
+                                    <tr>
+                                        <td><strong>{{ rop.part.name }}</strong><br><small style="color:var(--lux-slate);">{{ rop.part.part_number or '' }}{% if rop.part.brand %} · {{ rop.part.brand }}{% endif %}</small></td>
+                                        <td class="text-center text-nowrap">x{{ rop.quantity }}</td>
+                                        <td class="text-end text-nowrap">{{ "{:,.0f}".format(rop.unit_price) }} đ</td>
+                                        <td class="text-end text-nowrap fw-bold">{{ "{:,.0f}".format(rop.quantity * rop.unit_price) }} đ</td>
+                                        <td class="text-end"><button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" formaction="/tech/order/remove-part" formmethod="post" name="rop_id" value="{{ rop.id }}" title="Gỡ dòng này" onclick="return confirm('Gỡ {{ rop.part.name }} khỏi báo giá?');"><i class="bi bi-x-lg"></i></button></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="mb-2 p-2 rounded" style="background:var(--lux-ivory);border:1px dashed var(--lux-hairline);color:var(--lux-slate);font-size:.84rem;">Chưa có linh kiện nào — dùng nút <strong>Phụ tùng</strong> ở bảng để thêm trước khi gửi báo giá.</div>
+                        {% endif %}
+                    </div>
+                </section>
+                <!-- 3 · Kết quả kiểm tra & tiền công -->
+                <section class="rc-card">
+                    <div class="rc-card-h"><span class="rc-num">3</span> Kết quả kiểm tra & tiền công <i class="bi bi-cash-coin"></i></div>
+                    <div class="rc-card-b">
+                        <div class="mb-3">
+                            <label class="rc-lbl" for="q_insp_{{ order.id }}">Kết quả kỹ thuật viên kiểm tra <span class="rc-req">*</span></label>
+                            <textarea id="q_insp_{{ order.id }}" name="inspection_result" class="form-control" rows="3" required placeholder="Ghi rõ sửa gì, thay gì, vì sao phải thay">{{ order.inspection_result or '' }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="rc-lbl" for="q_cost_{{ order.id }}">Tiền công sửa chữa (chưa gồm linh kiện) <span class="rc-req">*</span></label>
+                            <div class="input-group">
+                                <input type="number" id="q_cost_{{ order.id }}" name="estimated_cost" class="form-control" required min="0" step="1000" placeholder="Ví dụ: 1500000" value="{{ order.estimated_cost or '' }}" data-parts="{{ qparts.total }}" oninput="var p=Number(this.dataset.parts||0), s=this.value.trim(), v=s==='' ? null : Number(s); this.closest('form').querySelector('.q-preview').textContent = v===null ? (p>0 ? 'Chưa nhập tiền công — tạm tính riêng linh kiện: ' + p.toLocaleString('vi-VN') + ' đ' : 'Nhập tiền công để thấy tổng báo giá') : 'Tổng báo giá dự kiến: ' + (p+v).toLocaleString('vi-VN') + ' đ (công ' + v.toLocaleString('vi-VN') + ' + linh kiện ' + p.toLocaleString('vi-VN') + ')';">
+                                <span class="input-group-text rc-suffix">VNĐ</span>
+                            </div>
+                            <div class="q-preview">Tổng báo giá dự kiến: {{ "{:,.0f}".format(((order.estimated_cost or 0) + qparts.total)).replace(',', '.') }} đ</div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-3">
+                                <label class="rc-lbl" for="q_tech_{{ order.id }}">Kỹ thuật viên sửa <span class="rc-req">*</span></label>
+                                <select id="q_tech_{{ order.id }}" name="technician_id" class="form-select" required>
+                                    <option value="">-- Chọn kỹ thuật viên --</option>
+                                    {% for technician in technicians %}
+                                    <option value="{{ technician.id }}" {% if order.technician_id == technician.id %}selected{% endif %}>{{ technician.full_name or technician.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="rc-lbl" for="q_start_{{ order.id }}">Giờ hẹn vào sửa (dự kiến) <span class="rc-req">*</span></label>
+                                <input type="datetime-local" id="q_start_{{ order.id }}" name="repair_started_at" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label class="rc-lbl" for="q_note_{{ order.id }}">Ghi chú sửa chữa</label>
+                            <textarea id="q_note_{{ order.id }}" name="repair_notes" class="form-control" rows="2" placeholder="Yêu cầu, thời gian dự kiến hoặc lưu ý khi sửa...">{{ order.repair_notes or '' }}</textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <span class="rc-hint"><i class="bi bi-asterisk me-1"></i>Lưu là gửi báo giá cho khách duyệt — xe <strong>chỉ vào sửa sau khi khách đồng ý</strong></span>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-dark rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-bronze fw-bold"><i class="bi bi-send me-1"></i>Gửi báo giá cho khách</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal Thêm Phụ Tùng vào Đơn -->
+            <div class="modal fade modal-lux" id="addPartOrderModal{{ order.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                    <form action="/tech/order/add-part" method="POST" class="modal-content border-0 shadow">
+                        <div class="modal-header bg-light border-bottom-0">
+                            <h5 class="modal-title"><i class="bi bi-box-seam me-2"></i>Cấp vật tư/Phụ tùng cho xe {{ order.vehicle.license_plate }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                            
+                            <!-- Danh sách vật tư đã dùng -->
+                            {% if order.used_parts %}
+                            <h6 class="mb-2" style="color:var(--lux-slate);">Vật tư đã cấp:</h6>
+                            <ul class="list-group list-group-flush mb-4 border rounded">
+                                {% for rop in order.used_parts %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    {{ rop.part.name }}
+                                    <span class="pill pill-wait">x{{ rop.quantity }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+
+                            <h6 class="mb-2" style="color:var(--lux-slate);">Cấp thêm vật tư:</h6>
+                            <div class="mb-3">
+                                <label>Chọn Phụ tùng từ Kho</label>
+                                <select name="part_id" class="form-select bg-light border-0" required>
+                                    <option value="">-- Chọn phụ tùng --</option>
+                                    {% for p in parts %}
+                                    <option value="{{ p.id }}" {% if p.stock_quantity == 0 %}disabled{% endif %}>
+                                        {{ p.name }} (Tồn: {{ p.stock_quantity }}) - {{ "{:,}".format(p.price) }}đ
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label>Số lượng sử dụng</label>
+                                <input type="number" name="quantity" class="form-control bg-light border-0" min="1" value="1" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-bronze">Xác nhận thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+<!-- Modal Lập Đơn Trực Tiếp -->
+<div class="modal fade rc-modal" id="directOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <form action="/tech/create-direct-order" method="POST" class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="rc-kicker">Đơn mới tại quầy</div>
+                    <h5 class="modal-title">Lập đơn sửa chữa</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-3 mb-3 rounded" style="background:rgba(200,121,65,.07);border:1px dashed rgba(200,121,65,.45);color:#8A5A32;font-size:.84rem;">Hệ thống nhận diện cả <strong>khách cũ</strong> và <strong>khách mới</strong> — chỉ cần <strong>số điện thoại</strong> và <strong>biển số xe</strong>, thiếu đâu tạo mới đó.</div>
+
+                <section class="rc-card">
+                    <div class="rc-card-h"><span class="rc-num">1</span> Thông tin Khách hàng <i class="bi bi-person-lines-fill"></i></div>
+                    <div class="rc-card-b">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="rc-lbl" for="do_phone">Số điện thoại <span class="rc-req">*</span></label>
+                                <input type="text" id="do_phone" name="customer_phone" class="form-control" required placeholder="Nhập SĐT để hệ thống nhận diện">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="rc-lbl" for="do_name">Họ và tên</label>
+                                <input type="text" id="do_name" name="customer_name" class="form-control" placeholder="Để trống nếu là khách cũ">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="rc-card">
+                    <div class="rc-card-h"><span class="rc-num">2</span> Thông tin Xe & Lỗi <i class="bi bi-car-front-fill"></i></div>
+                    <div class="rc-card-b">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="rc-lbl" for="do_plate">Biển số xe <span class="rc-req">*</span></label>
+                                <input type="text" id="do_plate" name="license_plate" class="form-control rc-mono" required placeholder="VD: 30A-123.45">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="rc-lbl" for="do_make">Hãng xe</label>
+                                <input type="text" id="do_make" name="make" class="form-control" placeholder="VD: Toyota">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="rc-lbl" for="do_model">Dòng xe</label>
+                                <input type="text" id="do_model" name="model" class="form-control" placeholder="VD: Vios">
+                            </div>
+                            <div class="col-12">
+                                <label class="rc-lbl" for="do_sym">Triệu chứng / yêu cầu sửa chữa <span class="rc-req">*</span></label>
+                                <textarea id="do_sym" name="symptoms" class="form-control" rows="3" required placeholder="Ghi nhận lỗi khách báo..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <span class="rc-hint"><i class="bi bi-asterisk me-1"></i>Đơn mới tạo ở trạng thái <strong>chờ tiếp nhận</strong></span>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-dark rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-bronze fw-bold"><i class="bi bi-plus-lg me-1"></i>Lập đơn</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+[GUIDELINE] Hệ thống phanh: má phanh, đĩa phanh, dầu phanh
+Áp dụng cho: Xe con dưới 16 chỗ dùng phanh đĩa/thủy lực (hầu hết xe phổ thông)
+Ngày hiệu lực: 01/01/2026
+
+1. NGUYÊN TẮC AN TOÀN
+Phanh liên quan trực tiếp tính mạng. Mọi dấu hiệu bất thường về phanh đều phải kiểm tra NGAY, không được để xe chạy tiếp khi chưa rõ nguyên nhân.
+
+2. MÁ PHANH (BỐ THẮNG)
+- Tuổi thọ tham khảo: 30.000 - 50.000 km tùy thói quen lái (rà phanh nhiều mòn nhanh).
+- Dấu hiệu mòn: phanh kêu ken két kim loại, đạp sâu hơn bình thường, đèn báo mòn má phanh sáng.
+- Thay theo cặp trên cùng một trục (cả 2 bánh trước hoặc cả 2 bánh sau), không thay lẻ một bên gây lệch lực phanh.
+
+3. ĐĨA PHANH (ĐĨA THẮNG)
+Đĩa bị vênh gây rung vô-lăng khi phanh ở tốc độ cao; đĩa mòn quá giới hạn phải thay, không nên láng quá 2 lần. Độ dày tối thiểu dập nổi trên vành đĩa — kỹ thuật viên đo bằng panme khi kiểm tra.
+
+4. DẦU PHANH
+Dầu phanh hút ẩm theo thời gian, điểm sôi giảm gây mất phanh khi đổ đèo.
+- Thay mỗi 40.000 km hoặc 2 năm, dùng đúng chỉ số DOT3/DOT4 theo nắp bình.
+- Dấu hiệu cần thay gấp: chân phanh mềm, nhún; dầu trong bình đen đục; xe vừa lội nước sâu.
+
+5. QUY TRÌNH TẠI THREEH
+Đo độ dày má/đĩa, kiểm tra rò rỉ heo phanh và ống dầu, thay thế bằng phụ tùng chính hãng, xả khí (xả e) toàn hệ thống, chạy thử ở tốc độ tăng dần và bàn giao kèm biên bản đo. Sau thay má mới cần 200-300 km rô-đa (tránh phanh gấp) để má ăn đều mặt đĩa.

@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+
+{% block title %}Dịch vụ - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== Light luxury — Than chì & Đồng :: Dịch vụ ===== */
+    .pg-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 20px; }
+    .pg-head h1 { font-size: 1.65rem; margin: 0; font-weight: 650; letter-spacing: -.02em; }
+    .pg-sub { color: var(--lux-slate); font-size: .86rem; margin: 6px 0 0; }
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .kpi { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; padding: 15px 17px 13px; box-shadow: 0 1px 3px rgba(30,30,30,.04); animation: kpiIn .5s both; animation-delay: calc(var(--i, 0) * 60ms); }
+    .kpi .l { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--lux-slate); font-weight: 700; }
+    .kpi .n { font-size: 1.65rem; font-weight: 700; letter-spacing: -.03em; color: var(--lux-graphite); font-variant-numeric: tabular-nums; margin-top: 5px; line-height: 1.15; }
+    .kpi .n.small-n { font-size: 1.3rem; }
+    .kpi .bar { height: 3px; background: var(--lux-hairline); border-radius: 3px; margin-top: 11px; overflow: hidden; }
+    .kpi .bar i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #C87941, #E0A375); transform-origin: left; animation: barIn .9s .3s both cubic-bezier(.22,1,.36,1); }
+    @keyframes kpiIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes barIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .tb { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 16px 18px; border-bottom: 1px solid var(--lux-hairline); margin: 0; }
+    .tb-search { position: relative; flex: 1 1 280px; }
+    .tb-search i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--lux-slate); font-size: .85rem; }
+    .tb-search input { width: 100%; height: 40px; border: 1px solid var(--lux-hairline); background: #fff; border-radius: 999px; padding: 0 16px 0 40px; font-size: .87rem; color: var(--lux-graphite); transition: border-color .25s, box-shadow .25s; }
+    .tb-search input:focus { outline: none; border-color: var(--copper-orange); box-shadow: 0 0 0 3px rgba(200,121,65,.12); }
+    .tb-search input::placeholder { color: var(--lux-slate); opacity: 1; }
+    .tb .form-select { height: 40px; border-radius: 999px; border-color: var(--lux-hairline); font-size: .84rem; width: auto; min-width: 160px; padding-right: 2.2rem; }
+    .tb-count { color: var(--lux-slate); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+    .badge-pill { display: inline-flex; align-items: center; gap: 4px; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: .3em .75em; border-radius: 999px; white-space: nowrap; }
+    .b-green { background: rgba(46,125,79,.10); color: #2E7D4F; border: 1px solid rgba(46,125,79,.25); }
+    .b-gray { background: #F1EFEA; color: #5F5A54; border: 1px solid #E4DFD8; }
+    .cat-chip { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .03em; background: var(--lux-sand); color: var(--lux-slate); border: 1px solid var(--lux-hairline); border-radius: 999px; padding: .18em .7em; margin: 2px 4px 0 0; }
+    .t-copper { color: var(--copper-orange) !important; }
+    .modal .nav-tabs { border-bottom: 1px solid var(--lux-hairline); gap: 2px; }
+    .modal .nav-tabs .nav-link { border: none; background: none; color: var(--lux-slate); font-size: .78rem; font-weight: 600; letter-spacing: .03em; padding: .55rem .9rem; border-bottom: 2px solid transparent; border-radius: 7px 7px 0 0; }
+    .modal .nav-tabs .nav-link.active { color: var(--lux-graphite); background: var(--lux-ivory); border-bottom-color: var(--copper-orange); }
+    .sec-title { color: var(--copper-orange); border-bottom: 1px solid var(--lux-hairline); padding-bottom: 7px; margin-bottom: 14px; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; font-weight: 700; }
+    .thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--lux-hairline); }
+    .thumb-ph { width: 48px; height: 48px; background: var(--lux-sand); border-radius: 8px; border: 1px dashed var(--lux-hairline); display: flex; align-items: center; justify-content: center; color: var(--lux-slate); }
+    .btn-ghost-sm { border: 1px solid #D8D1C8; background: #fff; color: var(--lux-slate); font-size: .77rem; font-weight: 600; padding: .38rem .9rem; border-radius: 999px; transition: all .25s; }
+    .btn-ghost-sm:hover { border-color: var(--lux-graphite); color: var(--lux-graphite); background: #fff; }
+    .btn-step-modal { background: var(--lux-bronze-deep, #A65E2F); border: 1px solid var(--lux-bronze-deep, #A65E2F); color: #fff; font-weight: 700; padding: .5rem 1.5rem; }
+    .btn-step-modal:hover { background: #8A4E26; border-color: #8A4E26; color: #fff; transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(200,121,65,.55); }
+    /* ===== Nhóm dịch vụ: pills + sections gập/mở ===== */
+    .grp-pills { display: flex; gap: 8px; flex-wrap: wrap; padding: 16px 18px 4px; }
+    .grp-pill { border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-graphite); border-radius: 999px; padding: .42rem 1rem; font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .2s; }
+    .grp-pill small { color: var(--lux-slate); font-weight: 700; margin-left: 4px; }
+    .grp-pill:hover { border-color: var(--copper-orange); color: var(--copper-orange); }
+    .grp-pill.active { background: var(--lux-graphite); border-color: var(--lux-graphite); color: #fff; }
+    .grp-pill.active small { color: #E0A375; }
+    tr.grp-head { cursor: pointer; }
+    tr.grp-head > td { background: var(--lux-sand) !important; font-weight: 700; color: var(--lux-graphite); padding: .65rem 1rem !important; }
+    tr.grp-head:hover > td { background: #EFE9E0 !important; }
+    tr.grp-head .grp-chev { display: inline-block; transition: transform .25s; margin-right: 8px; color: var(--copper-orange); }
+    tr.grp-head.closed .grp-chev { transform: rotate(-90deg); }
+    tr.grp-head .grp-count { font-weight: 600; font-size: .75rem; color: var(--lux-slate); margin-left: 8px; }
+</style>
+
+{% macro render_field(name, label, value='', type='text', col='col-md-6', required=False, placeholder='') %}
+<div class="{{ col }} mb-3">
+    <label class="form-label">{{ label }} {% if required %}<span class="text-danger">*</span>{% endif %}</label>
+    {% if type == 'textarea' %}
+    <textarea name="{{ name }}" class="form-control" rows="3" placeholder="{{ placeholder }}">{{ value }}</textarea>
+    {% elif type == 'file' %}
+    <input type="file" name="{{ name }}" class="form-control" accept="image/*">
+    {% else %}
+    <input type="{{ type }}" name="{{ name }}" class="form-control" value="{{ value }}" placeholder="{{ placeholder }}" {% if required %}required{% endif %}>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_select(name, label, options, selected='', col='col-md-6', required=False) %}
+<div class="{{ col }} mb-3">
+    <label class="form-label">{{ label }} {% if required %}<span class="text-danger">*</span>{% endif %}</label>
+    <select name="{{ name }}" class="form-select" {% if required %}required{% endif %}>
+        <option value="">-- Chọn --</option>
+        {% for opt in options %}
+        <option value="{{ opt }}" {% if selected == opt %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endmacro %}
+
+{% set svc_active = services|selectattr('status','equalto','Active')|list %}
+{% set svc_promo = services|selectattr('promo_price')|list %}
+{% set ns2 = namespace(psum=0) %}
+{% for s in services %}{% set ns2.psum = ns2.psum + (s.base_price or 0) %}{% endfor %}
+{% set svc_avg = (ns2.psum / services|length)|round|int if services|length else 0 %}
+
+<div class="pg-head">
+    <div>
+        <h1>Dịch vụ</h1>
+        <p class="pg-sub">Bảng giá, thời lượng và trạng thái kinh doanh của toàn bộ dịch vụ.</p>
+    </div>
+    {% if user.get('role') in ['manager', 'admin'] %}
+    <button class="btn btn-step-modal rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+        <i class="bi bi-plus-lg me-1"></i> Thêm dịch vụ mới
+    </button>
+    {% else %}
+    <span class="badge rounded-pill" style="background: rgba(200,121,65,0.12); color: var(--copper-orange); border: 1px solid rgba(200,121,65,0.3);"><i class="bi bi-eye me-1"></i>Chế độ chỉ xem</span>
+    {% endif %}
+</div>
+
+<div class="kpi-row">
+    <div class="kpi" style="--i:0">
+        <div class="l">Tổng dịch vụ</div>
+        <div class="n" data-count="{{ services|length }}">0</div>
+        <div class="bar"><i style="width:100%"></i></div>
+    </div>
+    <div class="kpi" style="--i:1">
+        <div class="l">Đang kinh doanh</div>
+        <div class="n" data-count="{{ svc_active|length }}">0</div>
+        <div class="bar"><i style="width: {{ (svc_active|length * 100 / services|length)|round|int if services|length else 0 }}%"></i></div>
+    </div>
+    <div class="kpi" style="--i:2">
+        <div class="l">Đang khuyến mãi</div>
+        <div class="n" data-count="{{ svc_promo|length }}">0</div>
+        <div class="bar"><i style="width: {{ (svc_promo|length * 100 / services|length)|round|int if services|length else 0 }}%"></i></div>
+    </div>
+    <div class="kpi" style="--i:3">
+        <div class="l">Giá trung bình</div>
+        <div class="n small-n" data-count="{{ svc_avg }}">0</div>
+        <div class="bar"><i style="width:100%"></i></div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <!-- Ô tìm kiếm + bộ lọc -->
+        <div class="tb">
+            <div class="tb-search">
+                <i class="bi bi-search"></i>
+                <input type="text" id="svcSearch" placeholder="Tìm theo tên, mã hoặc nhóm dịch vụ..." autocomplete="off">
+            </div>
+            <select id="svcStatus" class="form-select">
+                <option value="">Mọi trạng thái</option>
+                <option value="Active">Đang HĐ</option>
+                <option value="Inactive">Ngừng HĐ</option>
+            </select>
+            <small class="tb-count" id="svcCount">{{ services|length }} dịch vụ</small>
+        </div>
+        {% set _cats = services | map(attribute='category') | reject('none') | unique | list %}
+        {% set _has_other = (services | selectattr('category', 'none') | list | length) > 0 %}
+        {% set cats = _cats + (['Khác'] if _has_other else []) %}
+        <div class="grp-pills" id="svcPills">
+            <button type="button" class="grp-pill active" data-cat="">Tất cả<small>{{ services|length }}</small></button>
+            {% for c in cats %}
+            <button type="button" class="grp-pill" data-cat="{{ c|lower }}">{% if c == 'Khác' %}Khác{% else %}{{ c }}{% endif %}<small>{{ (services|selectattr('category','none')|list|length) if c == 'Khác' else (services|selectattr('category','equalto',c)|list|length) }}</small></button>
+            {% endfor %}
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="svcTable">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Mã DV</th>
+                        <th>Hình ảnh</th>
+                        <th>Tên Dịch vụ</th>
+                        <th>Thời gian</th>
+                        <th>Giá chuẩn</th>
+                        <th>Khuyến mãi</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cat in cats %}
+                        {% if cat == 'Khác' %}
+                            {% set items = services | selectattr('category', 'none') | list %}
+                        {% else %}
+                            {% set items = services | selectattr('category', 'equalto', cat) | list %}
+                        {% endif %}
+                    <tr class="grp-head" data-cat="{{ cat|lower }}">
+                        <td colspan="8"><i class="bi bi-chevron-down grp-chev"></i>{% if cat == 'Khác' %}Khác{% else %}{{ cat }}{% endif %}<span class="grp-count">{{ items|length }} dịch vụ</span></td>
+                    </tr>
+                    {% for service in items %}
+                    <tr class="svc-row" data-name="{{ service.name|lower }}" data-code="{{ service.service_code|lower }}" data-category="{{ cat|lower }}" data-status="{{ service.status }}" data-group="{{ cat|lower }}">
+                        <td class="ps-4"><span style="font-weight:700; letter-spacing:.04em; color:var(--lux-graphite)">{{ service.service_code }}</span></td>
+                        <td>
+                            {% if service.image_url %}
+                            <img src="{{ service.image_url }}" alt="Hình ảnh" class="thumb">
+                            {% else %}
+                            <div class="thumb-ph"><i class="bi bi-image"></i></div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="fw-bold" style="color: var(--charcoal-black);">{{ service.name }}</div>
+                            <div class="mt-1">
+                                <span class="cat-chip">{{ service.category or 'Khác' }}</span>
+                            </div>
+                        </td>
+                        <td><i class="bi bi-clock text-muted"></i> {{ service.duration_minutes }} phút</td>
+                        <td style="color: var(--copper-orange); font-weight: 700; font-variant-numeric: tabular-nums;">{{ "{:,}".format(service.base_price).replace(',', '.') }}</td>
+                        <td>
+                            {% if service.promo_price %}
+                            <span style="color:#2E7D4F; font-weight:700; font-variant-numeric: tabular-nums;">{{ "{:,}".format(service.promo_price).replace(',', '.') }}</span>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if service.status == 'Active' %}
+                            <span class="badge-pill b-green">Đang HĐ</span>
+                            {% else %}
+                            <span class="badge-pill b-gray">Ngừng HĐ</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-ghost-sm" data-bs-toggle="modal" data-bs-target="#editServiceModal{{ service.id }}">{% if user.get('role') in ['manager', 'admin'] %}Sửa{% else %}Chi tiết{% endif %}</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                    {% if not services %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-5">Chưa có dịch vụ nào. Vui lòng thêm mới.</td>
+                    </tr>
+                    {% endif %}
+                    <tr id="svcNoResult" style="display: none;">
+                        <td colspan="8" class="text-center text-muted py-5"><i class="bi bi-search d-block fs-3 mb-2"></i>Không tìm thấy dịch vụ nào khớp với từ khóa.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% set categories = ['Rửa xe', 'Vệ sinh nội thất', 'Đánh bóng & Phủ', 'Chăm sóc khoang máy', 'Khác'] %}
+{% set price_types = ['Theo loại xe', 'Gói cố định'] %}
+{% set statuses = ['Active', 'Inactive'] %}
+{% set vehicle_types = ['Ô tô con (Sedan/Hatchback)', 'SUV/Crossover', 'Bán tải', 'Tất cả'] %}
+{% set vehicle_sizes = ['Nhỏ (Hạng A/B)', 'Trung bình (Hạng C/D)', 'Lớn (SUV Fullsize)', 'Tất cả'] %}
+
+<!-- Modal Thêm Dịch vụ -->
+{% if user.get('role') in ['manager', 'admin'] %}
+<div class="modal fade" id="addServiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form action="/tech/services/add" method="POST" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-stars me-2 t-copper"></i>Thêm Dịch vụ mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs mb-3" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#add-basic" type="button">Cơ bản</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#add-price" type="button">Giá & Thời gian</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#add-apply" type="button">Áp dụng</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#add-process" type="button">Quy trình & Vật tư</button></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="add-basic">
+                        <div class="row">
+                            {{ render_field('service_code', 'Mã Dịch vụ', placeholder='VD: RX001', required=True) }}
+                            {{ render_field('name', 'Tên Dịch vụ', placeholder='Rửa xe bọt tuyết', required=True) }}
+                            {{ render_select('category', 'Nhóm Dịch vụ', categories, required=True) }}
+                            {{ render_select('status', 'Trạng thái', statuses, selected='Active') }}
+                            {{ render_field('image', 'Hình ảnh minh họa', type='file', col='col-12') }}
+                            {{ render_field('description', 'Mô tả chi tiết', type='textarea', col='col-12') }}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="add-price">
+                        <div class="row">
+                            {{ render_field('base_price', 'Giá tiêu chuẩn (VNĐ)', type='number', required=True) }}
+                            {{ render_field('promo_price', 'Giá khuyến mãi (VNĐ)', type='number') }}
+                            {{ render_select('price_type', 'Loại tính giá', price_types, selected='Theo loại xe') }}
+                            {{ render_field('vat_rate', 'Thuế VAT', placeholder='10%') }}
+                            {{ render_field('duration_minutes', 'Thời gian thực hiện (Phút)', type='number', required=True, value='30') }}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="add-apply">
+                        <div class="row">
+                            {{ render_select('applicable_vehicle_type', 'Loại xe áp dụng', vehicle_types, selected='Tất cả') }}
+                            {{ render_select('applicable_vehicle_size', 'Kích thước xe', vehicle_sizes, selected='Tất cả') }}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="add-process">
+                        <div class="row">
+                            {{ render_field('process_steps', 'Quy trình thực hiện (Các bước)', type='textarea', col='col-12', placeholder='1. Xịt rửa ngoài\n2. Phủ bọt tuyết\n3. Lau khô...') }}
+                            {{ render_field('materials_used', 'Vật tư tiêu hao (Tên - Số lượng)', type='textarea', col='col-12', placeholder='Dung dịch rửa: 50ml\nKhăn lau: 1 cái') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-step-modal">Lưu Dịch vụ</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% for service in services %}
+<!-- Modal Sửa Dịch vụ -->
+<div class="modal fade" id="editServiceModal{{ service.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form action="/tech/services/update" method="POST" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pencil-square me-2 t-copper"></i>Sửa Dịch vụ: {{ service.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="service_id" value="{{ service.id }}">
+                {% if user.get('role') not in ['manager', 'admin'] %}<fieldset disabled>{% endif %}
+                <ul class="nav nav-tabs mb-3" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#edit-basic-{{ service.id }}" type="button">Cơ bản</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#edit-price-{{ service.id }}" type="button">Giá & Thời gian</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#edit-apply-{{ service.id }}" type="button">Áp dụng</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#edit-process-{{ service.id }}" type="button">Quy trình & Vật tư</button></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="edit-basic-{{ service.id }}">
+                        <div class="row">
+                            {{ render_field('service_code', 'Mã Dịch vụ', value=service.service_code, required=True) }}
+                            {{ render_field('name', 'Tên Dịch vụ', value=service.name, required=True) }}
+                            {{ render_select('category', 'Nhóm Dịch vụ', categories, selected=service.category, required=True) }}
+                            {{ render_select('status', 'Trạng thái', statuses, selected=service.status) }}
+                            {{ render_field('image', 'Hình ảnh (Để trống nếu ko đổi)', type='file', col='col-12') }}
+                            {{ render_field('description', 'Mô tả chi tiết', value=service.description or '', type='textarea', col='col-12') }}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="edit-price-{{ service.id }}">
+                        <div class="row">
+                            {{ render_field('base_price', 'Giá tiêu chuẩn (VNĐ)', value=service.base_price, type='number', required=True) }}
+                            {{ render_field('promo_price', 'Giá khuyến mãi (VNĐ)', value=service.promo_price or '', type='number') }}
+                            {{ render_select('price_type', 'Loại tính giá', price_types, selected=service.price_type) }}
+                            {{ render_field('vat_rate', 'Thuế VAT', value=service.vat_rate or '') }}
+                            {{ render_field('duration_minutes', 'Thời gian (Phút)', value=service.duration_minutes, type='number', required=True) }}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="edit-apply-{{ service.id }}">
+                        <div class="row">
+                            {{ render_select('applicable_vehicle_type', 'Loại xe áp dụng', vehicle_types, selected=service.applicable_vehicle_type) }}
+                            {{ render_select('applicable_vehicle_size', 'Kích thước xe', vehicle_sizes, selected=service.applicable_vehicle_size) }}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="edit-process-{{ service.id }}">
+                        <div class="row">
+                            {{ render_field('process_steps', 'Quy trình thực hiện', value=service.process_steps or '', type='textarea', col='col-12') }}
+                            {{ render_field('materials_used', 'Vật tư tiêu hao', value=service.materials_used or '', type='textarea', col='col-12') }}
+                        </div>
+                    </div>
+                </div>
+                {% if user.get('role') not in ['manager', 'admin'] %}</fieldset>{% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                {% if user.get('role') in ['manager', 'admin'] %}
+                <button type="submit" class="btn btn-step-modal">Cập nhật</button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+(function() {
+    const searchInput = document.getElementById('svcSearch');
+    if (!searchInput) return;
+    const statusSelect = document.getElementById('svcStatus');
+    const pills = Array.from(document.querySelectorAll('#svcPills .grp-pill'));
+    const rows = Array.from(document.querySelectorAll('#svcTable tbody tr.svc-row'));
+    const heads = Array.from(document.querySelectorAll('#svcTable tbody tr.grp-head'));
+    const noResult = document.getElementById('svcNoResult');
+    const countEl = document.getElementById('svcCount');
+    const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+    let activeCat = '';
+    const collapsed = new Set();
+
+    function rowMatch(row, q, st) {
+        const hay = norm(row.dataset.name + ' ' + row.dataset.code + ' ' + row.dataset.category);
+        return (!q || hay.includes(q)) && (!st || row.dataset.status === st);
+    }
+
+    function applyFilter() {
+        const q = norm(searchInput.value.trim());
+        const st = statusSelect.value;
+        let visible = 0;
+        heads.forEach(head => {
+            const cat = head.dataset.cat;
+            const inPill = !activeCat || cat === activeCat;
+            let groupVisible = 0;
+            rows.forEach(row => {
+                if (row.dataset.group !== cat) return;
+                const ok = inPill && rowMatch(row, q, st) && !collapsed.has(cat);
+                row.style.display = ok ? '' : 'none';
+                if (ok) { visible++; groupVisible++; }
+            });
+            const headShow = inPill && (groupVisible > 0 || (!q && !st));
+            head.style.display = headShow ? '' : 'none';
+        });
+        if (noResult) noResult.style.display = visible === 0 && rows.length > 0 ? '' : 'none';
+        if (countEl) countEl.textContent = visible + ' dịch vụ';
+    }
+
+    pills.forEach(pill => pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeCat = pill.dataset.cat;
+        applyFilter();
+    }));
+
+    heads.forEach(head => head.addEventListener('click', () => {
+        const cat = head.dataset.cat;
+        if (collapsed.has(cat)) { collapsed.delete(cat); head.classList.remove('closed'); }
+        else { collapsed.add(cat); head.classList.add('closed'); }
+        applyFilter();
+    }));
+
+    searchInput.addEventListener('input', applyFilter);
+    statusSelect.addEventListener('change', applyFilter);
+
+    /* Count-up số liệu KPI */
+    var fmt = new Intl.NumberFormat('vi-VN');
+    document.querySelectorAll('[data-count]').forEach(function (el) {
+        var end = parseInt(el.dataset.count, 10) || 0;
+        if (end === 0) { el.textContent = '0'; return; }
+        var dur = 900, t0 = performance.now();
+        function tick(t) {
+            var p = Math.min((t - t0) / dur, 1);
+            var e = 1 - Math.pow(1 - p, 3);
+            el.textContent = fmt.format(Math.round(end * e));
+            if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    });
+})();
+</script>
+
+{% endblock %}

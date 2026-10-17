@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Khuyến mãi - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2 pt-3">
+    <h1 class="h3">🎁 Chương trình khuyến mãi</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPromoModal">+ Tạo khuyến mãi</button>
+</div>
+
+{% if request.query_params.get('success') %}
+<div class="alert alert-success">Lưu khuyến mãi thành công!</div>
+{% endif %}
+
+<div class="row g-3">
+    {% for p in promotions %}
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <h5 class="card-title mb-1">{{ p.title }}</h5>
+                    {% if p.status == 'Active' %}
+                    <span class="badge bg-success">Đang chạy</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Tắt</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted small mb-2">{{ p.description or '' }}</p>
+                <p class="mb-1">Giảm: <strong class="text-danger">{{ p.discount_percent }}%</strong></p>
+                <p class="text-muted small mb-3">{{ p.start_date or '---' }} → {{ p.end_date or '---' }}</p>
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editPromoModal{{ p.id }}">Sửa</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editPromoModal{{ p.id }}" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="/manager/promotions/update" method="POST" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sửa khuyến mãi #{{ p.id }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="promotion_id" value="{{ p.id }}">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề *</label>
+                        <input type="text" name="title" class="form-control" value="{{ p.title }}" required maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea name="description" class="form-control" rows="3">{{ p.description or '' }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 mb-3">
+                            <label class="form-label">Giảm (%)</label>
+                            <input type="number" step="0.1" min="0" max="100" name="discount_percent" class="form-control" value="{{ p.discount_percent or 0 }}">
+                        </div>
+                        <div class="col-4 mb-3">
+                            <label class="form-label">Từ ngày</label>
+                            <input type="date" name="start_date" class="form-control" value="{{ p.start_date or '' }}">
+                        </div>
+                        <div class="col-4 mb-3">
+                            <label class="form-label">Đến ngày</label>
+                            <input type="date" name="end_date" class="form-control" value="{{ p.end_date or '' }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select name="status" class="form-select">
+                            <option value="Active" {% if p.status == 'Active' %}selected{% endif %}>Đang chạy</option>
+                            <option value="Inactive" {% if p.status != 'Active' %}selected{% endif %}>Tắt</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center text-muted py-4">Chưa có khuyến mãi nào.</div>
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="createPromoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/manager/promotions/create" method="POST" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tạo khuyến mãi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Tiêu đề *</label>
+                    <input type="text" name="title" class="form-control" required maxlength="255">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <textarea name="description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-4 mb-3">
+                        <label class="form-label">Giảm (%)</label>
+                        <input type="number" step="0.1" min="0" max="100" name="discount_percent" class="form-control" value="0">
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label class="form-label">Từ ngày</label>
+                        <input type="date" name="start_date" class="form-control">
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label class="form-label">Đến ngày</label>
+                        <input type="date" name="end_date" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Trạng thái</label>
+                    <select name="status" class="form-select">
+                        <option value="Active">Đang chạy</option>
+                        <option value="Inactive">Tắt</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary">Tạo</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

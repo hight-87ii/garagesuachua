@@ -1,0 +1,13 @@
+[MANUAL] Xử lý lỗi hụt ga trên dòng xe C200 đời 2018
+Áp dụng cho: Mercedes-Benz C200 đời 2018 (máy xăng)
+Ngày hiệu lực: 01/01/2026
+
+Mã lỗi thường gặp: P0171 (System Too Lean Bank 1) hoặc P0300 (Random/Multiple Cylinder Misfire Detected).
+Nguyên nhân cốt lõi do bơm xăng cao áp bị đóng cặn sau thời gian dài sử dụng xăng không đạt chuẩn, hoặc kim phun bị nghẹt một phần.
+Quy trình xử lý chuẩn của Garage ThreeH:
+1. Cắm máy chẩn đoán OBD2, đọc và xóa lỗi cũ.
+2. Kiểm tra áp suất bơm xăng cao áp (phải đạt mức 120-200 bar khi nổ máy tĩnh).
+3. Tháo và vệ sinh kim phun bằng dung dịch 3M chuyên dụng.
+4. Nếu hụt ga vẫn còn, kiểm tra van thông hơi hộp cáp te (PCV valve). Van PCV hỏng thường phát ra tiếng rít nhẹ khi nổ máy.
+5. Cập nhật lại phần mềm hộp ECU (nếu có bản cập nhật mới từ hãng).
+Mẹo nhỏ: Tuyệt đối không thay thế ngay bơm xăng nếu chưa súc rửa kim phun, vì 80% trường hợp chỉ bị nghẹt kim.

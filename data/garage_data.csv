@@ -1,0 +1,501 @@
+﻿symptoms,category,recommendation,severity
+"bị lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+tự nhiên xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+rất đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thỉnh thoảng xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thỉnh thoảng đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+xe tôi phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thường xuyên kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+tự nhiên đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"thỉnh thoảng tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"hơi lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"hiện tượng hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe tôi bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"tự nhiên tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+rất đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"bị động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+rất thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hiện tượng xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe tôi chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hơi thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"hiện tượng lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+tự nhiên nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"thỉnh thoảng đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+rất phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+rất quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thường xuyên đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"tự nhiên hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hiện tượng chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bị đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bị khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+rất kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+tự nhiên khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+rất xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe tôi chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hơi bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thường xuyên máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thỉnh thoảng thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thỉnh thoảng kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"hơi tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe tôi đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"hơi xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+tự nhiên đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thỉnh thoảng thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"hơi động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thỉnh thoảng quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+tự nhiên nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+tự nhiên đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"tự nhiên động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hiện tượng màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+tự nhiên bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hơi đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"thỉnh thoảng xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hiện tượng nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bị đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"tự nhiên hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe tôi đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hơi kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hơi chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+rất xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thỉnh thoảng bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thỉnh thoảng khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bị chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hiện tượng chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hơi xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+tự nhiên xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+hiện tượng xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hơi đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+tự nhiên bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"xe tôi tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+rất đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+xe tôi đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thường xuyên đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thường xuyên đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+tự nhiên kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe tôi xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"xe tôi hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+rất quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"xe tôi tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thường xuyên đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe tôi xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hiện tượng bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+rất bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hơi khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"tự nhiên tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+hiện tượng khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+hơi phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"thường xuyên lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+rất thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+tự nhiên khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"rất tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thỉnh thoảng đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"thường xuyên hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thỉnh thoảng chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thường xuyên màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+tự nhiên kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+tự nhiên đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thỉnh thoảng bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hiện tượng bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thỉnh thoảng xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hơi kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thường xuyên thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"hiện tượng đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hơi bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"rất động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"thường xuyên động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+rất kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bị phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hơi chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hiện tượng quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thường xuyên chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hơi đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"thường xuyên động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hiện tượng đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+tự nhiên đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bị máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hiện tượng màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thỉnh thoảng kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+tự nhiên bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hiện tượng chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bị chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+tự nhiên chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"thỉnh thoảng hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thường xuyên chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hơi xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thỉnh thoảng máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+tự nhiên máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"tự nhiên xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thường xuyên đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+tự nhiên quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bị chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+hiện tượng đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"thỉnh thoảng xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe tôi đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thỉnh thoảng đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"thường xuyên tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe tôi đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hiện tượng khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+rất nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"hiện tượng hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+tự nhiên nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"hiện tượng động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hiện tượng xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+rất đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hơi khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe tôi xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bị đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thường xuyên xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+bị đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"hiện tượng lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"xe tôi đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+hiện tượng chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"xe tôi hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+tự nhiên đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"thường xuyên đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bị đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bị máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+bị thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thỉnh thoảng đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thường xuyên đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"thường xuyên lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"tự nhiên xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe tôi đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"thỉnh thoảng tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hơi chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+xe tôi đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hiện tượng chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thỉnh thoảng chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bị quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thường xuyên đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thỉnh thoảng nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+rất màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+hơi xe bị rung bần bật khi dừng đèn đỏ,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thường xuyên xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bị nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+xe tôi đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hiện tượng nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+đèn check engine sáng,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thỉnh thoảng bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thường xuyên nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"thường xuyên tay lái nặng, khó đánh lái",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"hiện tượng xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thường xuyên máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+rất đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"đề máy không nổ, chỉ kêu tạch tạch",Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+đèn pha bị tối mờ khi nổ vòng tua thấp,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bị máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe tôi khi ôm cua nghe tiếng kêu lụp cụp dưới gầm,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thường xuyên xe bị lắc lư khi đi qua gờ giảm tốc,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thỉnh thoảng xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+xe bị rung vô lăng khi chạy tốc độ cao,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hiện tượng đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+rất kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+xe tôi nước làm mát bị hao hụt nhanh,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thỉnh thoảng đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"bị lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+hiện tượng nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+"bị lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+đạp phanh kêu két két,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thường xuyên phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+thỉnh thoảng bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+thỉnh thoảng máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bị đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+hơi xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"hơi động cơ bị hụt ga, đạp không lên",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thường xuyên đạp phanh sâu mới ăn,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+bị máy lạnh không mát khi kẹt xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bố thắng có mùi khét khi xuống dốc,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+hiện tượng bấm còi không kêu hoặc kêu lí nhí,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+đèn cảnh báo ABS sáng trên taplo,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+chìa khóa thông minh (smartkey) không nhận,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+bị phanh bị rít,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+chân phanh bị rung khi phanh gấp,Hệ thống Phanh,"Kiểm tra thay má phanh, láng dĩa phanh và châm dầu phanh.",Cao (Nguy hiểm)
+"lốp mòn không đều, ăn lốp một bên",Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+thỉnh thoảng kim nhiệt độ động cơ báo quá vạch giữa,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+"bị hao xăng bất thường, mùi xăng sống",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+rất quạt tản nhiệt kêu to liên tục,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+thường xuyên nổ máy buổi sáng nghe tiếng gõ cạch cạch,Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao
+thỉnh thoảng thấy vũng nước màu xanh đỏ rỉ dưới gầm xe,Hệ thống Làm mát,"Kiểm tra rò rỉ két nước, thay nước làm mát, vệ sinh dàn nóng máy lạnh.",Cao
+bị màn hình giải trí tự khởi động lại,Hệ thống Điện & Bình Ắc quy,"Kiểm tra đo dòng bình ắc quy, kiểm tra máy phát điện (dynamo).",Thấp
+hiện tượng xe bị xỉa lái sang một bên khi đi thẳng,Hệ thống Lái & Bánh xe,"Gói kiểm tra gầm, cân bằng động mâm vỏ và cân chỉnh thước lái.",Trung bình
+"xe hao nhớt, ra khói trắng ở pô",Hệ thống Động cơ & Bôi trơn,"Quét lỗi OBD-II, thay nhớt động cơ, vệ sinh kim phun buồng đốt và kiểm tra bugi.",Cao

@@ -1,0 +1,21 @@
+[GUIDELINE] Lịch bảo dưỡng định kỳ ThreeH Workshop
+Áp dụng cho: Xe xăng/dầu dưới 16 chỗ (Toyota, Honda, Hyundai, Kia, Mazda, Ford, Mitsubishi, Suzuki)
+Ngày hiệu lực: 01/01/2026
+
+1. NGUYÊN TẮC CHUNG
+Bảo dưỡng định kỳ giúp xe vận hành ổn định, tiết kiệm nhiên liệu và giữ giá trị xe. ThreeH khuyến nghị khách tuân thủ mốc km HOẶC mốc thời gian, điều kiện nào đến trước thì làm trước.
+
+2. CÁC MỐC BẢO DƯỠNG
+- Mỗi 5.000 km hoặc 3 tháng: thay dầu động cơ + lọc dầu, kiểm tra tổng quát 20 hạng mục (lốp, phanh, đèn, nước làm mát, ắc quy).
+- Mỗi 10.000 km hoặc 6 tháng: như mốc 5.000 km + vệ sinh lọc gió động cơ, kiểm tra/cân bằng lốp, kiểm tra hệ thống phanh.
+- Mỗi 20.000 km hoặc 12 tháng: thay lọc gió động cơ, lọc gió điều hòa, kiểm tra bugi, vệ sinh bướm ga, kiểm tra dây curoa.
+- Mỗi 40.000 km hoặc 24 tháng (bảo dưỡng lớn): thay bugi, thay nước làm mát, thay dầu hộp số (tùy loại hộp số), thay lọc nhiên liệu, kiểm tra toàn bộ gầm và hệ thống treo.
+
+3. XE CHẠY ÍT (DƯỚI 5.000 KM/NĂM)
+Vẫn phải thay dầu mỗi 6 tháng vì dầu xuống cấp theo thời gian. Ắc quy xe ít chạy dễ yếu điện: nên nổ máy 15 phút mỗi tuần hoặc sạc bổ sung.
+
+4. XE KINH DOANH DỊCH VỤ (TAXI, GRAB)
+Rút ngắn chu kỳ còn 70% mốc chuẩn (ví dụ thay dầu mỗi 3.500 km) do tải nặng, chạy liên tục, đường đô thị nhiều bụi.
+
+5. LƯU Ý KHI ĐẾN XƯỞNG
+Mang theo sổ bảo dưỡng hoặc ảnh ODO gần nhất. Kỹ thuật viên ghi nhận ODO hiện tại vào phiếu tiếp nhận để hẹn mốc tiếp theo. Mọi hạng mục phát sinh ngoài lịch chuẩn đều phải báo giá và được khách duyệt trước khi làm.

@@ -1,0 +1,1079 @@
+{% extends "base.html" %}
+
+{% block title %}Bảng công việc - Kỹ thuật viên{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== Light luxury — Than chì & Đồng :: Bảng công việc KTV ===== */
+    .pg-head {
+        display: flex; justify-content: space-between; align-items: flex-end;
+        gap: 16px; flex-wrap: wrap;
+        padding: 22px 0 18px; border-bottom: 1px solid var(--lux-hairline);
+        margin-bottom: 20px;
+    }
+    .pg-kicker { font-size: .65rem; letter-spacing: .22em; text-transform: uppercase; color: var(--copper-orange); font-weight: 700; margin-bottom: 6px; }
+    .pg-head h1 { font-size: 1.65rem; margin: 0; font-weight: 650; letter-spacing: -.02em; }
+    .pg-sub { color: var(--lux-slate); font-size: .86rem; margin: 6px 0 0; }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .kpi {
+        background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px;
+        padding: 15px 17px 13px; box-shadow: 0 1px 3px rgba(30,30,30,.04);
+        animation: kpiIn .5s both; animation-delay: calc(var(--i, 0) * 60ms);
+    }
+    .kpi .l { font-size: .62rem; text-transform: uppercase; letter-spacing: .13em; color: var(--lux-slate); font-weight: 700; }
+    .kpi .n { font-size: 1.65rem; font-weight: 700; letter-spacing: -.03em; color: var(--lux-graphite); font-variant-numeric: tabular-nums; margin-top: 5px; line-height: 1.15; }
+    .kpi .bar { height: 3px; background: var(--lux-hairline); border-radius: 3px; margin-top: 11px; overflow: hidden; }
+    .kpi .bar i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #C87941, #E0A375); transform-origin: left; animation: barIn .9s .3s both cubic-bezier(.22,1,.36,1); }
+    @keyframes kpiIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes barIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+    .tb { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .tb-search { position: relative; flex: 1 1 280px; }
+    .tb-search i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #B5AFA8; font-size: .85rem; }
+    .tb-search input {
+        width: 100%; height: 40px; border: 1px solid var(--lux-hairline); background: #fff;
+        border-radius: 999px; padding: 0 16px 0 40px; font-size: .87rem; color: var(--lux-graphite);
+        transition: border-color .25s, box-shadow .25s;
+    }
+    .tb-search input:focus { outline: none; border-color: var(--copper-orange); box-shadow: 0 0 0 3px rgba(200,121,65,.12); }
+    .tb-search input::placeholder { color: #B5AFA8; }
+    .chips { display: flex; gap: 7px; flex-wrap: wrap; }
+    .wo-chip {
+        border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-slate);
+        border-radius: 999px; padding: .42rem .9rem; font-size: .77rem; font-weight: 600;
+        letter-spacing: .02em; transition: all .25s;
+    }
+    .wo-chip:hover { border-color: var(--copper-orange); color: var(--lux-bronze-deep); }
+    .wo-chip.on { background: var(--lux-graphite); border-color: var(--lux-graphite); color: #fff; }
+    .wo-chip span { opacity: .55; font-weight: 700; margin-left: 3px; }
+    .wo-chip.on span { color: #E0A375; opacity: 1; }
+    .tb-count { color: var(--lux-slate); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+
+    .wo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 16px; }
+    .wo {
+        background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px;
+        padding: 17px 19px 15px; display: flex; flex-direction: column; gap: 11px;
+        position: relative; overflow: hidden;
+        transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s, border-color .3s;
+        animation: woIn .5s both; animation-delay: min(calc(var(--i, 0) * 45ms), 600ms);
+    }
+    @keyframes woIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    .wo::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--lux-hairline); }
+    .wo[data-status="Pending"]::before { background: linear-gradient(180deg, #C87941, #E0A375); }
+    .wo[data-status="In Progress"]::before { background: linear-gradient(180deg, #1E1E1E, #4A4A4A); }
+    .wo[data-status="Completed"]::before { background: linear-gradient(180deg, #2E7D4F, #5BA57A); }
+    .wo:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -26px rgba(30,30,30,.4); border-color: #D8D1C8; }
+    .wo.is-cancelled { opacity: .62; }
+    .wo-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .wo-id { display: flex; align-items: baseline; gap: 9px; }
+    .wo-code { font-size: .84rem; font-weight: 700; letter-spacing: .08em; color: var(--lux-graphite); }
+    .wo-date { font-size: .68rem; color: #A9A29A; letter-spacing: .05em; }
+    .badge-pill {
+        display: inline-flex; align-items: center; gap: 4px;
+        font-size: .66rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+        padding: .3em .75em; border-radius: 999px; white-space: nowrap;
+    }
+    .b-copper { background: rgba(200,121,65,.12); color: #A65E2F; border: 1px solid rgba(200,121,65,.28); }
+    .b-green { background: rgba(46,125,79,.10); color: #2E7D4F; border: 1px solid rgba(46,125,79,.25); }
+    .b-amber { background: rgba(191,144,0,.11); color: #8A6D00; border: 1px solid rgba(191,144,0,.26); }
+    .b-red { background: rgba(192,57,43,.09); color: #B03A2E; border: 1px solid rgba(192,57,43,.22); }
+    .b-gray { background: #F1EFEA; color: #7A746D; border: 1px solid #E4DFD8; }
+    .b-slate { background: #F1EFEA; color: #4A4A4A; border: 1px solid #DDD7CF; }
+    .b-graphite { background: rgba(30,30,30,.07); color: #2D2D2D; border: 1px solid rgba(30,30,30,.15); }
+    .wo-plate { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .wo-plate i { color: var(--copper-orange); font-size: 1.05rem; }
+    .wo-plate span { font-size: 1.18rem; font-weight: 700; letter-spacing: .04em; color: var(--lux-graphite); font-variant-numeric: tabular-nums; }
+    .wo-plate small { font-size: .74rem; color: var(--lux-slate); letter-spacing: .04em; }
+    .wo-sym { margin: 0; font-size: .83rem; color: var(--lux-slate); line-height: 1.55; }
+    .wo-sym i { color: #C9C2B9; }
+    .wo-parts { display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; font-size: .7rem; font-weight: 600; color: #A65E2F; background: rgba(200,121,65,.09); border-radius: 999px; padding: .15em .6em; }
+
+    .steps { display: flex; margin: 2px 0 0; padding: 0; list-style: none; gap: 4px; }
+    .steps li { flex: 1; position: relative; text-align: center; font-size: .58rem; text-transform: uppercase; letter-spacing: .07em; color: #A9A29A; padding-top: 21px; font-weight: 600; }
+    .steps li .dot {
+        position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+        width: 16px; height: 16px; border-radius: 50%; background: #fff;
+        border: 1.5px solid var(--lux-hairline); font-size: .56rem; font-weight: 700;
+        display: flex; align-items: center; justify-content: center; color: #A9A29A; z-index: 1;
+    }
+    .steps li::after { content: ""; position: absolute; top: 7px; left: calc(50% + 10px); width: calc(100% - 20px); height: 1.5px; background: var(--lux-hairline); }
+    .steps li:last-child::after { display: none; }
+    .steps li.done { color: var(--lux-slate); }
+    .steps li.done .dot { background: var(--lux-graphite); border-color: var(--lux-graphite); color: #fff; }
+    .steps li.done::after { background: var(--lux-graphite); }
+    .steps li.cur { color: var(--copper-orange); font-weight: 700; }
+    .steps li.cur .dot { background: var(--copper-orange); border-color: var(--copper-orange); color: #fff; box-shadow: 0 0 0 4px rgba(200,121,65,.15); }
+
+    .wo-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--lux-hairline); padding-top: 11px; margin-top: auto; }
+    .wo-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .wo-acts { display: flex; gap: 7px; flex-wrap: wrap; }
+    .btn-step { background: var(--lux-graphite); color: #fff; border: none; font-size: .77rem; padding: .45rem 1rem; }
+    .btn-step:hover { background: var(--copper-orange); color: #fff; transform: translateY(-1px); box-shadow: 0 7px 16px -8px rgba(200,121,65,.55); }
+    .btn-quote { background: transparent; border: 1px solid rgba(200,121,65,.45); color: #A65E2F; font-size: .77rem; padding: .45rem 1rem; }
+    .btn-quote:hover { background: var(--copper-orange); border-color: var(--copper-orange); color: #fff; transform: translateY(-1px); }
+    .btn-ghost { background: #fff; border: 1px solid #D8D1C8; color: var(--lux-slate); font-size: .77rem; padding: .45rem 1rem; }
+    .btn-ghost:hover { border-color: var(--lux-graphite); color: var(--lux-graphite); background: #fff; }
+    .btn-done { background: #2E7D4F; border: none; color: #fff; font-size: .77rem; padding: .45rem 1rem; }
+    .btn-done:hover { background: #256840; color: #fff; transform: translateY(-1px); }
+    .btn-copper { background: var(--copper-orange); border: none; color: #fff; font-size: .77rem; padding: .45rem 1rem; }
+    .btn-copper:hover { background: var(--lux-bronze-deep); color: #fff; transform: translateY(-1px); }
+
+    .repair-snapshot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; padding: 9px; border: 1px solid var(--lux-hairline); border-radius: 10px; background: var(--lux-ivory); }
+    .repair-snapshot .item { min-width: 0; }
+    .repair-snapshot .k { display: block; font-size: .56rem; letter-spacing: .09em; text-transform: uppercase; color: var(--lux-slate); font-weight: 700; }
+    .repair-snapshot .v { display: block; margin-top: 2px; color: var(--lux-graphite); font-size: .76rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .repair-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .repair-money { padding: 12px 14px; border: 1px solid var(--lux-hairline); border-radius: 11px; background: var(--lux-ivory); }
+    .repair-money .k { display: block; color: var(--lux-slate); font-size: .64rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .repair-money .v { display: block; margin-top: 4px; color: var(--lux-graphite); font-size: 1.04rem; font-weight: 700; }
+    .repair-money.total { border-color: rgba(200,121,65,.45); background: rgba(200,121,65,.06); }
+    .repair-money.total .v { color: var(--lux-bronze-deep); }
+    .repair-part-table { border: 1px solid var(--lux-hairline); border-radius: 11px; overflow: hidden; }
+    .repair-part-table .table { margin: 0; }
+
+    .empty {
+        grid-column: 1 / -1; text-align: center; padding: 54px 20px;
+        background: #fff; border: 1px dashed var(--lux-hairline); border-radius: 14px; color: var(--lux-slate);
+    }
+    .empty i { font-size: 2rem; color: #D8D1C8; display: block; margin-bottom: 10px; }
+
+    /* Modal phụ */
+    .t-copper { color: var(--copper-orange) !important; }
+    .modal .nav-tabs { border-bottom: 1px solid var(--lux-hairline); gap: 2px; }
+    .modal .nav-tabs .nav-link { border: none; background: none; color: var(--lux-slate); font-size: .78rem; font-weight: 600; letter-spacing: .03em; padding: .55rem .9rem; border-bottom: 2px solid transparent; border-radius: 7px 7px 0 0; }
+    .modal .nav-tabs .nav-link.active { color: var(--lux-graphite); background: var(--lux-ivory); border-bottom-color: var(--copper-orange); }
+    .form-control:disabled, .form-select:disabled { background: var(--lux-sand); color: var(--lux-slate); border-color: var(--lux-hairline); opacity: 1; }
+    .sec-title { color: var(--copper-orange); border-bottom: 1px solid var(--lux-hairline); padding-bottom: 7px; margin-bottom: 14px; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; font-weight: 700; }
+    .ai-box { background: var(--lux-ivory); border: 1px solid var(--lux-hairline); border-left: 3px solid var(--copper-orange); border-radius: 10px; padding: 10px 13px; font-size: .84rem; max-height: 110px; overflow-y: auto; }
+    .note { background: rgba(200,121,65,.07); border: 1px dashed rgba(200,121,65,.35); color: #8A5A32; border-radius: 10px; padding: .6rem .8rem; font-size: .8rem; text-align: center; }
+    .modal .card { box-shadow: none; }
+    .modal .card-header { font-size: .82rem; }
+    .modal .list-group-item { background: #fff; border-color: var(--lux-hairline); }
+    /* ===== Modal Phiếu tiếp nhận — light luxury ===== */
+    .rc-modal .modal-content { border-radius: 16px; overflow: hidden; }
+    .rc-modal .modal-header { background: #fff; color: var(--lux-graphite); border-bottom: 1px solid var(--lux-hairline); padding: 16px 20px; }
+    .rc-modal .modal-title { color: var(--lux-graphite); }
+    .rc-modal .modal-header .btn-close { filter: none; opacity: .55; }
+    .rc-modal .modal-header .btn-close:hover { opacity: 1; }
+    .rc-modal .modal-footer { background: #fff; border-top: 1px solid var(--lux-hairline); padding: 14px 20px; }
+    .rc-modal .modal-body { background: var(--lux-ivory); }
+    .rc-kicker { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: #8A5A32; margin-bottom: 3px; }
+    .rc-plate-t { letter-spacing: .08em; }
+    .rc-title-sub { font-size: .78rem; font-weight: 400; letter-spacing: .03em; color: var(--lux-slate); margin-left: 10px; }
+    .rc-hint { font-size: .76rem; color: var(--lux-slate); }
+    .rc-hint i { color: var(--copper-orange); }
+
+    .rc-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 13px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .rc-card-h { display: flex; align-items: center; gap: 9px; padding: 11px 15px; border-bottom: 1px solid var(--lux-hairline); background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); font-size: .73rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--lux-graphite); }
+    .rc-card-h i { margin-left: auto; color: var(--copper-orange); font-size: .92rem; opacity: .8; }
+    .rc-num { flex: 0 0 21px; width: 21px; height: 21px; border-radius: 50%; background: var(--copper-orange); color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: 0; display: inline-flex; align-items: center; justify-content: center; }
+    .rc-card-b { padding: 14px 16px; }
+    .rc-lbl { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 6px; }
+    .rc-req { color: var(--copper-orange); }
+
+    .rc-cust { display: flex; align-items: center; gap: 11px; padding-bottom: 11px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 9px; }
+    .rc-avatar { flex: 0 0 42px; width: 42px; height: 42px; border-radius: 50%; background: var(--lux-graphite); color: #E0A375; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .92rem; letter-spacing: .03em; }
+    .rc-cust .nm { font-weight: 700; font-size: .97rem; color: var(--lux-graphite); line-height: 1.4; }
+    .rc-cust .rl { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--copper-orange); font-weight: 700; margin-top: 2px; }
+    .rc-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--lux-hairline); font-size: .86rem; }
+    .rc-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rc-row .k { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); flex-shrink: 0; }
+    .rc-row .v { font-weight: 600; color: var(--lux-graphite); text-align: right; word-break: break-word; }
+
+    .rc-plate { display: inline-flex; align-items: center; gap: 9px; background: var(--lux-graphite); color: #fff; font-weight: 700; font-size: 1.02rem; letter-spacing: .08em; padding: .38em 1em; border-radius: 9px; border-bottom: 3px solid var(--copper-orange); box-shadow: 0 6px 14px -8px rgba(30,30,30,.6); }
+    .rc-plate i { color: #E0A375; font-size: .95rem; letter-spacing: 0; }
+    .rc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 14px; margin-top: 13px; }
+    .rc-grid .cell { background: var(--lux-ivory); border: 1px solid var(--lux-hairline); border-radius: 9px; padding: 7px 10px; }
+    .rc-grid .cell .k { display: block; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 2px; }
+    .rc-grid .cell .v { font-size: .87rem; font-weight: 700; color: var(--lux-graphite); }
+    .rc-grid .cell-full { grid-column: 1 / -1; }
+    .rc-mono { font-family: Consolas, 'SF Mono', monospace; letter-spacing: .05em; font-size: .8rem !important; }
+
+    .rc-modal .form-control, .rc-modal .form-select { border-radius: 9px; border-color: #D8D1C8; font-size: .87rem; background: #fff; }
+    .rc-modal .form-control:focus, .rc-modal .form-select:focus { border-color: var(--copper-orange); box-shadow: 0 0 0 3px rgba(200,121,65,.13); background: #fff; }
+    .rc-modal .form-control:disabled { background: var(--lux-sand); color: var(--lux-slate); opacity: 1; }
+    .rc-sym { border-left: 3px solid var(--copper-orange) !important; font-size: .87rem !important; line-height: 1.55; }
+    .rc-suffix { background: var(--lux-sand); border-color: #D8D1C8; color: var(--lux-slate); font-size: .72rem; font-weight: 700; letter-spacing: .05em; }
+
+    .rc-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .rc-chips input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .rc-chips label { display: inline-flex; align-items: center; gap: 7px; margin: 0; cursor: pointer; user-select: none; font-size: .77rem; font-weight: 600; padding: .36em .85em; border-radius: 999px; border: 1px solid var(--lux-hairline); background: #fff; color: var(--lux-slate); transition: all .18s; }
+    .rc-chips label::before { content: ""; flex: 0 0 12px; width: 12px; height: 12px; border: 1.5px solid #C4BDB4; border-radius: 3px; background: #fff; transition: all .15s; }
+    .rc-chips label:hover { border-color: var(--copper-orange); color: var(--lux-bronze-deep); }
+    .rc-chips input:checked + label { background: rgba(200,121,65,.09); border-color: rgba(200,121,65,.6); color: #A65E2F; }
+    .rc-chips input:checked + label::before { background: var(--copper-orange); border-color: var(--copper-orange); box-shadow: inset 0 0 0 2px #fff; }
+    .rc-chips input:focus-visible + label { box-shadow: 0 0 0 3px rgba(200,121,65,.22); }
+    .rc-chips.warn label { color: #B03A2E; border-color: rgba(192,57,43,.32); background: rgba(192,57,43,.035); font-weight: 700; }
+    .rc-chips.warn label::before { border-radius: 50%; }
+    .rc-chips.warn label:hover { border-color: #C0392B; }
+    .rc-chips.warn input:checked + label { background: rgba(192,57,43,.1); border-color: rgba(192,57,43,.65); color: #A93226; }
+    .rc-chips.warn input:checked + label::before { background: #C0392B; border-color: #C0392B; }
+
+    .rc-seg { position: relative; display: inline-flex; gap: 3px; background: var(--lux-sand); border: 1px solid var(--lux-hairline); border-radius: 999px; padding: 3px; }
+    .rc-seg input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .rc-seg label { margin: 0; cursor: pointer; font-size: .78rem; font-weight: 700; padding: .33em 1.05em; border-radius: 999px; color: var(--lux-slate); transition: all .18s; }
+    .rc-seg label:hover { color: var(--lux-graphite); }
+    .rc-seg input:checked + label { color: #fff; box-shadow: 0 5px 12px -5px rgba(0,0,0,.45); }
+    .rc-seg input.s-nhe:checked + label { background: #2E7D4F; }
+    .rc-seg input.s-vua:checked + label { background: #8A6D00; }
+    .rc-seg input.s-nang:checked + label { background: #C0392B; }
+    .rc-seg input:focus-visible + label { outline: 2px solid var(--copper-orange); }
+
+    .rc-file { position: relative; display: flex; align-items: center; gap: 12px; padding: 13px 15px; border: 1.5px dashed rgba(200,121,65,.5); background: rgba(200,121,65,.045); border-radius: 11px; cursor: pointer; transition: all .2s; overflow: hidden; }
+    .rc-file:hover { background: rgba(200,121,65,.09); border-color: var(--copper-orange); }
+    .rc-file input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .rc-file i { font-size: 1.45rem; color: var(--copper-orange); }
+    .rc-file .ft { font-size: .82rem; font-weight: 700; color: var(--lux-graphite); }
+    .rc-file .fn { font-size: .7rem; color: var(--lux-slate); margin-top: 1px; }
+
+    .rc-modal .modal-body::-webkit-scrollbar { width: 9px; }
+    .rc-modal .modal-body::-webkit-scrollbar-track { background: var(--lux-ivory); }
+    .rc-modal .modal-body::-webkit-scrollbar-thumb { background: #D8D1C8; border-radius: 9px; border: 2px solid var(--lux-ivory); }
+
+    @media (max-width: 575.98px) {
+        .wo-grid { grid-template-columns: 1fr; }
+        .repair-snapshot, .repair-summary { grid-template-columns: 1fr; }
+    }
+</style>
+
+{% set tot = orders|length %}
+{% set pend = orders|selectattr('status','equalto','Pending')|list %}
+{% set pend1 = pend|rejectattr('reception_datetime')|list %}
+{% set wait_quote = pend|selectattr('reception_datetime')|rejectattr('customer_approval','equalto','Approved')|list %}
+{% set approved_wait = pend|selectattr('customer_approval','equalto','Approved')|list %}
+{% set inprog = orders|selectattr('status','equalto','In Progress')|list %}
+{% set done_orders = orders|selectattr('status','equalto','Completed')|list %}
+
+<div class="pg-head">
+    <div>
+        <div class="pg-kicker">Workshop · Kỹ thuật viên</div>
+        <h1>Bảng công việc</h1>
+        <p class="pg-sub">Quy trình 4 bước: Tiếp nhận → Báo giá → Sửa chữa → Bàn giao.</p>
+    </div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#directOrderModal">
+        <i class="bi bi-plus-lg me-1"></i> Lập đơn sửa chữa
+    </button>
+</div>
+
+<div class="kpi-row">
+    <div class="kpi" style="--i:0">
+        <div class="l">Tổng phiếu</div>
+        <div class="n" data-count="{{ tot }}">0</div>
+        <div class="bar"><i style="width:100%"></i></div>
+    </div>
+    <div class="kpi" style="--i:1">
+        <div class="l">Chờ tiếp nhận</div>
+        <div class="n" data-count="{{ pend1|length }}">0</div>
+        <div class="bar"><i style="width: {{ ((pend1|length) * 100 / tot)|round|int if tot else 0 }}%"></i></div>
+    </div>
+    <div class="kpi" style="--i:2">
+        <div class="l">Chờ báo giá</div>
+        <div class="n" data-count="{{ wait_quote|length }}">0</div>
+        <div class="bar"><i style="width: {{ ((wait_quote|length) * 100 / tot)|round|int if tot else 0 }}%"></i></div>
+    </div>
+    <div class="kpi" style="--i:3">
+        <div class="l">Đang sửa</div>
+        <div class="n" data-count="{{ inprog|length }}">0</div>
+        <div class="bar"><i style="width: {{ ((inprog|length) * 100 / tot)|round|int if tot else 0 }}%"></i></div>
+    </div>
+    <div class="kpi" style="--i:4">
+        <div class="l">Hoàn thành</div>
+        <div class="n" data-count="{{ done_orders|length }}">0</div>
+        <div class="bar"><i style="width: {{ ((done_orders|length) * 100 / tot)|round|int if tot else 0 }}%"></i></div>
+    </div>
+</div>
+
+<div class="tb">
+    <div class="tb-search">
+        <i class="bi bi-search"></i>
+        <input type="text" id="woSearch" placeholder="Tìm theo biển số, mã phiếu, triệu chứng, khách hàng..." autocomplete="off">
+    </div>
+    <div class="chips">
+        <button type="button" class="wo-chip on" data-stage="">Tất cả <span>{{ tot }}</span></button>
+        <button type="button" class="wo-chip" data-stage="1">Chờ tiếp nhận <span>{{ pend1|length }}</span></button>
+        <button type="button" class="wo-chip" data-stage="2">Chờ báo giá <span>{{ wait_quote|length }}</span></button>
+        <button type="button" class="wo-chip" data-stage="3">Đang sửa <span>{{ approved_wait|length + inprog|length }}</span></button>
+        <button type="button" class="wo-chip" data-stage="5">Hoàn thành <span>{{ done_orders|length }}</span></button>
+    </div>
+    <small class="tb-count" id="woCount">{{ tot }} phiếu</small>
+    <form action="/tech/dashboard" method="GET" class="d-flex align-items-center mb-0" style="margin-left: auto;">
+        <div class="input-group input-group-sm">
+            <span class="input-group-text bg-white border-end-0" style="border-radius: 999px 0 0 999px; border-color: var(--lux-hairline);"><i class="bi bi-calendar3 text-muted"></i></span>
+            <input type="date" name="date" class="form-control border-start-0" value="{{ search_date }}" style="border-radius: 0 999px 999px 0; border-color: var(--lux-hairline); color: var(--lux-graphite); max-width: 135px;" onchange="this.form.submit()">
+        </div>
+        {% if search_date %}
+        <a href="/tech/dashboard" class="btn btn-link btn-sm text-danger text-decoration-none ms-1"><i class="bi bi-x-circle-fill"></i></a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="wo-grid">
+{% for order in orders %}
+
+{% if order.status == 'Cancelled' %}{% set stage = 0 %}
+{% elif order.status == 'Completed' %}{% set stage = 5 %}
+{% elif order.status == 'In Progress' %}{% set stage = 3 %}
+{% elif order.customer_approval == 'Approved' %}{% set stage = 3 %}
+{% elif order.reception_datetime %}{% set stage = 2 %}
+{% else %}{% set stage = 1 %}{% endif %}
+
+<article class="wo{% if order.status == 'Cancelled' %} is-cancelled{% endif %}" style="--i: {{ loop.index0 }}"
+         data-stage="{{ stage }}" data-status="{{ order.status }}"
+         data-created="{{ order.created_at.strftime('%Y-%m-%d') if order.created_at else '' }}"
+         data-search="{{ ('RO-' ~ order.id ~ ' ' ~ order.vehicle.license_plate ~ ' ' ~ (order.symptoms or '') ~ ' ' ~ (order.vehicle.make or '') ~ ' ' ~ (order.vehicle.model or '') ~ ' ' ~ (order.vehicle.owner.full_name if order.vehicle.owner else ''))|lower }}">
+    <div class="wo-top">
+        <div class="wo-id"><span class="wo-code">#RO-{{ order.id }}</span><span class="wo-date">{{ order.created_at.strftime('%d/%m/%Y') }}</span></div>
+        {% if order.order_type == 'CarWash' %}
+        <span class="badge-pill b-copper">Dịch vụ</span>
+        {% else %}
+        <span class="badge-pill b-graphite">Sửa chữa</span>
+        {% endif %}
+    </div>
+    <div class="wo-plate">
+        <i class="bi bi-car-front-fill"></i>
+        <span>{{ order.vehicle.license_plate }}</span>
+        {% if order.vehicle.make or order.vehicle.model %}
+        <small>{{ order.vehicle.make or '' }} {{ order.vehicle.model or '' }}</small>
+        {% endif %}
+    </div>
+    <p class="wo-sym"><i class="bi bi-info-circle"></i> {{ order.symptoms }}
+        {% if order.used_parts %}
+        <span class="wo-parts"><i class="bi bi-box-seam"></i> {{ order.used_parts|length }} phụ tùng</span>
+        {% endif %}
+    </p>
+    <ol class="steps">
+        {% for s in ['Tiếp nhận', 'Báo giá', 'Sửa chữa', 'Bàn giao'] %}
+        <li class="{% if loop.index < stage %}done{% elif loop.index == stage and stage <= 4 %}cur{% endif %}">
+            <span class="dot">{% if loop.index < stage %}<i class="bi bi-check-lg" style="font-size:.6rem"></i>{% else %}{{ loop.index }}{% endif %}</span>{{ s }}
+        </li>
+        {% endfor %}
+    </ol>
+    {% if order.status == 'In Progress' %}
+    <div class="repair-snapshot">
+        <div class="item">
+            <span class="k">Kỹ thuật viên</span>
+            <span class="v">{{ order.technician.full_name if order.technician else 'Chưa phân công' }}</span>
+        </div>
+        <div class="item">
+            <span class="k">Giờ vào sửa</span>
+            <span class="v">{{ order.repair_started_at.strftime('%H:%M · %d/%m/%Y') if order.repair_started_at else 'Chưa ghi nhận' }}</span>
+        </div>
+        <div class="item">
+            <span class="k">Tiền công / báo giá</span>
+            <span class="v">{{ "{:,.0f}".format(order.estimated_cost or 0) }} đ</span>
+        </div>
+    </div>
+    {% endif %}
+    <div class="wo-foot">
+        <div class="wo-badges">
+            {% if not order.reception_datetime and order.status == 'Pending' %}
+            <span class="badge-pill b-amber">Chờ tiếp nhận</span>
+            {% endif %}
+            {% if order.reception_datetime and order.status == 'Pending' %}
+                {% if order.customer_approval == 'Pending' %}
+                <span class="badge-pill b-slate">Chờ duyệt KH</span>
+                {% elif order.customer_approval == 'Approved' %}
+                <span class="badge-pill b-green">KH đã duyệt</span>
+                {% elif order.customer_approval == 'Rejected' %}
+                <span class="badge-pill b-red">KH từ chối</span>
+                {% endif %}
+            {% endif %}
+            {% if order.status == 'In Progress' %}
+            <span class="badge-pill b-copper">Đang sửa chữa</span>
+            {% elif order.status == 'Completed' %}
+            <span class="badge-pill b-green">Hoàn thành</span>
+            {% elif order.status == 'Cancelled' %}
+            <span class="badge-pill b-gray">Đã hủy</span>
+            {% endif %}
+        </div>
+        <div class="wo-acts">
+            {% if order.status == 'Pending' and not order.reception_datetime %}
+            <button class="btn btn-step" data-bs-toggle="modal" data-bs-target="#receptionModal{{ order.id }}">
+                <i class="bi bi-clipboard-check me-1"></i>1 · Tiếp nhận xe
+            </button>
+            {% elif order.status == 'Pending' and order.reception_datetime and order.customer_approval == 'Pending' %}
+            <button class="btn btn-quote" data-bs-toggle="modal" data-bs-target="#quoteModal{{ order.id }}">
+                <i class="bi bi-cash-coin me-1"></i>2 · Lập báo giá
+            </button>
+            <button class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#addPartOrderModal{{ order.id }}"><i class="bi bi-box-seam me-1"></i>Phụ tùng</button>
+            {% elif order.status == 'Pending' and order.customer_approval == 'Approved' %}
+            <button class="btn btn-step" data-bs-toggle="modal" data-bs-target="#startRepairModal{{ order.id }}"><i class="bi bi-play-fill me-1"></i>3 · Nhận vào sửa</button>
+            {% elif order.status == 'In Progress' %}
+            <button class="btn btn-quote" data-bs-toggle="modal" data-bs-target="#repairDetailModal{{ order.id }}"><i class="bi bi-card-list me-1"></i> Chi tiết</button>
+            <button class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#addPartOrderModal{{ order.id }}"><i class="bi bi-box-seam me-1"></i> Phụ tùng</button>
+            <button class="btn btn-done" data-bs-toggle="modal" data-bs-target="#completeModal{{ order.id }}"><i class="bi bi-check2-all me-1"></i>4 · Hoàn thành</button>
+            {% elif order.status == 'Completed' %}
+                {% if not order.invoice %}
+                <form action="/tech/order/generate-invoice" method="POST" class="d-inline">
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <button type="submit" class="btn btn-copper"><i class="bi bi-receipt me-1"></i> Xuất hóa đơn</button>
+                </form>
+                {% else %}
+                <span class="badge-pill b-green"><i class="bi bi-check-circle"></i> Đã xuất HĐ</span>
+                <a href="/tech/invoice/{{ order.invoice.id }}/print" class="btn btn-ghost"><i class="bi bi-printer me-1"></i> In HĐ</a>
+                {% endif %}
+            {% elif order.status == 'Cancelled' %}
+            <button class="btn btn-ghost" disabled>Đã hủy</button>
+            {% endif %}
+        </div>
+    </div>
+</article>
+
+<!-- Modal Phiếu Tiếp Nhận — light luxury -->
+<div class="modal fade rc-modal" id="receptionModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <form action="/tech/reception" method="POST" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="rc-kicker"><i class="bi bi-clipboard-check me-1"></i>Phiếu tiếp nhận · RO-{{ order.id }}</div>
+                    <h5 class="modal-title"><span class="rc-plate-t">{{ order.vehicle.license_plate }}</span><span class="rc-title-sub">{{ order.vehicle.make }} {{ order.vehicle.model }}{% if order.vehicle.manufacture_year %} · Đời {{ order.vehicle.manufacture_year }}{% endif %}</span></h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+
+                <div class="row g-3">
+                    <!-- Cột Trái: Thông tin chung & KH -->
+                    <div class="col-lg-5">
+                        <!-- 1 · Khách hàng -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">1</span> Thông tin Khách hàng <i class="bi bi-person-lines-fill"></i></div>
+                            <div class="rc-card-b">
+                                {% set rc_parts = (order.vehicle.owner.full_name or 'Khách vãng lai').split() %}
+                                <div class="rc-cust">
+                                    <div class="rc-avatar">{{ (rc_parts[0][:1] ~ (rc_parts[1][:1] if rc_parts|length > 1 else ''))|upper }}</div>
+                                    <div>
+                                        <div class="nm">{{ order.vehicle.owner.full_name or 'Khách vãng lai' }}</div>
+                                        <div class="rl">Chủ xe · {{ order.vehicle.license_plate }}</div>
+                                    </div>
+                                </div>
+                                <div class="rc-row"><span class="k">Số điện thoại</span><span class="v">{{ order.vehicle.owner.phone or '---' }}</span></div>
+                                <div class="rc-row"><span class="k">Email</span><span class="v">{{ order.vehicle.owner.email or '---' }}</span></div>
+                                <div class="rc-row"><span class="k">Địa chỉ</span><span class="v">{{ order.vehicle.owner.address or '---' }}</span></div>
+                                {% if not order.vehicle.owner.phone %}
+                                <div class="mt-2 p-2 rounded" style="background:rgba(200,121,65,.08);border:1px dashed rgba(200,121,65,.45);color:#8A5A32;font-size:.8rem;">Hồ sơ chưa có SĐT — nhập ở ô bên dưới, hệ thống sẽ lưu vào tài khoản khách.</div>
+                                {% endif %}
+                                <hr class="my-2">
+                                <div class="mb-2">
+                                    <label class="rc-lbl" for="rc_phone_{{ order.id }}">Cập nhật SĐT khách <span class="rc-req">*</span></label>
+                                    <input type="text" id="rc_phone_{{ order.id }}" name="customer_phone" class="form-control" required placeholder="Bắt buộc để liên hệ" value="{{ order.vehicle.owner.phone or '' }}">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="rc-lbl" for="rc_email_{{ order.id }}">Cập nhật Email</label>
+                                    <input type="email" id="rc_email_{{ order.id }}" name="customer_email" class="form-control" placeholder="VD: khach@email.com" value="{{ order.vehicle.owner.email or '' }}">
+                                </div>
+                                <div class="mb-0">
+                                    <label class="rc-lbl" for="rc_addr_{{ order.id }}">Cập nhật địa chỉ</label>
+                                    <input type="text" id="rc_addr_{{ order.id }}" name="customer_address" class="form-control" placeholder="Số nhà, đường, phường/xã..." value="{{ order.vehicle.owner.address or '' }}">
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2 · Xe -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">2</span> Thông tin Xe <i class="bi bi-car-front-fill"></i></div>
+                            <div class="rc-card-b">
+                                <span class="rc-plate"><i class="bi bi-car-front"></i>{{ order.vehicle.license_plate }}</span>
+                                <div class="rc-grid">
+                                    <div class="cell"><span class="k">Hãng xe</span><span class="v">{{ order.vehicle.make or '---' }}</span></div>
+                                    <div class="cell"><span class="k">Dòng xe</span><span class="v">{{ order.vehicle.model or '---' }}</span></div>
+                                    <div class="cell"><span class="k">Đời xe</span><span class="v">{{ order.vehicle.manufacture_year or '---' }}</span></div>
+                                    <div class="cell"><span class="k">Số máy</span><span class="v rc-mono">{{ order.vehicle.engine_number or '---' }}</span></div>
+                                    <div class="cell cell-full"><span class="k">Số VIN</span><span class="v rc-mono">{{ order.vehicle.VIN or '---' }}</span></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 3 · Thời gian & thông số -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">3</span> Thời gian & Thông số cơ bản <i class="bi bi-clipboard-data"></i></div>
+                            <div class="rc-card-b">
+                                <div class="mb-3">
+                                    <label class="rc-lbl" for="rc_dt_{{ order.id }}">Ngày giờ nhận xe <span class="rc-req">*</span></label>
+                                    <input type="datetime-local" id="rc_dt_{{ order.id }}" name="reception_datetime" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="rc-lbl" for="rc_del_{{ order.id }}">Người giao xe <span class="rc-req">*</span></label>
+                                    <input type="text" id="rc_del_{{ order.id }}" name="deliverer_name" class="form-control" required placeholder="Tên người mang xe tới">
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="rc-lbl" for="rc_fuel_{{ order.id }}">Mức nhiên liệu</label>
+                                        <select id="rc_fuel_{{ order.id }}" name="fuel_level" class="form-select">
+                                            <option value="Đầy">Đầy (Full)</option>
+                                            <option value="1/2">1/2 (Half)</option>
+                                            <option value="Gần hết">Gần hết (Low)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="rc-lbl" for="rc_odo_{{ order.id }}">Số ODO lúc nhận</label>
+                                        <div class="input-group">
+                                            <input type="number" id="rc_odo_{{ order.id }}" name="current_odo" class="form-control" placeholder="VD: 50000" value="{{ order.vehicle.current_odo or '' }}">
+                                            <span class="input-group-text rc-suffix">km</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Cột Phải: Kiểm tra chi tiết -->
+                    <div class="col-lg-7">
+                        <!-- 4 · Ngoại thất & Hình ảnh -->
+                        <section class="rc-card mb-3">
+                            <div class="rc-card-h"><span class="rc-num">4</span> Ngoại thất & Hình ảnh <i class="bi bi-camera-fill"></i></div>
+                            <div class="rc-card-b">
+                                <span class="rc-lbl">Checklist hư hỏng ngoại thất</span>
+                                <div class="rc-chips mb-3">
+                                    {% for item in ['Cản trước', 'Cản sau', 'Cửa trái', 'Cửa phải', 'Nắp capo', 'Kính xe', 'Đèn xe', 'Gương xe', 'Lốp xe'] %}
+                                    <input type="checkbox" name="exterior_scratches" value="{{ item }}" id="ext_{{ order.id }}_{{ loop.index }}">
+                                    <label for="ext_{{ order.id }}_{{ loop.index }}">{{ item }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="rc-lbl">Ảnh hiện trạng xe <span style="text-transform: none; letter-spacing: .02em; color: #B5AFA8;">· tùy chọn</span></span>
+                                <label class="rc-file">
+                                    <i class="bi bi-image-fill"></i>
+                                    <div>
+                                        <div class="ft">Bấm để chọn ảnh hiện trạng xe</div>
+                                        <div class="fn">JPG / PNG · tối đa 1 ảnh</div>
+                                    </div>
+                                    <input type="file" name="vehicle_images" accept="image/*" onchange="var f=this.files[0]; this.parentNode.querySelector('.fn').textContent = f ? f.name : 'JPG / PNG · tối đa 1 ảnh';">
+                                </label>
+                            </div>
+                        </section>
+
+                        <!-- 5 · Tình trạng kỹ thuật -->
+                        <section class="rc-card mb-3">
+                            <div class="rc-card-h"><span class="rc-num">5</span> Tình trạng kỹ thuật ban đầu <i class="bi bi-wrench-adjustable"></i></div>
+                            <div class="rc-card-b">
+                                <div class="mb-3">
+                                    <span class="rc-lbl">Triệu chứng khách báo (yêu cầu)</span>
+                                    <textarea class="form-control rc-sym" disabled rows="2">{{ order.symptoms }}</textarea>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-5">
+                                        <span class="rc-lbl">Mức độ lỗi</span>
+                                        <div class="rc-seg mb-2">
+                                            <input type="radio" name="symptom_severity" value="Nhẹ" id="sev1_{{ order.id }}" class="s-nhe">
+                                            <label for="sev1_{{ order.id }}">Nhẹ</label>
+                                            <input type="radio" name="symptom_severity" value="Trung bình" id="sev2_{{ order.id }}" checked class="s-vua">
+                                            <label for="sev2_{{ order.id }}">Vừa</label>
+                                            <input type="radio" name="symptom_severity" value="Nặng" id="sev3_{{ order.id }}" class="s-nang">
+                                            <label for="sev3_{{ order.id }}">Nặng</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <label class="rc-lbl" for="rc_snd_{{ order.id }}">Âm thanh bất thường</label>
+                                        <input type="text" id="rc_snd_{{ order.id }}" name="abnormal_sounds" class="form-control" placeholder="Ví dụ: Lạch cạch gầm trước...">
+                                    </div>
+                                </div>
+                                <span class="rc-lbl">Đèn cảnh báo trên taplo</span>
+                                <div class="rc-chips warn">
+                                    {% for item in ['Check Engine', 'ABS', 'Túi khí', 'Dầu máy', 'Nhiệt độ nước', 'Khác'] %}
+                                    <input type="checkbox" name="warning_lights" value="{{ item }}" id="warn_{{ order.id }}_{{ loop.index }}">
+                                    <label for="warn_{{ order.id }}_{{ loop.index }}">{{ item }}</label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 6 · Phụ kiện bàn giao -->
+                        <section class="rc-card">
+                            <div class="rc-card-h"><span class="rc-num">6</span> Phụ kiện bàn giao <i class="bi bi-box-seam"></i></div>
+                            <div class="rc-card-b">
+                                <div class="row g-2 align-items-start">
+                                    <div class="col-4">
+                                        <label class="rc-lbl" for="rc_key_{{ order.id }}">Số chìa khóa</label>
+                                        <input type="number" id="rc_key_{{ order.id }}" name="key_count" class="form-control" value="1" min="1">
+                                    </div>
+                                    <div class="col-8">
+                                        <span class="rc-lbl">Checklist đồ cá nhân / phụ kiện</span>
+                                        <div class="rc-chips">
+                                            {% for item in ['Lốp dự phòng', 'Kích nâng xe', 'Bộ dụng cụ', 'Camera hành trình', 'Thẻ ETC', 'Giấy tờ xe'] %}
+                                            <input type="checkbox" name="personal_belongings" value="{{ item }}" id="acc_{{ order.id }}_{{ loop.index }}">
+                                            <label for="acc_{{ order.id }}_{{ loop.index }}">{{ item }}</label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="rc-hint"><i class="bi bi-asterisk me-1"></i>Các trường <strong>*</strong> là bắt buộc — phiếu được in bàn giao cho khách</span>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-step"><i class="bi bi-check2-circle me-1"></i> Lưu phiếu tiếp nhận</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Nhận xe vào sửa -->
+{% if order.status == 'Pending' and order.customer_approval == 'Approved' %}
+<div class="modal fade" id="startRepairModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form action="/tech/update-status" method="POST" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-play-circle me-2 t-copper"></i>Nhận vào sửa — {{ order.vehicle.license_plate }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <input type="hidden" name="status" value="In Progress">
+                <div class="note mb-3">Xác nhận kỹ thuật viên, giờ xe vào khu sửa chữa và ghi chú ban đầu.</div>
+                <div class="repair-summary mb-3">
+                    {% set start_parts = namespace(total=0) %}
+                    {% for rop in order.used_parts %}{% set start_parts.total = start_parts.total + (rop.quantity * rop.unit_price) %}{% endfor %}
+                    <div class="repair-money"><span class="k">Tiền công / báo giá</span><span class="v">{{ "{:,.0f}".format(order.estimated_cost or 0) }} đ</span></div>
+                    <div class="repair-money"><span class="k">Tiền linh kiện</span><span class="v">{{ "{:,.0f}".format(start_parts.total) }} đ</span></div>
+                    <div class="repair-money total"><span class="k">Tạm tính</span><span class="v">{{ "{:,.0f}".format((order.estimated_cost or 0) + start_parts.total) }} đ</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Kỹ thuật viên sửa <span class="text-danger">*</span></label>
+                        {% if user.role in ['manager', 'admin'] %}
+                        <select name="technician_id" class="form-select" required>
+                            <option value="">-- Chọn kỹ thuật viên --</option>
+                            {% for technician in technicians %}
+                            <option value="{{ technician.id }}" {% if order.technician_id == technician.id %}selected{% endif %}>{{ technician.full_name or technician.username }}</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <input type="text" class="form-control" value="{{ user.get('name') or user.sub }}" disabled>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Giờ vào sửa <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="repair_started_at" class="form-control repair-start-input" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label">Ghi chú khi nhận sửa</label>
+                    <textarea name="repair_notes" class="form-control" rows="3" placeholder="VD: Ưu tiên kiểm tra hệ thống phanh, khách cần xe trước 17:00...">{{ order.repair_notes or '' }}</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-step"><i class="bi bi-play-fill me-1"></i> Chuyển sang đang sửa</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal Thông tin xe đang sửa -->
+{% if order.status == 'In Progress' %}
+<div class="modal fade" id="repairDetailModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <form action="/tech/update-repair-details" method="POST" class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="rc-kicker"><i class="bi bi-tools me-1"></i>Đang sửa chữa · RO-{{ order.id }}</div>
+                    <h5 class="modal-title">{{ order.vehicle.license_plate }} <span class="rc-title-sub">{{ order.vehicle.make or '' }} {{ order.vehicle.model or '' }}</span></h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                {% set detail_parts = namespace(total=0) %}
+                {% for rop in order.used_parts %}{% set detail_parts.total = detail_parts.total + (rop.quantity * rop.unit_price) %}{% endfor %}
+                <div class="repair-summary mb-4">
+                    <div class="repair-money"><span class="k">Tiền công / báo giá</span><span class="v">{{ "{:,.0f}".format(order.estimated_cost or 0) }} đ</span></div>
+                    <div class="repair-money"><span class="k">Tiền linh kiện</span><span class="v">{{ "{:,.0f}".format(detail_parts.total) }} đ</span></div>
+                    <div class="repair-money total"><span class="k">Tạm tính</span><span class="v">{{ "{:,.0f}".format((order.estimated_cost or 0) + detail_parts.total) }} đ</span></div>
+                </div>
+
+                <h6 class="sec-title">Phát sinh trong lúc sửa</h6>
+                <div class="mb-3">
+                    <label class="form-label">Lỗi phát sinh thêm / cập nhật kết quả kiểm tra</label>
+                    <textarea name="inspection_result" class="form-control" rows="3" placeholder="VD: Mở ra thấy thêm rô-tuyn lái rơ, má phanh mòn quá giới hạn...">{{ order.inspection_result or '' }}</textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Tiền công / báo giá (sửa khi có phát sinh)</label>
+                    <div class="input-group">
+                        <input type="number" name="estimated_cost" class="form-control" min="0" step="1000" value="{{ order.estimated_cost or 0 }}" data-parts="{{ detail_parts.total }}" oninput="var p=Number(this.dataset.parts||0), s=this.value.trim(), v=s==='' ? null : Number(s); this.closest('form').querySelector('.q-preview').textContent = v===null ? 'Chưa nhập tiền công — tạm tính riêng linh kiện: ' + p.toLocaleString('vi-VN') + ' đ' : 'Tạm tính mới: ' + (p+v).toLocaleString('vi-VN') + ' đ (công ' + v.toLocaleString('vi-VN') + ' + linh kiện ' + p.toLocaleString('vi-VN') + ')';">
+                        <span class="input-group-text">VNĐ</span>
+                    </div>
+                    <div class="q-preview" style="font-size:.82rem;font-weight:700;color:var(--lux-bronze-deep);margin-top:6px;">Tạm tính mới: {{ "{:,.0f}".format((order.estimated_cost or 0) + detail_parts.total) }} đ</div>
+                </div>
+
+                <h6 class="sec-title">Thông tin thực hiện</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Kỹ thuật viên sửa</label>
+                        {% if user.role in ['manager', 'admin'] %}
+                        <select name="technician_id" class="form-select">
+                            <option value="">-- Chưa phân công --</option>
+                            {% for technician in technicians %}
+                            <option value="{{ technician.id }}" {% if order.technician_id == technician.id %}selected{% endif %}>{{ technician.full_name or technician.username }}</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <input type="text" class="form-control" value="{{ order.technician.full_name if order.technician else (user.get('name') or user.sub) }}" disabled>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Giờ vào sửa</label>
+                        <input type="datetime-local" name="repair_started_at" class="form-control" value="{{ order.repair_started_at.strftime('%Y-%m-%dT%H:%M') if order.repair_started_at else '' }}">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Ghi chú sửa chữa</label>
+                    <textarea name="repair_notes" class="form-control" rows="3" placeholder="Ghi chú tình trạng, yêu cầu hoặc tiến độ sửa chữa...">{{ order.repair_notes or '' }}</textarea>
+                </div>
+
+                <h6 class="sec-title">Linh kiện sử dụng</h6>
+                {% if order.used_parts %}
+                <div class="repair-part-table">
+                    <table class="table align-middle">
+                        <thead><tr><th>Linh kiện</th><th class="text-center">SL</th><th class="text-end">Đơn giá</th><th class="text-end">Thành tiền</th><th></th></tr></thead>
+                        <tbody>
+                            {% for rop in order.used_parts %}
+                            <tr>
+                                <td><strong>{{ rop.part.name }}</strong><br><small class="text-muted">{{ rop.part.part_number or '' }}</small></td>
+                                <td class="text-center">{{ rop.quantity }}</td>
+                                <td class="text-end">{{ "{:,.0f}".format(rop.unit_price) }} đ</td>
+                                <td class="text-end fw-bold">{{ "{:,.0f}".format(rop.quantity * rop.unit_price) }} đ</td>
+                                <td class="text-end"><button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" formaction="/tech/order/remove-part" formmethod="post" name="rop_id" value="{{ rop.id }}" title="Gỡ linh kiện, hoàn lại kho" onclick="return confirm('Gỡ {{ rop.part.name }} khỏi phiếu? Tồn kho sẽ được hoàn lại.');"><i class="bi bi-x-lg"></i></button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="note">Chưa có linh kiện nào được cấp cho phiếu sửa chữa này. Dùng nút <strong>Phụ tùng</strong> ngoài bảng công việc để thêm.</div>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-step"><i class="bi bi-floppy me-1"></i> Lưu thông tin</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal Kiểm tra & Báo Giá -->
+{% if order.status == 'Pending' and order.reception_datetime and order.customer_approval == 'Pending' %}
+{% set qparts = namespace(total=0) %}
+{% for rop in order.used_parts %}{% set qparts.total = qparts.total + (rop.quantity * rop.unit_price) %}{% endfor %}
+<div class="modal fade" id="quoteModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <form action="/tech/quote" method="POST" class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="rc-kicker">Báo giá chi tiết · RO-{{ order.id }}</div>
+                    <h5 class="modal-title">{{ order.vehicle.license_plate }} <span class="rc-title-sub">{{ order.vehicle.make or '' }} {{ order.vehicle.model or '' }}</span></h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <div class="mb-3">
+                    <label class="form-label">Triệu chứng khách báo</label>
+                    <textarea class="form-control" disabled rows="2">{{ order.symptoms }}</textarea>
+                </div>
+                {% if order.ai_diagnosis %}
+                <div class="mb-3">
+                    <label class="form-label">AI Chẩn đoán (Tham khảo)</label>
+                    <div class="ai-box">{{ order.ai_diagnosis }}</div>
+                </div>
+                {% endif %}
+                <hr>
+                <div class="mb-3">
+                    <label class="form-label">Kết quả kỹ thuật viên kiểm tra <span class="text-danger">*</span></label>
+                    <textarea name="inspection_result" class="form-control" rows="3" required placeholder="Ghi rõ sửa gì, thay gì, vì sao phải thay">{{ order.inspection_result or '' }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Linh kiện dự kiến thay ({{ order.used_parts|length }} mã)</label>
+                    {% if order.used_parts %}
+                    <div class="repair-part-table mb-2">
+                        <table class="table align-middle mb-0">
+                            <tbody>
+                                {% for rop in order.used_parts %}
+                                <tr>
+                                    <td><strong>{{ rop.part.name }}</strong><br><small class="text-muted">{{ rop.part.part_number or '' }}{% if rop.part.brand %} · {{ rop.part.brand }}{% endif %}</small></td>
+                                    <td class="text-center text-nowrap">x{{ rop.quantity }}</td>
+                                    <td class="text-end text-nowrap">{{ "{:,.0f}".format(rop.unit_price) }} đ</td>
+                                    <td class="text-end text-nowrap fw-bold">{{ "{:,.0f}".format(rop.quantity * rop.unit_price) }} đ</td>
+                                    <td class="text-end"><button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" formaction="/tech/order/remove-part" formmethod="post" name="rop_id" value="{{ rop.id }}" title="Gỡ dòng này" onclick="return confirm('Gỡ {{ rop.part.name }} khỏi báo giá?');"><i class="bi bi-x-lg"></i></button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="note mb-2">Chưa có linh kiện nào — bấm nút <strong>Phụ tùng</strong> ngoài bảng để thêm trước khi gửi báo giá.</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tiền công sửa chữa (chưa gồm linh kiện) <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="number" name="estimated_cost" class="form-control" required min="0" step="1000" placeholder="Ví dụ: 1500000" value="{{ order.estimated_cost or '' }}" data-parts="{{ qparts.total }}" oninput="var p=Number(this.dataset.parts||0), s=this.value.trim(), v=s==='' ? null : Number(s); this.closest('form').querySelector('.q-preview').textContent = v===null ? (p>0 ? 'Chưa nhập tiền công — tạm tính riêng linh kiện: ' + p.toLocaleString('vi-VN') + ' đ' : 'Nhập tiền công để thấy tổng báo giá') : 'Tổng báo giá dự kiến: ' + (p+v).toLocaleString('vi-VN') + ' đ (công ' + v.toLocaleString('vi-VN') + ' + linh kiện ' + p.toLocaleString('vi-VN') + ')';">
+                        <span class="input-group-text">VNĐ</span>
+                    </div>
+                    <div class="q-preview" style="font-size:.84rem;font-weight:700;color:var(--lux-bronze-deep);margin-top:6px;">Tổng báo giá dự kiến: {{ "{:,.0f}".format((order.estimated_cost or 0) + qparts.total) }} đ</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Kỹ thuật viên sửa <span class="text-danger">*</span></label>
+                        {% if user.role in ['manager', 'admin'] %}
+                        <select name="technician_id" class="form-select" required>
+                            <option value="">-- Chọn kỹ thuật viên --</option>
+                            {% for technician in technicians %}
+                            <option value="{{ technician.id }}" {% if order.technician_id == technician.id %}selected{% endif %}>{{ technician.full_name or technician.username }}</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <input type="text" class="form-control" value="{{ user.get('name') or user.sub }}" disabled>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Giờ hẹn vào sửa (dự kiến) <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="repair_started_at" class="form-control repair-start-input" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ghi chú sửa chữa</label>
+                    <textarea name="repair_notes" class="form-control" rows="2" placeholder="Ghi chú yêu cầu, thời gian dự kiến hoặc lưu ý khi sửa...">{{ order.repair_notes or '' }}</textarea>
+                </div>
+                <div class="note">Lưu là gửi báo giá chi tiết cho khách duyệt — xe <strong>chỉ vào sửa sau khi khách đồng ý</strong> (kể cả khi khách không có mặt tại xưởng).</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-step"><i class="bi bi-send me-1"></i> Gửi báo giá cho khách</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal Thêm Phụ Tùng vào Đơn -->
+<div class="modal fade" id="addPartOrderModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/tech/order/add-part" method="POST" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-box-seam me-2 t-copper"></i>Cấp vật tư / Phụ tùng — {{ order.vehicle.license_plate }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+
+                <!-- Danh sách vật tư đã dùng -->
+                {% if order.used_parts %}
+                <label class="form-label">Vật tư đã cấp</label>
+                <ul class="list-group list-group-flush mb-4" style="border:1px solid var(--lux-hairline); border-radius:10px; overflow:hidden;">
+                    {% for rop in order.used_parts %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ rop.part.name }}
+                        <span class="badge-pill b-graphite">x{{ rop.quantity }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <label class="form-label">Chọn phụ tùng từ kho</label>
+                <select name="part_id" class="form-select mb-3" required>
+                    <option value="">-- Chọn phụ tùng --</option>
+                    {% for p in parts %}
+                    <option value="{{ p.id }}" {% if p.stock_quantity == 0 %}disabled{% endif %}>
+                        {{ p.name }} (Tồn: {{ p.stock_quantity }}) - {{ "{:,}".format(p.price) }}đ
+                    </option>
+                    {% endfor %}
+                </select>
+                <label class="form-label">Số lượng sử dụng</label>
+                <input type="number" name="quantity" class="form-control" min="1" value="1" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-step">Xác nhận thêm</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Hoàn thành + Nghiệm thu sau sửa -->
+<div class="modal fade" id="completeModal{{ order.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form action="/tech/update-status" method="POST" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-check2-all me-2 t-copper"></i>Hoàn thành — Xe {{ order.vehicle.license_plate }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <input type="hidden" name="status" value="Completed">
+                <div class="note mb-3">Kỹ thuật nhập biên bản <strong>ngay sau khi sửa xong</strong>. Thông tin này hiện cho chủ xe trên hóa đơn.</div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Số ODO sau sửa chữa (km)</label>
+                        <input type="number" name="final_odo" class="form-control" min="0" value="{{ order.vehicle.current_odo or order.current_odo or '' }}" placeholder="VD: 50500">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Giờ bàn giao (tùy chọn)</label>
+                        <input type="datetime-local" name="handover_datetime" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ghi nhận sau sửa xong <span class="text-danger">*</span></label>
+                    <textarea name="completion_notes" class="form-control" rows="3" required placeholder="VD: Đã thay má phanh trước, chạy thử 5km, phanh êm, không báo lỗi..."></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Ảnh nghiệm thu</label>
+                        <input type="file" name="completion_images" class="form-control" accept="image/*" multiple>
+                        <small class="text-muted">Có thể chọn nhiều ảnh.</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="bi bi-camera-video me-1"></i>Video camera xe đang sửa</label>
+                        <input type="file" name="repair_video" class="form-control" accept="video/mp4,video/webm,video/quicktime">
+                        <small class="text-muted">MP4/WebM/MOV. Lưu 7 ngày từ khi sửa xong.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-done"><i class="bi bi-check2-all me-1"></i> Xác nhận hoàn thành</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="empty">
+    <i class="bi bi-clipboard-check"></i>
+    <p class="mb-3">Chưa có phiếu sửa chữa nào trong hệ thống.</p>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#directOrderModal"><i class="bi bi-plus-lg me-1"></i> Lập đơn sửa chữa</button>
+</div>
+{% endfor %}
+
+<div class="empty" id="woNoResult" style="display:none;">
+    <i class="bi bi-search"></i>
+    <p class="mb-0">Không tìm thấy phiếu nào khớp với tìm kiếm.</p>
+</div>
+</div>
+
+<!-- Modal Lập Đơn Trực Tiếp -->
+<div class="modal fade" id="directOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form action="/tech/create-direct-order" method="POST" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-file-earmark-plus me-2 t-copper"></i>Lập đơn sửa chữa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="note mb-3 text-start">
+                    Hệ thống hỗ trợ cả <strong>Khách cũ</strong> và <strong>Khách mới</strong>. Chỉ cần nhập Số điện thoại và Biển số xe, hệ thống sẽ tự động đối chiếu hoặc tạo hồ sơ mới.
+                </div>
+
+                <h6 class="sec-title">Thông tin Khách hàng</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                        <input type="text" name="customer_phone" class="form-control" required placeholder="Nhập SĐT để hệ thống nhận diện">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Họ và Tên</label>
+                        <input type="text" name="customer_name" class="form-control" placeholder="Để trống nếu là khách cũ">
+                    </div>
+                </div>
+
+                <h6 class="sec-title mt-2">Thông tin Xe & Lỗi</h6>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Biển số xe <span class="text-danger">*</span></label>
+                        <input type="text" name="license_plate" class="form-control" required placeholder="VD: 30A-123.45">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Hãng xe</label>
+                        <input type="text" name="make" class="form-control" placeholder="VD: Toyota (Để trống nếu xe cũ)">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Dòng xe</label>
+                        <input type="text" name="model" class="form-control" placeholder="VD: Vios (Để trống nếu xe cũ)">
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Triệu chứng / Yêu cầu sửa chữa <span class="text-danger">*</span></label>
+                        <textarea name="symptoms" class="form-control" rows="3" required placeholder="Ghi nhận lỗi khách báo..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-step">Lập đơn</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function () {
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.wo'));
+    var search = document.getElementById('woSearch');
+    var chips = Array.prototype.slice.call(document.querySelectorAll('.wo-chip[data-stage]'));
+    var countEl = document.getElementById('woCount');
+    var noRes = document.getElementById('woNoResult');
+    var stage = '';
+
+    function norm(s) {
+        return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+    }
+
+    function apply() {
+        var q = norm(search.value.trim());
+        var visible = 0;
+        cards.forEach(function (c) {
+            var ok = (!q || norm(c.dataset.search).indexOf(q) !== -1) && (!stage || c.dataset.stage === stage);
+            c.style.display = ok ? '' : 'none';
+            if (ok) visible++;
+        });
+        if (countEl) countEl.textContent = visible + ' phiếu';
+        if (noRes) noRes.style.display = (visible === 0 && cards.length > 0) ? '' : 'none';
+    }
+
+    if (search) search.addEventListener('input', apply);
+    chips.forEach(function (ch) {
+        ch.addEventListener('click', function () {
+            chips.forEach(function (x) { x.classList.remove('on'); });
+            ch.classList.add('on');
+            stage = ch.dataset.stage;
+            apply();
+        });
+    });
+
+    document.querySelectorAll('.repair-start-input').forEach(function (input) {
+        var modal = input.closest('.modal');
+        if (!modal) return;
+        modal.addEventListener('show.bs.modal', function () {
+            if (input.value) return;
+            var now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            input.value = now.toISOString().slice(0, 16);
+        });
+    });
+
+    /* Count-up số liệu */
+    var fmt = new Intl.NumberFormat('vi-VN');
+    document.querySelectorAll('[data-count]').forEach(function (el) {
+        var end = parseInt(el.dataset.count, 10) || 0;
+        if (end === 0) { el.textContent = '0'; return; }
+        var dur = 900, t0 = performance.now();
+        function tick(t) {
+            var p = Math.min((t - t0) / dur, 1);
+            var e = 1 - Math.pow(1 - p, 3);
+            el.textContent = fmt.format(Math.round(end * e));
+            if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    });
+})();
+</script>
+
+{% endblock %}

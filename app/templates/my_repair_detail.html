@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+
+{% block title %}Chi tiết công việc sửa chữa - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== Light luxury — Chi tiết công việc sửa chữa (Khách hàng) ===== */
+    .pg-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 22px 0 18px; border-bottom: 1px solid var(--lux-hairline); margin-bottom: 20px; }
+    .pg-kicker { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--copper-orange); font-weight: 700; margin-bottom: 6px; }
+    .pg-head h1 { font-size: 1.6rem; margin: 0; font-weight: 650; letter-spacing: -.02em; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .pg-sub { color: var(--lux-slate); font-size: .86rem; margin: 6px 0 0; }
+    .back-link { font-size: .8rem; font-weight: 600; color: var(--lux-slate); letter-spacing: .04em; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .back-link:hover { color: var(--copper-orange); }
+
+    .badge-pill { display: inline-flex; align-items: center; gap: 5px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: .32em .8em; border-radius: 999px; white-space: nowrap; }
+    .b-copper { background: rgba(200,121,65,.12); color: #A65E2F; border: 1px solid rgba(200,121,65,.28); }
+    .b-green { background: rgba(46,125,79,.10); color: #2E7D4F; border: 1px solid rgba(46,125,79,.25); }
+    .b-amber { background: rgba(191,144,0,.11); color: #8A6D00; border: 1px solid rgba(191,144,0,.26); }
+    .b-gray { background: #F1EFEA; color: #7A746D; border: 1px solid #E4DFD8; }
+    .b-graphite { background: rgba(30,30,30,.07); color: #2D2D2D; border: 1px solid rgba(30,30,30,.15); }
+    .b-red { background: rgba(192,57,43,.09); color: #B03A2E; border: 1px solid rgba(192,57,43,.22); }
+
+    /* Timeline 5 bước */
+    .tl { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; padding: 22px 26px 16px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(30,30,30,.04); }
+    .tl-steps { display: flex; margin: 0; padding: 0; list-style: none; gap: 4px; }
+    .tl-steps li { flex: 1; position: relative; text-align: center; padding-top: 26px; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; color: var(--lux-slate); }
+    .tl-steps li .dot { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 19px; height: 19px; border-radius: 50%; background: #fff; border: 1.5px solid #C9C2B9; font-size: .62rem; font-weight: 700; display: flex; align-items: center; justify-content: center; color: var(--lux-slate); z-index: 1; }
+    .tl-steps li::after { content: ""; position: absolute; top: 9px; left: calc(50% + 12px); width: calc(100% - 24px); height: 1.5px; background: var(--lux-hairline); }
+    .tl-steps li:last-child::after { display: none; }
+    .tl-steps li .note { display: block; margin-top: 5px; font-size: .72rem; letter-spacing: .02em; text-transform: none; color: var(--lux-slate); font-weight: 500; }
+    .tl-steps li.done { color: var(--lux-slate); }
+    .tl-steps li.done .dot { background: var(--lux-graphite); border-color: var(--lux-graphite); color: #fff; }
+    .tl-steps li.done::after { background: var(--lux-graphite); }
+    .tl-steps li.active { color: var(--copper-orange); font-weight: 700; }
+    .tl-steps li.active .dot { background: var(--copper-orange); border-color: var(--copper-orange); color: #fff; box-shadow: 0 0 0 4px rgba(200,121,65,.15); }
+    .tl-steps li.active .note { color: var(--copper-orange); font-weight: 600; }
+
+    .info-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; margin-bottom: 18px; overflow: hidden; box-shadow: 0 1px 3px rgba(30,30,30,.04); animation: cardIn .5s both; }
+    .info-card:nth-of-type(2) { animation-delay: .07s; }
+    .info-card:nth-of-type(3) { animation-delay: .14s; }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .ic-head { display: flex; align-items: center; gap: 9px; padding: 13px 20px; border-bottom: 1px solid var(--lux-hairline); background: var(--lux-ivory); font-size: .74rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--lux-graphite); }
+    .ic-head i { color: var(--copper-orange); font-size: .95rem; }
+    .ic-body { padding: 18px 20px; }
+
+    .mini-label { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin-bottom: 5px; }
+    .sym-box { background: var(--lux-ivory); border: 1px solid var(--lux-hairline); border-radius: 10px; padding: 12px 15px; font-size: .92rem; line-height: 1.6; color: var(--lux-graphite); }
+    .ai-box { background: #fff; border: 1px dashed rgba(200,121,65,.4); border-radius: 10px; padding: 12px 15px; font-size: .87rem; line-height: 1.6; color: var(--lux-slate); }
+    .ai-box::before { content: "AI CHẨN ĐOÁN"; display: block; font-size: .58rem; letter-spacing: .16em; font-weight: 700; color: var(--copper-orange); margin-bottom: 6px; }
+
+    .quote-box { background: linear-gradient(135deg, #1E1E1E 0%, #2D2D2D 60%, #3A342F 100%); color: #fff; border-radius: 12px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .quote-box .ql { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #B9B1A7; font-weight: 700; }
+    .quote-box .qv { font-size: 1.7rem; font-weight: 700; letter-spacing: -.02em; color: #E0A375; font-variant-numeric: tabular-nums; line-height: 1.2; }
+    .quote-box .qnote { font-size: .76rem; color: #C9C2B9; }
+
+    .btn-approve { background: #2E7D4F; border: none; color: #fff; font-weight: 600; padding: .5rem 1.4rem; }
+    .btn-approve:hover { background: #256840; color: #fff; transform: translateY(-1px); }
+    .btn-reject { background: transparent; border: 1px solid rgba(192,57,43,.4); color: #B03A2E; font-weight: 600; padding: .5rem 1.4rem; }
+    .btn-reject:hover { background: #B03A2E; border-color: #B03A2E; color: #fff; }
+    .btn-copper { background: var(--copper-orange); border: none; color: #fff; font-weight: 600; padding: .5rem 1.4rem; }
+    .btn-copper:hover { background: var(--lux-bronze-deep); color: #fff; transform: translateY(-1px); }
+    .btn-ghost { background: #fff; border: 1px solid #D8D1C8; color: var(--lux-slate); font-weight: 600; padding: .48rem 1.3rem; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+    .btn-ghost:hover { border-color: var(--lux-graphite); color: var(--lux-graphite); background: #fff; }
+
+    .data-list { margin: 0; }
+    .data-row { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 9px 0; border-bottom: 1px dashed var(--lux-hairline); font-size: .88rem; }
+    .data-row:last-child { border-bottom: none; }
+    .data-row dt { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--lux-slate); margin: 0; }
+    .data-row dd { margin: 0; font-weight: 600; color: var(--lux-graphite); text-align: right; font-variant-numeric: tabular-nums; }
+
+    .chip { display: inline-flex; align-items: center; gap: 5px; font-size: .74rem; font-weight: 600; background: var(--lux-sand); color: var(--lux-slate); border: 1px solid var(--lux-hairline); border-radius: 999px; padding: .22em .75em; margin: 0 5px 6px 0; }
+    .chip.warn { background: rgba(192,57,43,.07); color: #B03A2E; border-color: rgba(192,57,43,.25); }
+
+    .parts-table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    .parts-table th { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--lux-slate); font-weight: 700; padding: 8px 10px; background: var(--lux-ivory); border-bottom: 1px solid var(--lux-hairline); text-align: left; }
+    .parts-table td { padding: 10px; border-bottom: 1px solid var(--lux-hairline); vertical-align: middle; }
+    .parts-table .num { font-variant-numeric: tabular-nums; text-align: right; }
+    .parts-table .pn { font-size: .75rem; color: var(--lux-slate); letter-spacing: .03em; }
+    .cost-line { display: flex; justify-content: space-between; padding: 8px 10px; font-size: .88rem; border-bottom: 1px dashed var(--lux-hairline); }
+    .cost-line.total { border-bottom: none; border-top: 2px solid var(--lux-graphite); margin-top: 4px; padding-top: 12px; font-weight: 700; font-size: 1.02rem; color: var(--lux-graphite); }
+    .cost-line .v { font-variant-numeric: tabular-nums; }
+
+    .gallery { display: flex; gap: 10px; flex-wrap: wrap; }
+    .gallery img { width: 96px; height: 72px; object-fit: cover; border-radius: 8px; border: 1px solid var(--lux-hairline); transition: transform .25s; }
+    .gallery img:hover { transform: scale(1.04); }
+    .empty-note { background: var(--lux-sand); border: 1px dashed var(--lux-hairline); border-radius: 10px; padding: 14px; text-align: center; color: var(--lux-slate); font-size: .84rem; }
+
+    .vid-frame { width: 100%; border-radius: 10px; border: 1px solid var(--lux-hairline); background: #000; aspect-ratio: 16/9; }
+    @media (max-width: 767.98px) { .tl-steps li .note { display: none; } }
+</style>
+
+{% set ro = order %}
+{% set status_map = {
+    'Pending': ('Chờ tiếp nhận', 'b-amber'),
+    'In Progress': ('Đang sửa chữa', 'b-copper'),
+    'Completed': ('Hoàn thành', 'b-green'),
+    'Cancelled': ('Đã hủy', 'b-gray')
+} %}
+{% set st = status_map.get(ro.status, (ro.status, 'b-gray')) %}
+
+<div class="pg-head">
+    <div>
+        <a class="back-link" href="/my-appointments"><i class="bi bi-arrow-left"></i> Quay lại danh sách lịch hẹn</a>
+        <div class="pg-kicker">Công việc sửa chữa · Phiếu #RO-{{ ro.id }}</div>
+        <h1>
+            <i class="bi bi-car-front-fill" style="color: var(--copper-orange); font-size: 1.2rem;"></i>
+            {{ vehicle.license_plate if vehicle else '---' }}
+            <span class="badge-pill {{ st[1] }}">{{ st[0] }}</span>
+            <span class="badge-pill b-graphite">{{ 'Dịch vụ' if ro.order_type == 'CarWash' else 'Sửa chữa' }}</span>
+        </h1>
+        <p class="pg-sub">
+            {% if vehicle %}{{ vehicle.make }} {{ vehicle.model }}{% if vehicle.manufacture_year %} · {{ vehicle.manufacture_year }}{% endif %} · {% endif %}
+            Mở ngày {{ ro.created_at.strftime('%d/%m/%Y') if ro.created_at else '---' }}
+        </p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        {% if ro.invoice %}
+        <a class="btn btn-copper" href="/my-invoices/{{ ro.invoice.id }}"><i class="bi bi-receipt me-1"></i> Xem hóa đơn</a>
+        {% endif %}
+        {% if video_available %}
+        <a class="btn btn-ghost" href="{{ video_url }}"><i class="bi bi-camera-video me-1"></i> Video đang sửa</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Timeline -->
+<div class="tl">
+    <ul class="tl-steps">
+        {% for s in steps %}
+        <li class="{{ s.state }}"><span class="dot">{% if s.state == 'done' %}<i class="bi bi-check-lg" style="font-size:.7rem"></i>{% else %}{{ loop.index }}{% endif %}</span>{{ s.label }}{% if s.note %}<span class="note">{{ s.note }}</span>{% endif %}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="row g-4">
+    <!-- ===== CỘT TRÁI: Thông tin công việc ===== -->
+    <div class="col-lg-7">
+
+        <!-- Yêu cầu & AI -->
+        <div class="info-card">
+            <div class="ic-head"><i class="bi bi-chat-dots-fill"></i> Yêu cầu & Chẩn đoán</div>
+            <div class="ic-body">
+                <div class="mini-label">Bạn đã báo lỗi</div>
+                <div class="sym-box mb-3">{{ ro.symptoms }}</div>
+                {% if ro.ai_diagnosis %}
+                <div class="mini-label">AI dự đoán sơ bộ</div>
+                <div class="ai-box">{{ ro.ai_diagnosis }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Kiểm tra & báo giá -->
+        <div class="info-card">
+            <div class="ic-head"><i class="bi bi-clipboard2-pulse-fill"></i> Kết quả kiểm tra & Báo giá</div>
+            <div class="ic-body">
+                {% if ro.inspection_result %}
+                <div class="mini-label">Kỹ thuật viên kết luận</div>
+                <p style="font-size: .92rem; line-height: 1.65; margin-bottom: 14px;">{{ ro.inspection_result }}</p>
+                {% endif %}
+
+                {% if ro.estimated_cost %}
+                <div class="quote-box mb-3">
+                    <div>
+                        <div class="ql">Tổng báo giá dự kiến</div>
+                        <div class="qv">{{ "{:,}".format(ro.estimated_cost).replace(',', '.') }} đ</div>
+                    </div>
+                    <div class="qnote">Tiền công · chưa gồm VAT nếu có</div>
+                </div>
+                {% endif %}
+
+                {% if ro.estimated_cost and ro.customer_approval == 'Pending' %}
+                <div class="d-flex gap-2 flex-wrap align-items-center">
+                    <form action="/my-appointments/approve" method="POST" class="m-0">
+                        <input type="hidden" name="order_id" value="{{ ro.id }}">
+                        <input type="hidden" name="action" value="approve">
+                        <input type="hidden" name="next" value="/my-repairs/{{ ro.id }}">
+                        <button type="submit" class="btn btn-approve"><i class="bi bi-check2 me-1"></i> Đồng ý sửa</button>
+                    </form>
+                    <form action="/my-appointments/approve" method="POST" class="m-0">
+                        <input type="hidden" name="order_id" value="{{ ro.id }}">
+                        <input type="hidden" name="action" value="reject">
+                        <input type="hidden" name="next" value="/my-repairs/{{ ro.id }}">
+                        <button type="submit" class="btn btn-reject" onclick="return confirm('Bạn chắc chắn từ chối báo giá này?');"><i class="bi bi-x-lg me-1"></i> Từ chối</button>
+                    </form>
+                    <small class="text-muted">Chọn "Đồng ý" để garage tiến hành ngay.</small>
+                </div>
+                {% elif ro.customer_approval == 'Approved' %}
+                <div class="badge-pill b-green"><i class="bi bi-check-circle"></i> Bạn đã duyệt báo giá</div>
+                {% elif ro.customer_approval == 'Rejected' %}
+                <div class="badge-pill b-red"><i class="bi bi-x-circle"></i> Bạn đã từ chối báo giá</div>
+                {% else %}
+                <div class="empty-note"><i class="bi bi-hourglass-split me-1"></i> Chưa có báo giá — garage đang kiểm tra hiện trạng xe.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Phụ tùng -->
+        <div class="info-card">
+            <div class="ic-head"><i class="bi bi-box-seam-fill"></i> {% if ro.status == 'In Progress' %}Linh kiện dự kiến & Tạm tính trực tiếp{% else %}Phụ tùng & Chi phí{% endif %}</div>
+            <div class="ic-body">
+                {% if ro.used_parts %}
+                {% set ns = namespace(parts=0) %}
+                <div class="table-responsive">
+                    <table class="parts-table">
+                        <thead>
+                            <tr><th>Phụ tùng{% if ro.status == 'In Progress' %} dự kiến thay{% endif %}</th><th class="num">SL</th><th class="num">Đơn giá</th><th class="num">Thành tiền</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for rop in ro.used_parts %}
+                            {% set ns.parts = ns.parts + rop.quantity * rop.unit_price %}
+                            <tr>
+                                <td>
+                                    <strong>{{ rop.part.name }}</strong>
+                                    <div class="pn">{{ rop.part.part_number }}{% if rop.part.brand %} · {{ rop.part.brand }}{% endif %}{% if rop.part.origin %} · {{ rop.part.origin }}{% endif %}</div>
+                                    {% if rop.part.warranty_period %}<div class="pn" style="color:#2E7D4F;"><i class="bi bi-shield-check"></i> BH: {{ rop.part.warranty_period }}</div>{% endif %}
+                                </td>
+                                <td class="num">{{ rop.quantity }}</td>
+                                <td class="num">{{ "{:,}".format(rop.unit_price).replace(',', '.') }}</td>
+                                <td class="num"><strong>{{ "{:,}".format(rop.quantity * rop.unit_price).replace(',', '.') }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% set sub = labor_cost + ns.parts %}
+                {% set vat = (sub * 0.1)|round|int %}
+                <div class="mt-3">
+                    <div class="cost-line"><span>Tiền công sửa chữa{% if ro.status == 'In Progress' %} (theo báo giá mới nhất){% endif %}</span><span class="v">{{ "{:,}".format(labor_cost).replace(',', '.') }} đ</span></div>
+                    <div class="cost-line"><span>Phụ tùng ({{ ro.used_parts|length }} mã)</span><span class="v">{{ "{:,}".format(ns.parts).replace(',', '.') }} đ</span></div>
+                    <div class="cost-line"><span>Tạm tính</span><span class="v">{{ "{:,}".format(sub).replace(',', '.') }} đ</span></div>
+                    <div class="cost-line"><span>VAT 10% (ước tính)</span><span class="v">{{ "{:,}".format(vat).replace(',', '.') }} đ</span></div>
+                    <div class="cost-line total"><span>Tổng tạm tính</span><span class="v">{{ "{:,}".format(sub + vat).replace(',', '.') }} đ</span></div>
+                </div>
+                <p class="mt-2 mb-0" style="font-size:.8rem;color:var(--lux-slate);"><i class="bi bi-info-circle me-1"></i>Bảng giá cập nhật trực tiếp khi thợ thêm linh kiện hoặc điều chỉnh công. Số chốt cuối cùng nằm ở hóa đơn{% if ro.invoice %} — <a href="/my-invoices/{{ ro.invoice.id }}" class="fw-bold" style="color:var(--lux-bronze-deep);">xem hóa đơn</a>{% endif %}.</p>
+                {% else %}
+                <div class="empty-note"><i class="bi bi-box-seam me-1"></i> {% if ro.status == 'In Progress' %}Chưa phát sinh linh kiện — bảng giá sẽ hiện ngay khi thợ thêm linh kiện thay thế.{% else %}Chưa phát sinh phụ tùng thay thế cho xe này.{% endif %}</div>
+                {% if labor_cost %}
+                <div class="mt-3">
+                    <div class="cost-line"><span>Tiền công sửa chữa</span><span class="v">{{ "{:,}".format(labor_cost).replace(',', '.') }} đ</span></div>
+                    <div class="cost-line total"><span>Tổng tạm tính</span><span class="v">{{ "{:,}".format((labor_cost * 1.1)|round|int).replace(',', '.') }} đ (gồm VAT ước tính)</span></div>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Nghiệm thu -->
+        <div class="info-card">
+            <div class="ic-head"><i class="bi bi-patch-check-fill"></i> Nghiệm thu sau sửa chữa</div>
+            <div class="ic-body">
+                {% if ro.completion_notes %}
+                <div class="mini-label">Biên bản kỹ thuật</div>
+                <div class="sym-box mb-3" style="border-left-color: #2E7D4F;">{{ ro.completion_notes }}</div>
+                {% endif %}
+                <dl class="data-list mb-3">
+                    <div class="data-row"><dt>ODO sau sửa</dt><dd>{{ "{:,}".format(ro.final_odo).replace(',', '.') ~ ' km' if ro.final_odo else '—' }}</dd></div>
+                    <div class="data-row"><dt>Hoàn thành lúc</dt><dd>{{ ro.completed_at.strftime('%d/%m/%Y %H:%M') if ro.completed_at else '—' }}</dd></div>
+                    <div class="data-row"><dt>Bàn giao xe</dt><dd>{{ handover_fmt or '—' }}</dd></div>
+                </dl>
+                {% if completion_images %}
+                <div class="mini-label">Ảnh nghiệm thu</div>
+                <div class="gallery mb-3">
+                    {% for img in completion_images %}
+                    <img src="{{ img }}" alt="Ảnh nghiệm thu" loading="lazy">
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if video_available %}
+                <div class="mini-label">Video camera xe đang sửa</div>
+                <video class="vid-frame mb-2" controls preload="metadata" src="{{ video_url }}"></video>
+                <small class="text-muted"><i class="bi bi-clock me-1"></i>Video lưu đến {{ video_expires_at.strftime('%d/%m/%Y') if video_expires_at else '7 ngày' }} (7 ngày kể từ lúc sửa xong).</small>
+                {% elif ro.repair_video_path %}
+                <div class="empty-note"><i class="bi bi-clock-history me-1"></i> Video đã hết hạn lưu trữ (7 ngày).</div>
+                {% endif %}
+                {% if not ro.completion_notes and not ro.final_odo %}
+                <div class="empty-note"><i class="bi bi-tools me-1"></i> Garage đang sửa — biên bản nghiệm thu sẽ hiển thị ngay khi hoàn thành.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CỘT PHẢI: Thông tin kỹ thuật ===== -->
+    <div class="col-lg-5">
+
+        <!-- Phiếu tiếp nhận -->
+        <div class="info-card">
+            <div class="ic-head"><i class="bi bi-clipboard-check-fill"></i> Thông tin kỹ thuật — Phiếu tiếp nhận</div>
+            <div class="ic-body">
+                {% if technical.reception_datetime %}
+                <dl class="data-list mb-3">
+                    <div class="data-row"><dt>Ngày giờ nhận xe</dt><dd>{{ technical.reception_datetime }}</dd></div>
+                    <div class="data-row"><dt>Người giao xe</dt><dd>{{ technical.deliverer_name or '—' }}</dd></div>
+                    <div class="data-row"><dt>Mức nhiên liệu</dt><dd>{{ technical.fuel_level or '—' }}</dd></div>
+                    <div class="data-row"><dt>ODO lúc nhận</dt><dd>{{ "{:,}".format(technical.current_odo).replace(',', '.') ~ ' km' if technical.current_odo else '—' }}</dd></div>
+                    <div class="data-row"><dt>Mức độ lỗi</dt><dd>{{ technical.symptom_severity or '—' }}</dd></div>
+                    <div class="data-row"><dt>Âm thanh bất thường</dt><dd>{{ technical.abnormal_sounds or '—' }}</dd></div>
+                    <div class="data-row"><dt>Số chìa khóa</dt><dd>{{ technical.key_count if technical.key_count is not none else '—' }}</dd></div>
+                </dl>
+
+                {% if technical.warning_lights %}
+                <div class="mini-label">Đèn cảnh báo taplo</div>
+                <div class="mb-3">{% for w in technical.warning_lights %}<span class="chip warn"><i class="bi bi-exclamation-triangle-fill"></i> {{ w }}</span>{% endfor %}</div>
+                {% endif %}
+
+                {% if technical.exterior_scratches %}
+                <div class="mini-label">Ngoại thất ghi nhận khi nhận xe</div>
+                <div class="mb-3">{% for e in technical.exterior_scratches %}<span class="chip"><i class="bi bi-dash"></i> {{ e }}</span>{% endfor %}</div>
+                {% endif %}
+
+                {% if technical.personal_belongings %}
+                <div class="mini-label">Phụ kiện bàn giao</div>
+                <div>{% for p in technical.personal_belongings %}<span class="chip"><i class="bi bi-check2"></i> {{ p }}</span>{% endfor %}</div>
+                {% endif %}
+                {% else %}
+                <div class="empty-note"><i class="bi bi-clipboard me-1"></i> Xe chưa được tiếp nhận — phiếu kỹ thuật sẽ hiển thị sau khi garage tiếp nhận.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Hồ sơ xe -->
+        <div class="info-card">
+            <div class="ic-head"><i class="bi bi-car-front-fill"></i> Hồ sơ kỹ thuật xe</div>
+            <div class="ic-body">
+                <dl class="data-list">
+                    <div class="data-row"><dt>Biển số</dt><dd>{{ vehicle.license_plate if vehicle else '—' }}</dd></div>
+                    <div class="data-row"><dt>Hãng / Dòng</dt><dd>{{ (vehicle.make or '—') ~ ' ' ~ (vehicle.model or '') }}</dd></div>
+                    <div class="data-row"><dt>Đời xe</dt><dd>{{ vehicle.manufacture_year or '—' }}</dd></div>
+                    <div class="data-row"><dt>Màu / Nhiên liệu</dt><dd>{{ (vehicle.color or '—') ~ ' · ' ~ (vehicle.fuel_type or '—') }}</dd></div>
+                    <div class="data-row"><dt>Số VIN</dt><dd style="font-size:.8rem; letter-spacing:.05em;">{{ vehicle.vin or '—' }}</dd></div>
+                    <div class="data-row"><dt>Số máy</dt><dd style="font-size:.8rem;">{{ vehicle.engine_number or '—' }}</dd></div>
+                    <div class="data-row"><dt>ODO hiện tại</dt><dd>{{ "{:,}".format(vehicle.current_odo).replace(',', '.') ~ ' km' if vehicle.current_odo else '—' }}</dd></div>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Lịch hẹn liên kết -->
+        {% if appointment %}
+        <div class="info-card">
+            <div class="ic-head"><i class="bi bi-calendar-check-fill"></i> Lịch hẹn liên kết</div>
+            <div class="ic-body">
+                <dl class="data-list mb-3">
+                    <div class="data-row"><dt>Ngày hẹn</dt><dd>{{ appointment.appointment_date }}{% if appointment.appointment_time %} · {{ appointment.appointment_time }}{% endif %}</dd></div>
+                    <div class="data-row"><dt>Loại lịch</dt><dd>{{ 'Rửa xe / Chăm sóc' if appointment.appointment_type == 'CarWash' else 'Sửa chữa / Bảo dưỡng' }}</dd></div>
+                    {% if appointment.preferred_technician %}
+                    <div class="data-row"><dt>KTV phụ trách</dt><dd>{{ appointment.preferred_technician.full_name }}</dd></div>
+                    {% endif %}
+                    <div class="data-row"><dt>Trạng thái lịch</dt><dd>{{ appointment.status }}</dd></div>
+                </dl>
+                <a class="btn btn-ghost w-100 justify-content-center" href="/my-appointments"><i class="bi bi-journal-text"></i> Xem trong danh sách lịch hẹn</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

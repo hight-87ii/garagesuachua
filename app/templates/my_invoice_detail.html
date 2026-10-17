@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Hóa đơn HD-{{ "%04d"|format(invoice.id) }} - ThreeH Workshop{% endblock %}
+
+{% block content %}
+<style>
+    .inv-card { background: #fff; border: 1px solid var(--lux-hairline); border-radius: 14px; box-shadow: 0 1px 3px rgba(30,30,30,.04); margin-bottom: 1.25rem; }
+    .inv-card .card-head { padding: 1rem 1.4rem; border-bottom: 1px solid var(--lux-hairline); font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; color: var(--lux-graphite); background: linear-gradient(180deg, #FFFDFB, var(--lux-ivory)); border-radius: 14px 14px 0 0; }
+    .inv-card .card-body { padding: 1.3rem 1.4rem; }
+    .info-line { display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; font-size: 0.92rem; border-bottom: 1px dashed var(--lux-hairline); }
+    .info-line:last-child { border-bottom: none; }
+    .info-line .lbl { color: var(--lux-slate); white-space: nowrap; font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding-top: 3px; }
+    .info-line .val { font-weight: 600; text-align: right; color: var(--lux-graphite); }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 0.4rem; }
+    .tl-item { position: relative; padding: 0 0 1.3rem 2rem; border-left: 2px solid var(--lux-hairline); margin-left: 0.6rem; }
+    .tl-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+    .tl-item::before {
+        content: ''; position: absolute; left: -9px; top: 2px; width: 16px; height: 16px; border-radius: 50%;
+        background: #fff; border: 2px solid #D8D1C8;
+    }
+    .tl-item.done::before { background: var(--lux-graphite); border-color: var(--lux-graphite); }
+    .tl-item.done { border-left-color: var(--lux-graphite); }
+    .tl-item.active::before { background: #fff; border-color: var(--copper-orange); box-shadow: 0 0 0 4px rgba(200,121,65,0.16); }
+    .tl-item.active .tl-label { color: var(--lux-bronze-deep); }
+    .tl-label { font-weight: 700; font-size: 0.92rem; color: var(--lux-graphite); }
+    .tl-note { font-size: 0.82rem; color: var(--lux-slate); }
+    .tl-item.pending .tl-label { color: var(--lux-slate); font-weight: 600; }
+
+    /* Bảng chi phí */
+    .cost-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .cost-table th { background: var(--lux-ivory); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lux-slate); padding: 0.6rem 0.75rem; font-weight: 700; }
+    .cost-table td { padding: 0.7rem 0.75rem; border-bottom: 1px solid var(--lux-hairline); color: var(--lux-graphite); }
+    .cost-table .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .summary-line { display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.93rem; }
+    .summary-total { border-top: 2px solid var(--lux-graphite); margin-top: 0.5rem; padding-top: 0.7rem; font-size: 1.15rem; font-weight: 700; }
+    .pay-banner { border-radius: 12px; padding: 1rem 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 0.7rem; }
+    .pay-unpaid { background: rgba(220,53,69,0.08); color: #dc3545; border: 1px solid rgba(220,53,69,0.25); }
+    .pay-paid { background: rgba(25,135,84,0.08); color: #198754; border: 1px solid rgba(25,135,84,0.25); }
+</style>
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pt-3">
+    <div class="d-flex align-items-center gap-3">
+        <a href="/my-invoices" class="btn btn-sm btn-outline-dark rounded-pill"><i class="bi bi-arrow-left"></i></a>
+        <div>
+            <h1 class="h4 mb-0">Hóa đơn HD-{{ "%04d"|format(invoice.id) }}</h1>
+            <small class="text-muted">
+                Ngày lập: {{ invoice.created_at.strftime('%d/%m/%Y') if invoice.created_at else '---' }}
+            </small>
+        </div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="/my-repairs/{{ invoice.repair_order_id }}" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+            <i class="bi bi-tools me-1"></i> Chi tiết công việc
+        </a>
+        <a href="/my-invoices/{{ invoice.id }}/print" class="btn btn-sm btn-dark rounded-pill px-3">
+            <i class="bi bi-printer me-1"></i> In hóa đơn
+        </a>
+    </div>
+</div>
+
+<!-- Trạng thái thanh toán -->
+{% if invoice.status == 'Unpaid' %}
+<div class="pay-banner pay-unpaid mb-3">
+    <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+    <div>Chưa thanh toán — Tổng cộng <strong>{{ "{:,.0f}".format(invoice.total_amount) }} VNĐ</strong></div>
+</div>
+{% else %}
+<div class="pay-banner pay-paid mb-3">
+    <i class="bi bi-check-circle-fill fs-5"></i>
+    <div>Đã thanh toán{% if invoice.payment_method %} — {{ invoice.payment_method }}{% endif %}</div>
+</div>
+{% endif %}
+
+<div class="row g-0">
+    <!-- Cột trái -->
+    <div class="col-lg-5 pe-lg-3">
+        <!-- 1. Thông tin khách hàng & xe -->
+        <div class="inv-card">
+            <div class="card-head"><i class="bi bi-person-vcard" style="color: var(--copper-orange);"></i> Thông tin khách hàng & xe</div>
+            <div class="card-body pt-2 pb-2">
+                <div class="info-line"><span class="lbl">Khách hàng</span><span class="val">{{ invoice.repair_order.vehicle.owner.full_name if invoice.repair_order.vehicle.owner and invoice.repair_order.vehicle.owner.full_name else 'Khách vãng lai' }}</span></div>
+                <div class="info-line"><span class="lbl">Số điện thoại</span><span class="val">{{ invoice.repair_order.vehicle.owner.phone if invoice.repair_order.vehicle.owner and invoice.repair_order.vehicle.owner.phone else '---' }}</span></div>
+                <div class="info-line"><span class="lbl">Biển số xe</span><span class="val">{{ invoice.repair_order.vehicle.license_plate }}</span></div>
+                <div class="info-line"><span class="lbl">Hãng / Dòng xe</span><span class="val">{{ invoice.repair_order.vehicle.make or '---' }} {{ invoice.repair_order.vehicle.model or '' }}</span></div>
+                <div class="info-line"><span class="lbl">Năm sản xuất</span><span class="val">{{ invoice.repair_order.vehicle.manufacture_year or '---' }}</span></div>
+                <div class="info-line"><span class="lbl">ODO lúc nhận xe</span><span class="val">{{ "{:,}".format(invoice.repair_order.current_odo) ~ ' km' if invoice.repair_order.current_odo else '---' }}</span></div>
+                <div class="info-line"><span class="lbl">ODO sau sửa chữa</span><span class="val">{{ "{:,}".format(order.final_odo) ~ ' km' if order.final_odo else '---' }}</span></div>
+                <div class="info-line"><span class="lbl">Kỹ thuật viên</span><span class="val">{{ invoice.repair_order.technician.full_name if invoice.repair_order.technician else '---' }}</span></div>
+                {% if order.completed_at %}
+                <div class="info-line"><span class="lbl">Sửa xong lúc</span><span class="val">{{ order.completed_at.strftime('%d/%m/%Y %H:%M') }}</span></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 2. Tiến trình sửa chữa -->
+        <div class="inv-card">
+            <div class="card-head"><i class="bi bi-diagram-3" style="color: var(--copper-orange);"></i> Tiến trình sửa chữa</div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for step in steps %}
+                    <div class="tl-item {{ step.state }}">
+                        <div class="tl-label">
+                            {{ step.label }}
+                            {% if step.state == 'active' %}<span class="badge rounded-pill ms-2" style="background: rgba(200,121,65,0.15); color: var(--copper-orange);">Hiện tại</span>{% endif %}
+                        </div>
+                        {% if step.note %}<div class="tl-note">{{ step.note }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột phải -->
+    <div class="col-lg-7">
+        <!-- 3. Chi tiết chi phí -->
+        <div class="inv-card">
+            <div class="card-head"><i class="bi bi-itemized-receipt" style="color: var(--copper-orange);"></i> Chi tiết chi phí</div>
+            <div class="card-body pt-2">
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th>Nội dung</th>
+                            <th class="num">SL</th>
+                            <th class="num">Đơn giá</th>
+                            <th class="num">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Công sửa chữa / bảo dưỡng</strong>
+                                {% if invoice.repair_order.inspection_result %}
+                                <div class="text-muted" style="font-size: 0.82rem;">{{ invoice.repair_order.inspection_result|truncate(90) }}</div>
+                                {% elif invoice.repair_order.symptoms %}
+                                <div class="text-muted" style="font-size: 0.82rem;">{{ invoice.repair_order.symptoms|truncate(90) }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="num">1</td>
+                            <td class="num">{{ "{:,.0f}".format(labor_cost) }}</td>
+                            <td class="num">{{ "{:,.0f}".format(labor_cost) }}</td>
+                        </tr>
+                        {% for item in invoice.repair_order.used_parts %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.part.name if item.part else 'Phụ tùng' }}</strong>
+                                <div class="text-muted" style="font-size: 0.82rem;">
+                                    {% if item.part and item.part.part_number %}Mã: {{ item.part.part_number }}{% endif %}
+                                    {% if item.part and item.part.brand %} · {{ item.part.brand }}{% endif %}
+                                    {% if item.part and item.part.origin %} · {{ item.part.origin }}{% endif %}
+                                </div>
+                                {% if item.part and item.part.oem_code %}
+                                <div class="text-muted" style="font-size: 0.78rem;">OEM: {{ item.part.oem_code }}</div>
+                                {% endif %}
+                                {% if item.part and item.part.warranty_period %}
+                                <div style="font-size: 0.78rem; color: #198754;"><i class="bi bi-shield-check"></i> BH: {{ item.part.warranty_period }}</div>
+                                {% endif %}
+                                {% if item.part and item.part.category %}
+                                <div class="text-muted" style="font-size: 0.78rem;">{{ item.part.category }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="num">{{ item.quantity }}</td>
+                            <td class="num">{{ "{:,.0f}".format(item.unit_price) }}</td>
+                            <td class="num">{{ "{:,.0f}".format(item.quantity * item.unit_price) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Tổng kết -->
+                <div class="mt-3 ms-auto" style="max-width: 340px;">
+                    <div class="summary-line"><span class="text-muted">Tạm tính</span><strong>{{ "{:,.0f}".format(invoice.subtotal) }} đ</strong></div>
+                    <div class="summary-line"><span class="text-muted">Thuế VAT (10%)</span><strong>{{ "{:,.0f}".format(invoice.vat_amount) }} đ</strong></div>
+                    <div class="summary-line"><span class="text-muted">Giảm giá</span><strong>-{{ "{:,.0f}".format(invoice.discount) }} đ</strong></div>
+                    <div class="summary-line summary-total"><span>TỔNG THANH TOÁN</span><span style="color: var(--copper-orange);">{{ "{:,.0f}".format(invoice.total_amount) }} đ</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3b. Biên bản sau sửa chữa + Camera -->
+        <div class="inv-card">
+            <div class="card-head"><i class="bi bi-camera-video" style="color: var(--copper-orange);"></i> Nghiệm thu sau sửa chữa & Camera</div>
+            <div class="card-body">
+                {% if order.completion_notes %}
+                <div class="mb-3" style="background: var(--warm-white); border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.9rem;">
+                    <strong><i class="bi bi-clipboard-check me-1"></i>Kỹ thuật ghi nhận sau sửa xong:</strong>
+                    <div class="mt-1" style="white-space: pre-wrap;">{{ order.completion_notes }}</div>
+                </div>
+                {% elif order.status != 'Completed' %}
+                <p class="text-muted mb-3" style="font-size: 0.9rem;">Xe đang sửa — biên bản nghiệm thu sẽ hiện sau khi kỹ thuật hoàn thành.</p>
+                {% endif %}
+
+                {% if completion_images %}
+                <h6 class="fw-bold mb-2">Ảnh nghiệm thu</h6>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    {% for img in completion_images %}
+                    <a href="{{ img }}" target="_blank"><img src="{{ img }}" alt="Ảnh nghiệm thu" style="width: 110px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--concrete-gray);"></a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if video_available %}
+                <h6 class="fw-bold mb-2"><i class="bi bi-camera-video me-1"></i>Video xe của bạn lúc sửa</h6>
+                <video controls preload="metadata" style="width: 100%; max-height: 380px; border-radius: 12px; background: #000; color: #fff;">
+                    <source src="{{ video_url }}" type="video/mp4">
+                    Trình duyệt không hỗ trợ video.
+                </video>
+                <small class="text-muted d-block mt-2"><i class="bi bi-clock me-1"></i>Video lưu đến {{ video_expires_at.strftime('%d/%m/%Y %H:%M') }} (7 ngày từ khi sửa xong).</small>
+                {% elif order.repair_video_path %}
+                <div class="alert alert-secondary mb-0" style="font-size: 0.88rem;">Video đã hết hạn lưu trữ 7 ngày và được tự động xóa để bảo mật.</div>
+                {% else %}
+                <p class="text-muted mb-0" style="font-size: 0.9rem;">Chưa có video camera cho lần sửa này.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 3c. Hồ sơ kỹ thuật sửa chữa -->
+        <div class="inv-card">
+            <div class="card-head"><i class="bi bi-wrench-adjustable" style="color: var(--copper-orange);"></i> Hồ sơ kỹ thuật sửa chữa</div>
+            <div class="card-body">
+                <h6 class="fw-bold mb-2"><i class="bi bi-chat-text me-1"></i>Triệu chứng khách báo</h6>
+                <p class="mb-2" style="font-size: 0.92rem;">{{ order.symptoms or '---' }}</p>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    {% if order.symptom_severity %}
+                    <span class="badge rounded-pill {% if order.symptom_severity == 'Nặng' %}text-bg-danger{% elif order.symptom_severity == 'Trung bình' %}text-bg-warning{% else %}text-bg-success{% endif %}">Mức độ: {{ order.symptom_severity }}</span>
+                    {% endif %}
+                    {% if order.abnormal_sounds %}
+                    <span class="badge rounded-pill text-bg-secondary">Âm thanh lạ: {{ order.abnormal_sounds }}</span>
+                    {% endif %}
+                    {% if order.warning_lights %}
+                    <span class="badge rounded-pill text-bg-danger">Đèn taplo: {{ order.warning_lights }}</span>
+                    {% endif %}
+                </div>
+
+                {% if order.ai_diagnosis %}
+                <h6 class="fw-bold mb-2"><i class="bi bi-robot me-1"></i>AI chẩn đoán tham khảo</h6>
+                <div class="mb-3" style="background: var(--warm-white); border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.9rem; white-space: pre-wrap;">{{ order.ai_diagnosis }}</div>
+                {% endif %}
+
+                <h6 class="fw-bold mb-2"><i class="bi bi-clipboard-data me-1"></i>Kết quả kiểm tra của kỹ thuật viên</h6>
+                {% if order.inspection_result %}
+                <div class="mb-3" style="background: rgba(25,135,84,0.06); border: 1px solid rgba(25,135,84,0.2); border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.9rem; white-space: pre-wrap;">{{ order.inspection_result }}</div>
+                {% else %}
+                <p class="text-muted" style="font-size: 0.9rem;">Kỹ thuật viên chưa ghi nhận kết quả kiểm tra.</p>
+                {% endif %}
+
+                <h6 class="fw-bold mb-2"><i class="bi bi-clipboard-check me-1"></i>Phiếu tiếp nhận xe</h6>
+                <div class="info-line"><span class="lbl">Ngày giờ nhận xe</span><span class="val">{{ order.reception_datetime or '---' }}</span></div>
+                <div class="info-line"><span class="lbl">Người giao xe</span><span class="val">{{ order.deliverer_name or '---' }}</span></div>
+                <div class="info-line"><span class="lbl">Mức nhiên liệu</span><span class="val">{{ order.fuel_level or '---' }}</span></div>
+                <div class="info-line"><span class="lbl">Trầy xước ngoại thất</span><span class="val">{{ order.exterior_scratches or 'Không' }}</span></div>
+                <div class="info-line"><span class="lbl">Đồ cá nhân bàn giao</span><span class="val">{{ order.personal_belongings or 'Không' }}</span></div>
+                <div class="info-line"><span class="lbl">Số chìa khóa</span><span class="val">{{ order.key_count if order.key_count is not none else '---' }}</span></div>
+
+                {% if order.vehicle_images %}
+                <h6 class="fw-bold mt-3 mb-2">Ảnh hiện trạng lúc nhận xe</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for img in order.vehicle_images.split(',') %}
+                    {% if img.strip() %}
+                    <a href="{{ img.strip() }}" target="_blank"><img src="{{ img.strip() }}" alt="Hiện trạng xe" style="width: 110px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--concrete-gray);"></a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 4. Bảo hành & thanh toán -->
+        <div class="inv-card">
+            <div class="card-head"><i class="bi bi-shield-check" style="color: var(--copper-orange);"></i> Bảo hành & thanh toán</div>
+            <div class="card-body">
+                {% if invoice.warranty_info %}
+                <div class="d-flex gap-2 mb-3" style="background: var(--warm-white); border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.9rem;">
+                    <i class="bi bi-patch-check" style="color: var(--copper-orange);"></i>
+                    <div><strong>Bảo hành:</strong> {{ invoice.warranty_info }}</div>
+                </div>
+                {% endif %}
+
+                {% if invoice.status == 'Unpaid' %}
+                <form method="post" action="/my-invoices/{{ invoice.id }}/pay" id="payForm">
+                    <label class="form-label fw-semibold" style="font-size: 0.9rem;">Phương thức thanh toán</label>
+                    <div class="d-flex flex-wrap gap-3 mb-3">
+                        {% for m in payment_methods %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" value="{{ m }}" id="pm{{ loop.index }}" {% if loop.first %}checked{% endif %}>
+                            <label class="form-check-label" style="font-size: 0.9rem;" for="pm{{ loop.index }}">{{ m }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn rounded-pill px-4" style="background: var(--lux-bronze-deep, #A65E2F); color: #fff; border: 1px solid var(--lux-bronze-deep, #A65E2F); font-weight: 700;" onclick="return confirm('Xác nhận bạn đã thanh toán {{ "{:,.0f}".format(invoice.total_amount) }} VNĐ?');">
+                        <i class="bi bi-check2-circle me-1"></i> Xác nhận đã thanh toán
+                    </button>
+                </form>
+                {% else %}
+                <div class="info-line"><span class="lbl">Trạng thái</span><span class="val" style="color: #198754;">Đã thanh toán</span></div>
+                <div class="info-line"><span class="lbl">Phương thức</span><span class="val">{{ invoice.payment_method or '---' }}</span></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
